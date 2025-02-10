@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .landing-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #282c34;
+    color: white;
+  }
+  
+  .about-me, .skills, .projects, .contact {
+    padding: 20px;
+    margin: 20px;
+    background: white;
+    color: black;
+    border-radius: 8px;
+  }  
