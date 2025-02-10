@@ -9,6 +9,13 @@ This portfolio is designed to provide an immersive experience for recruiters and
 - A section about me, my skills, and career goals.
 - Contact and social links for easy reach.
 
+## 💡 About Me & Name Usage
+You'll see my name appear as both **Victoria Marinus** and **Victoria Ghoos** across different platforms.  
+- **Victoria Marinus** is my legal name and is primarily used for academic and professional settings.  
+- **Victoria Ghoos** is my preferred name, which I use on my personal projects and accounts.  
+
+Since I actively develop projects for both college and personal use, I sometimes switch between these names, especially when using different GitHub accounts. Regardless of the name, it's still **me** behind all the work! 😊
+
 ## 🛠️ Technologies Used
 - **Frontend:** React.js, TypeScript, SCSS
 - **Animations:** Framer Motion, GSAP
