@@ -1,106 +1,137 @@
-.home {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+.home-3d {
   position: relative;
-  overflow: hidden;
-  background: #121212;
-}
-
-.name {
-  position: absolute;
-  font-size: 3rem;
-  font-weight: bold;
-  color: #fff;
-  z-index: 1;
-}
-
-.circle-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: translateX(0);
-}
-
-.circle {
-  width: 5vw; 
-  height: 5vw; 
-  border-radius: 50%;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
-  will-change: transform;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  transform: translate(-50%, -50%); 
-}
-
-.circle:hover {
-  transform: translate(-50%, -50%) scale(1.1);
-  box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.circle img {
-  transition: transform 0.3s ease;
-  width: 70%;
-  height: 70%;
-  object-fit: contain;
-}
-
-.circle:hover img {
-  transform: scale(1.1);
-}
-
-.page-transition {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100vh;
-  background: #000;
-  z-index: 999;
-  animation: fadeOut 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-}
-
-@keyframes fadeOut {
-  to { opacity: 0; visibility: hidden; }
-}
-
-.circular-image-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 25vw;
-  height: 25vw;
-  border-radius: 50%;
   overflow: hidden;
-  z-index: 1; 
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  
-  .circular-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center; 
+
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+
+    background: 
+      radial-gradient(ellipse at 30% 20%, rgba(68, 76, 194, 0.08) 0%, transparent 70%),
+      radial-gradient(ellipse at 70% 25%, rgba(84, 84, 206, 0.06) 0%, transparent 70%);
+    
+    mix-blend-mode: screen;
+    opacity: 0.2;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.15;
+  }
+
+  canvas {
+    position: relative;
+    z-index: 1;
   }
 }
 
-.circle-container {
-  // add for debugging
-  border: 2px dashed red;
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
-.circle {
-  // add for debugging
-  border: 1px solid lime;
+.drag-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  background: rgba(16, 23, 41, 0.85);
+  color: #7c9eff;
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 1;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Glass morphism effect */
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(124, 158, 255, 0.3);
+  
+  /* Subtle glow */
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(124, 158, 255, 0.1),
+    0 0 30px rgba(124, 158, 255, 0.15);
+  
+  /* Text styling */
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  
+  /* Animation */
+  animation: floatHint 3s ease-in-out infinite, 
+             fadeInUp 0.6s ease-out;
+  
+  /* Ensure it's above the canvas */
+  z-index: 10;
+}
+
+/* Floating animation */
+@keyframes floatHint {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0px);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-3px);
+  }
+}
+
+/* Entrance animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Optional: Add a subtle pulse to the emoji */
+.drag-hint::before {
+  content: '💫';
+  display: inline-block;
+  margin-right: 8px;
+  animation: spinSlow 4s linear infinite;
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.drag-hint.fade-out {
+  animation: fadeOutDown 0.5s ease-in forwards;
+}
+
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
 }
