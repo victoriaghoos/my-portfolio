@@ -15,16 +15,17 @@ import resumeVideo from "../assets/images/resume.mp4";
 import resumePng from "../assets/images/resume.png";
 import socialsVideo from "../assets/images/social-media.mp4";
 import socialsPng from "../assets/images/social-media.png";
-import CatOutlineStars from "./CatOutlineStars.js";
-import CameraOutlineStars from "./CameraOutlineStars.js";
-import BookOutlineStars from "./BookOutlineStars.js";
-import FlowerOutlineStars from "./FlowerOutlineStars.js";
 import NightSkyBackground from "./NightSkyBackground.js";
 import InteractivePanel from "./InteractivePanel.js";
 import CentralHologram from "./CentralHologram.js";
-import HeadsetOutlineStars from "./HeadsetOutlineStars.js";
 import OutlineStars from "./OutlineStars.js";
+import SectionsContainer from "./sections/SectionsContainer.js";
 
+import catPoints from "../catPoints.json";
+import cameraPoints from "../cameraPoints.json";
+import bookPoints from "../bookPoints.json";
+import flowerPoints from "../flowerPoints.json";
+import headsetPoints from "../headsetPoints.json";
 const icons = [
   {
     png: socialsPng,
@@ -100,6 +101,29 @@ const Home = () => {
 
   const [hasDragged, setHasDragged] = useState(false);
 
+  // Add navigation function
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
+  // Update handleIconClick to include navigation
+  const handleIconClick = (iconLabel) => {
+    const sectionMap = {
+      'About': 'about-section',
+      'Skills': 'skills-section', 
+      'Projects': 'projects-section',
+      'Resume': 'resume-section',
+      'Socials': 'socials-section'
+    };
+    scrollToSection(sectionMap[iconLabel]);
+  };
+
   useEffect(() => {
     const rotationInterval = setInterval(() => {
       if (!initialRotationComplete) {
@@ -122,7 +146,7 @@ const Home = () => {
       setRotationY(dragRef.current.startRot + deltaX * rotationSpeed);
 
       if (!hasDragged && Math.abs(deltaX) > 5) {
-        setHasDragged(true); 
+        setHasDragged(true);
       }
     };
 
@@ -164,91 +188,112 @@ const Home = () => {
   });
 
   return (
-    <section
-      className="home-3d"
-      onMouseDown={(e) => {
-        if (!initialRotationComplete) return;
-        dragRef.current.dragging = true;
-        dragRef.current.startX = e.clientX;
-        dragRef.current.startRot = rotationY;
-      }}
-      style={{
-        cursor: dragRef.current.dragging
-          ? "grabbing"
-          : initialRotationComplete
-          ? "grab"
-          : "default",
-      }}
-    >
-      <div className="home-3d">
-        <NightSkyBackground mouse={mouse} clicks={clicks} />
+    <>
+      <div className="main-container">
+      <section
+        className="home-3d"
+        onMouseDown={(e) => {
+          if (!initialRotationComplete) return;
+          dragRef.current.dragging = true;
+          dragRef.current.startX = e.clientX;
+          dragRef.current.startRot = rotationY;
+        }}
+        style={{
+          cursor: dragRef.current.dragging
+            ? "grabbing"
+            : initialRotationComplete
+            ? "grab"
+            : "default",
+        }}
+      >
+        <div className="home-3d">
+          <NightSkyBackground mouse={mouse} clicks={clicks} />
 
-        {initialRotationComplete && !hasDragged && (
-          <DragHint isVisible={!hasDragged} />
-        )}
+          {initialRotationComplete && !hasDragged && (
+            <DragHint isVisible={!hasDragged} />
+          )}
 
-        <Canvas
-          camera={{ position: [0, 5, 20], fov: 45 }}
-          eventSource={document.getElementById("root")}
-          eventPrefix="client"
-        >
-          <group>
-            <Environment preset="sunset" />
-
-            {icons.map((icon, i) => (
-              <motion.group
-                key={i}
-                initial={{ opacity: 0, scale: 0.7, y: 1 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{
-                  duration: 1.2,
-                  delay: 0.5 + i * 0.15,
-                  ease: [0.6, 0.01, 0.05, 0.95],
-                }}
-              >
-                <InteractivePanel
-                  icon={icon}
-                  active={active}
-                  setActive={setActive}
-                  index={i}
-                  position={panelPositions[i]}
-                />
-              </motion.group>
-            ))}
-          </group>
-
-          <motion.group
-            initial={{ opacity: 0, scale: 0.85, y: -0.5 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{
-              duration: 1.5,
-              delay: 1.2,
-              ease: [0.6, 0.01, 0.05, 0.95],
-            }}
+          <Canvas
+            camera={{ position: [0, 5, 20], fov: 45 }}
+            eventSource={document.getElementById("root")}
+            eventPrefix="client"
           >
-            <CentralHologram />
-          </motion.group>
+            <group>
+              <Environment preset="sunset" />
 
-          <CatOutlineStars active={active === "About"} position={[-12, 0, 0]} />
-          <CameraOutlineStars
-            active={active === "Socials"}
-            position={[-14, -6, 0]}
-          />
-          <BookOutlineStars
-            active={active === "Resume"}
-            position={[-14, 4, 0]}
-          />
-          <FlowerOutlineStars
-            active={active === "Skills"}
-            position={[14, 4, 0]}
-          />
-          <HeadsetOutlineStars
-            active={active === "Projects"}
-            position={[12, -6, 0]}
-          />
-        </Canvas>
+              {icons.map((icon, i) => (
+                <motion.group
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.7, y: 1 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{
+                    duration: 1.2,
+                    delay: 0.5 + i * 0.15,
+                    ease: [0.6, 0.01, 0.05, 0.95],
+                  }}
+                >
+                  <InteractivePanel
+                    icon={icon}
+                    active={active}
+                    setActive={setActive}
+                    index={i}
+                    position={panelPositions[i]}
+                    onIconClick={handleIconClick} // Pass click handler
+                  />
+                </motion.group>
+              ))}
+            </group>
+
+            <motion.group
+              initial={{ opacity: 0, scale: 0.85, y: -0.5 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{
+                duration: 1.5,
+                delay: 1.2,
+                ease: [0.6, 0.01, 0.05, 0.95],
+              }}
+            >
+              <CentralHologram />
+            </motion.group>
+
+            <OutlineStars
+              active={active === "About"}
+              position={[-11, 0, 0]}
+              pointsData={catPoints}
+              scale={1.3}
+            />
+            <OutlineStars
+              active={active === "Socials"}
+              position={[-14, -6, 0]}
+              pointsData={cameraPoints}
+              scale={0.8}
+            />
+            <OutlineStars
+              active={active === "Resume"}
+              position={[-13, 4, 0]}
+              pointsData={bookPoints}
+              scale={0.8}
+            />
+            <OutlineStars
+              active={active === "Skills"}
+              position={[14, 4, 0]}
+              pointsData={flowerPoints}
+              scale={0.8}
+            />
+            <OutlineStars
+              active={active === "Projects"}
+              position={[12, -6, 0]}
+              pointsData={headsetPoints}
+              scale={0.8}
+            />
+          </Canvas>
+        </div>
+      </section>
+
+      {/* Add SectionsContainer below the 3D scene */}
+      <SectionsContainer />
       </div>
-    </section>
+    </>
   );
 };
 
