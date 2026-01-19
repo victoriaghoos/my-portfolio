@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import * as THREE from "three";
 import "../styles/home.scss";
+import MusicPlayer from "./MusicPlayer.js";
 
 import avatarVideo from "../assets/images/avatar.mp4";
 import avatarPng from "../assets/images/avatar.png";
@@ -82,8 +83,10 @@ const DragHint = ({ isVisible }) => {
 
 const Home = () => {
   const [active, setActive] = useState(null);
+  const homeRef = useRef(null);
   const radius = 10;
   const numberOfIcons = icons.length;
+  const isInView = useInView(homeRef, { amount: 1 });
 
   const [rotationY, setRotationY] = useState(0);
   const dragRef = useRef({
@@ -105,9 +108,9 @@ const Home = () => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
       });
     }
   };
@@ -115,11 +118,11 @@ const Home = () => {
   // Update handleIconClick to include navigation
   const handleIconClick = (iconLabel) => {
     const sectionMap = {
-      'About': 'about-section',
-      'Skills': 'skills-section', 
-      'Projects': 'projects-section',
-      'Resume': 'resume-section',
-      'Socials': 'socials-section'
+      About: "about-section",
+      Skills: "skills-section",
+      Projects: "projects-section",
+      Resume: "resume-section",
+      Socials: "socials-section",
     };
     scrollToSection(sectionMap[iconLabel]);
   };
@@ -190,108 +193,112 @@ const Home = () => {
   return (
     <>
       <div className="main-container">
-      <section
-        className="home-3d"
-        onMouseDown={(e) => {
-          if (!initialRotationComplete) return;
-          dragRef.current.dragging = true;
-          dragRef.current.startX = e.clientX;
-          dragRef.current.startRot = rotationY;
-        }}
-        style={{
-          cursor: dragRef.current.dragging
-            ? "grabbing"
-            : initialRotationComplete
-            ? "grab"
-            : "default",
-        }}
-      >
-        <div className="home-3d">
-          <NightSkyBackground mouse={mouse} clicks={clicks} />
+        <MusicPlayer />
+        <section
+          ref={homeRef}
+          className="home-3d"
+          onMouseDown={(e) => {
+            if (!initialRotationComplete) return;
+            dragRef.current.dragging = true;
+            dragRef.current.startX = e.clientX;
+            dragRef.current.startRot = rotationY;
+          }}
+          style={{
+            cursor: dragRef.current.dragging
+              ? "grabbing"
+              : active
+                ? "pointer"
+                : initialRotationComplete
+                  ? "grab"
+                  : "default",
+          }}
+        >
+          <div className="home-3d">
+            <NightSkyBackground mouse={mouse} clicks={clicks} />
 
-          {initialRotationComplete && !hasDragged && (
-            <DragHint isVisible={!hasDragged} />
-          )}
+            {initialRotationComplete && !hasDragged && (
+              <DragHint isVisible={!hasDragged} />
+            )}
 
-          <Canvas
-            camera={{ position: [0, 5, 20], fov: 45 }}
-            eventSource={document.getElementById("root")}
-            eventPrefix="client"
-          >
-            <group>
-              <Environment preset="sunset" />
-
-              {icons.map((icon, i) => (
-                <motion.group
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.7, y: 1 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{
-                    duration: 1.2,
-                    delay: 0.5 + i * 0.15,
-                    ease: [0.6, 0.01, 0.05, 0.95],
-                  }}
-                >
-                  <InteractivePanel
-                    icon={icon}
-                    active={active}
-                    setActive={setActive}
-                    index={i}
-                    position={panelPositions[i]}
-                    onIconClick={handleIconClick} // Pass click handler
-                  />
-                </motion.group>
-              ))}
-            </group>
-
-            <motion.group
-              initial={{ opacity: 0, scale: 0.85, y: -0.5 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{
-                duration: 1.5,
-                delay: 1.2,
-                ease: [0.6, 0.01, 0.05, 0.95],
-              }}
+            <Canvas
+              camera={{ position: [0, 5, 20], fov: 45 }}
+              eventSource={document.getElementById("root")}
+              eventPrefix="client"
             >
-              <CentralHologram />
-            </motion.group>
+              <group>
+                <Environment preset="sunset" />
 
-            <OutlineStars
-              active={active === "About"}
-              position={[-11, 0, 0]}
-              pointsData={catPoints}
-              scale={1.3}
-            />
-            <OutlineStars
-              active={active === "Socials"}
-              position={[-14, -6, 0]}
-              pointsData={cameraPoints}
-              scale={0.8}
-            />
-            <OutlineStars
-              active={active === "Resume"}
-              position={[-13, 4, 0]}
-              pointsData={bookPoints}
-              scale={0.8}
-            />
-            <OutlineStars
-              active={active === "Skills"}
-              position={[14, 4, 0]}
-              pointsData={flowerPoints}
-              scale={0.8}
-            />
-            <OutlineStars
-              active={active === "Projects"}
-              position={[12, -6, 0]}
-              pointsData={headsetPoints}
-              scale={0.8}
-            />
-          </Canvas>
-        </div>
-      </section>
+                {icons.map((icon, i) => (
+                  <motion.group
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.7, y: 1 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{
+                      duration: 1.2,
+                      delay: 0.5 + i * 0.15,
+                      ease: [0.6, 0.01, 0.05, 0.95],
+                    }}
+                  >
+                    <InteractivePanel
+                      icon={icon}
+                      active={active}
+                      setActive={setActive}
+                      index={i}
+                      position={panelPositions[i]}
+                      onIconClick={handleIconClick}
+                      isParentVisible={isInView}
+                    />
+                  </motion.group>
+                ))}
+              </group>
 
-      {/* Add SectionsContainer below the 3D scene */}
-      <SectionsContainer />
+              <motion.group
+                initial={{ opacity: 0, scale: 0.85, y: -0.5 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{
+                  duration: 1.5,
+                  delay: 1.2,
+                  ease: [0.6, 0.01, 0.05, 0.95],
+                }}
+              >
+                <CentralHologram />
+              </motion.group>
+
+              <OutlineStars
+                active={active === "About"}
+                position={[-11, 0, 0]}
+                pointsData={catPoints}
+                scale={1.3}
+              />
+              <OutlineStars
+                active={active === "Socials"}
+                position={[-14, -6, 0]}
+                pointsData={cameraPoints}
+                scale={0.8}
+              />
+              <OutlineStars
+                active={active === "Resume"}
+                position={[-13, 4, 0]}
+                pointsData={bookPoints}
+                scale={0.8}
+              />
+              <OutlineStars
+                active={active === "Skills"}
+                position={[14, 4, 0]}
+                pointsData={flowerPoints}
+                scale={0.8}
+              />
+              <OutlineStars
+                active={active === "Projects"}
+                position={[12, -6, 0]}
+                pointsData={headsetPoints}
+                scale={0.8}
+              />
+            </Canvas>
+          </div>
+        </section>
+
+        <SectionsContainer />
       </div>
     </>
   );

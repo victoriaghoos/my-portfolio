@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Html, useTexture, Float } from "@react-three/drei";
 import * as THREE from "three";
 
-const InteractivePanel = ({ icon, setActive, index, position }) => {
+const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, onIconClick }) => {
   const ref = useRef();
   const pngTexture = useTexture(icon.png);
   const [hovered, setHovered] = useState(false);
@@ -85,6 +85,8 @@ const InteractivePanel = ({ icon, setActive, index, position }) => {
     setHovered(true);
     setActive(icon.label);
 
+    document.body.style.cursor = 'pointer';
+
     if (!videoTextureRef.current && icon.video) {
       const video = document.createElement("video");
       video.src = icon.video;
@@ -111,6 +113,8 @@ const InteractivePanel = ({ icon, setActive, index, position }) => {
     setHovered(false);
     setActive(null);
 
+    document.body.style.cursor = 'auto';
+
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
@@ -135,6 +139,10 @@ const InteractivePanel = ({ icon, setActive, index, position }) => {
             ref={meshRef}
             onPointerOver={handlePointerOver}
             onPointerOut={handlePointerOut}
+            onClick={(e) => {
+            e.stopPropagation();
+            onIconClick(icon.label);
+          }}
           >
             <planeGeometry args={[1.6, 1.6]} />
             <meshStandardMaterial
@@ -157,10 +165,12 @@ const InteractivePanel = ({ icon, setActive, index, position }) => {
             center
             style={{
               width: "100%",
-              display: "flex",
+              display: isParentVisible ? "flex" : "none",
               justifyContent: "center",
               marginTop: "70px",
               pointerEvents: "none",
+              opacity: hovered ? 1 : 0.9,
+              transition: "none",
             }}
             transform
           >
@@ -181,10 +191,8 @@ const InteractivePanel = ({ icon, setActive, index, position }) => {
                     0 0 15px ${icon.color.getStyle()}40
                   `,
                 opacity: hovered ? 1 : 0.9,
-                transition: "all 0.3s ease",
-                transform: hovered
-                  ? "translateY(-2px) scale(1.05)"
-                  : "translateY(0) scale(1)",
+                transition: "none",
+                transform: hovered ? "translateY(-2px) scale(1.05)" : "translateY(0) scale(1)",
                 letterSpacing: "1px",
                 textTransform: "uppercase",
               }}

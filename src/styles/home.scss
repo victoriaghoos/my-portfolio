@@ -1,10 +1,26 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow:hidden;
+}
+
+.main-container {
+  height: 100vh;             
+  overflow-y: auto;          
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory; 
+  scroll-behavior: smooth;  
+}
+
+
 .home-3d {
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
-  margin: 0; // Add this
-  padding: 0; // Add this
+  margin: 0;
+  padding: 0;
+  scroll-snap-align: start;
 
   opacity: 0;
   animation: fadeIn 1.5s ease forwards;
@@ -48,6 +64,8 @@ body {
 .sections-container {
   margin: 0;
   padding: 0;
+  z-index: 999;
+  background: #0b0e14;
 }
 
 @keyframes fadeIn {
@@ -146,5 +164,126 @@ body {
   to {
     opacity: 0;
     transform: translateX(-50%) translateY(20px);
+  }
+}
+
+/* 1. The scrollbar width */
+::-webkit-scrollbar {
+  width: 8px; /* Thinner than default */
+}
+
+/* 2. The background of the scrollbar (The Track) */
+::-webkit-scrollbar-track {
+  background: #0b0e14; /* Matches your section background */
+}
+
+/* 3. The draggable part (The Thumb) */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #7c9eff, #8a63f2); /* Gradient matching your icons */
+  border-radius: 10px;
+  border: 2px solid #0b0e14; /* Creates a 'padding' effect around the thumb */
+}
+
+/* 4. Hover effect on the thumb */
+::-webkit-scrollbar-thumb:hover {
+  background: #a184f5; /* Brighter purple on hover */
+  box-shadow: 0 0 10px rgba(138, 99, 242, 0.5);
+}
+
+/* Support for Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #8a63f2 #0b0e14;
+}
+
+.music-player-pill {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  cursor: pointer;
+  
+  /* Glassmorphism */
+  background: rgba(16, 23, 41, 0.4);
+  backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(124, 158, 255, 0.2);
+  border-radius: 50px;
+  
+  color: #7c9eff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background: rgba(124, 158, 255, 0.15);
+    border-color: rgba(124, 158, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(124, 158, 255, 0.15);
+  }
+
+  &.active {
+    border-color: rgba(138, 99, 242, 0.4);
+    .icon-wrapper { color: #8a63f2; }
+  }
+
+  .icon-wrapper {
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+  }
+
+  .music-status {
+    font-weight: 500;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  /* Tiny visualizer animation */
+  .visualizer {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 10px;
+    
+    .bar {
+      width: 2px;
+      background: #8a63f2;
+      border-radius: 1px;
+      animation: equalize 1s ease-in-out infinite;
+      
+      &:nth-child(1) { height: 60%; animation-delay: 0.1s; }
+      &:nth-child(2) { height: 100%; animation-delay: 0.3s; }
+      &:nth-child(3) { height: 40%; animation-delay: 0.2s; }
+    }
+  }
+}
+
+@keyframes equalize {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.4); }
+}
+
+.text-container {
+  display: flex;
+  align-items: center;
+  /* Zorg dat de container niet verspringt als de tekstlengte verandert */
+  min-width: 120px; 
+}
+
+.music-status {
+  white-space: nowrap;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  
+  &.artist-info {
+    color: #a184f5; /* Een iets andere kleur voor de artiest informatie */
+    font-size: 0.6rem; /* Iets kleiner om het subtiel te houden */
   }
 }

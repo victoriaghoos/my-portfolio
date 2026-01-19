@@ -1,8 +1,11 @@
 // styles/sections/AboutSection.scss
 
 .about-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  z-index: 1000;
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
   overflow: hidden;
   background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 50%, #0f0f23 100%);
   display: flex;
@@ -253,6 +256,27 @@
       filter: blur(10px);
       animation: rotateGlow 6s linear infinite;
     }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.1) 50%
+      ), linear-gradient(
+        90deg, 
+        rgba(255, 0, 0, 0.03), 
+        rgba(0, 255, 0, 0.01), 
+        rgba(0, 0, 255, 0.03)
+      );
+      background-size: 100% 3px, 3px 100%;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0.4;
+    }
   }
   
   .avatar-orbits {
@@ -359,14 +383,19 @@
         color: rgba(255, 255, 255, 0.9);
         
         .highlight {
+          transition: all 0.3s ease;
+          cursor: default;
           // Elegant icy blue-purple gradient
           background: linear-gradient(135deg, #8AE6FF 0%, #A78BFA 100%);
           background-clip: text;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           font-weight: 600;
-          // Subtle glow for better readability
           text-shadow: 0 0 15px rgba(138, 230, 255, 0.2);
+          &:hover {
+            text-shadow: 0 0 20px rgba(138, 230, 255, 0.5);
+            letter-spacing: 0.5px; 
+          }
         }
       }
     }

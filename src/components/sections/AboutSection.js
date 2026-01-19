@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import '../../styles/sections/AboutSection.scss';
 import foto1 from '../../assets/images/foto1.jpg';
+import catPoints from '../../catPoints.json';
 
 const AboutSection = ({ id }) => {
   const [isVisible, setIsVisible] = useState(false);
