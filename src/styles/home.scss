@@ -13,7 +13,6 @@ html, body {
   scroll-behavior: smooth;  
 }
 
-
 .home-3d {
   position: relative;
   width: 100%;
@@ -89,31 +88,20 @@ body {
   pointer-events: none;
   opacity: 1;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  /* Glass morphism effect */
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   backdrop-filter: blur(12px) saturate(180%);
   border: 1px solid rgba(124, 158, 255, 0.3);
-  
-  /* Subtle glow */
   box-shadow: 
     0 4px 20px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(124, 158, 255, 0.1),
     0 0 30px rgba(124, 158, 255, 0.15);
-  
-  /* Text styling */
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  
-  /* Animation */
   animation: floatHint 3s ease-in-out infinite, 
              fadeInUp 0.6s ease-out;
-  
-  /* Ensure it's above the canvas */
   z-index: 10;
 }
 
-/* Floating animation */
 @keyframes floatHint {
   0%, 100% {
     transform: translateX(-50%) translateY(0px);
@@ -123,7 +111,6 @@ body {
   }
 }
 
-/* Entrance animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -135,7 +122,6 @@ body {
   }
 }
 
-/* Optional: Add a subtle pulse to the emoji */
 .drag-hint::before {
   content: '💫';
   display: inline-block;
@@ -167,33 +153,23 @@ body {
   }
 }
 
-/* 1. The scrollbar width */
 ::-webkit-scrollbar {
-  width: 8px; /* Thinner than default */
+  width: 8px; 
 }
 
-/* 2. The background of the scrollbar (The Track) */
 ::-webkit-scrollbar-track {
-  background: #0b0e14; /* Matches your section background */
+  background: #0b0e14; 
 }
 
-/* 3. The draggable part (The Thumb) */
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #7c9eff, #8a63f2); /* Gradient matching your icons */
+  background: linear-gradient(to bottom, #7c9eff, #8a63f2);
   border-radius: 10px;
-  border: 2px solid #0b0e14; /* Creates a 'padding' effect around the thumb */
+  border: 2px solid #0b0e14; 
 }
 
-/* 4. Hover effect on the thumb */
 ::-webkit-scrollbar-thumb:hover {
-  background: #a184f5; /* Brighter purple on hover */
+  background: #a184f5; 
   box-shadow: 0 0 10px rgba(138, 99, 242, 0.5);
-}
-
-/* Support for Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #8a63f2 #0b0e14;
 }
 
 .music-player-pill {
@@ -206,9 +182,8 @@ body {
   gap: 12px;
   padding: 10px 18px;
   cursor: pointer;
-  
-  /* Glassmorphism */
   background: rgba(16, 23, 41, 0.4);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   backdrop-filter: blur(12px) saturate(180%);
   border: 1px solid rgba(124, 158, 255, 0.2);
   border-radius: 50px;
@@ -244,7 +219,6 @@ body {
     opacity: 0.8;
   }
 
-  /* Tiny visualizer animation */
   .visualizer {
     display: flex;
     align-items: flex-end;
@@ -272,7 +246,6 @@ body {
 .text-container {
   display: flex;
   align-items: center;
-  /* Zorg dat de container niet verspringt als de tekstlengte verandert */
   min-width: 120px; 
 }
 
@@ -283,7 +256,7 @@ body {
   letter-spacing: 1.5px;
   
   &.artist-info {
-    color: #a184f5; /* Een iets andere kleur voor de artiest informatie */
-    font-size: 0.6rem; /* Iets kleiner om het subtiel te houden */
+    color: #a184f5; 
+    font-size: 0.6rem; 
   }
 }

@@ -1,8 +1,8 @@
-// styles/sections/AboutSection.scss
-
 .about-section {
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  @supports (scroll-snap-stop: always) {
+    scroll-snap-stop: always;
+  }
   z-index: 1000;
   position: relative;
   height: 100vh;
@@ -37,7 +37,6 @@
   z-index: 1;
 }
 
-// Floating Orbs with Interactive Effects
 .floating-orbs {
   position: absolute;
   width: 100%;
@@ -88,8 +87,6 @@
   }
 }
 
-// Animated Star Field
-// Animated Star Field
 .star-field {
   position: absolute;
   top: 0;
@@ -133,7 +130,6 @@
   width: 100%;
 }
 
-// Section Header Styles
 .section-header {
   text-align: center;
   margin-bottom: 4rem;
@@ -144,10 +140,9 @@
     margin-bottom: 1rem;
     
     .title-glow {
-      // Refined cosmic blue-purple gradient
       background: linear-gradient(135deg, #8AE6FF 0%, #A78BFA 50%, #C084FC 100%);
-      background-clip: text;
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 30px rgba(138, 230, 255, 0.4);
       position: relative;
@@ -169,7 +164,6 @@
   .title-underline {
     width: 80px;
     height: 3px;
-    // Refined gradient
     background: linear-gradient(90deg, #8AE6FF, #C084FC);
     margin: 0 auto;
     border-radius: 2px;
@@ -189,7 +183,6 @@
   }
 }
 
-// About Grid Layout
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -210,7 +203,6 @@
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid transparent;
-    // Refined gradient
     background: linear-gradient(135deg, #8AE6FF, #A78BFA, #C084FC);
     background-size: 400% 400%;
     animation: gradientShift 8s ease infinite;
@@ -367,10 +359,9 @@
       color: white;
       
       .name-glow {
-        // Refined gradient
         background: linear-gradient(135deg, #8AE6FF, #C084FC);
-        background-clip: text;
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
         text-shadow: 0 0 20px rgba(192, 132, 252, 0.3);
       }
@@ -386,10 +377,9 @@
         .highlight {
           transition: all 0.3s ease;
           cursor: default;
-          // Elegant icy blue-purple gradient
           background: linear-gradient(135deg, #8AE6FF 0%, #A78BFA 100%);
-          background-clip: text;
           -webkit-background-clip: text;
+          background-clip: text;
           -webkit-text-fill-color: transparent;
           font-weight: 600;
           text-shadow: 0 0 15px rgba(138, 230, 255, 0.2);
@@ -484,7 +474,6 @@
   }
 }
 
-// Interactive States
 .about-section {
   &:hover {
     .floating-orbs .orb {
@@ -497,7 +486,6 @@
   }
 }
 
-// Responsive Design
 @media (max-width: 1024px) {
   .about-grid {
     gap: 3rem;
@@ -540,7 +528,6 @@
   }
 }
 
-// Reduced motion for accessibility
 @media (prefers-reduced-motion: reduce) {
   .floating-orbs .orb,
   .avatar-orbits .orbit-ring,
