@@ -80,7 +80,10 @@ const ProjectsSection = ({ id }) => {
             <motion.div
               key={project.id}
               className="music-card"
-              style={{ "--accent-glow": `${project.color}33` }} 
+              style={{
+                "--accent-glow": `${project.color}33`,
+                "--base-rotation": project.id % 2 === 0 ? "1deg" : "-1deg",
+              }}
             >
               <div className="card-glass">
                 <div className="album-art">
@@ -109,11 +112,17 @@ const ProjectsSection = ({ id }) => {
                     <span>3:45</span>
                   </div>
                   <div className="progress-bg">
-                    <div
+                    <motion.div
                       className="progress-fill"
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{
+                        duration: 10, 
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
                       style={{
                         backgroundColor: project.color,
-                        width: "35%",
                         boxShadow: `0 0 12px ${project.color}66`,
                       }}
                     />
@@ -143,23 +152,18 @@ const ProjectsSection = ({ id }) => {
       </div>
 
       <div className="audio-visualizer">
-        {[...Array(20)].map(
-          (
-            _,
-            i, 
-          ) => (
-            <motion.div
-              key={i}
-              className="bar"
-              animate={{ height: [5, 30, 15, 35, 5] }}
-              transition={{
-                repeat: Infinity,
-                duration: 1 + Math.random(),
-                ease: "easeInOut",
-              }}
-            />
-          ),
-        )}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="bar"
+            animate={{ height: [5, 30, 15, 35, 5] }}
+            transition={{
+              repeat: Infinity,
+              duration: 1 + Math.random(),
+              ease: "easeInOut",
+            }}
+          />
+        ))}
       </div>
     </section>
   );
