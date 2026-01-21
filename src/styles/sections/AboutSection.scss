@@ -89,6 +89,7 @@
 }
 
 // Animated Star Field
+// Animated Star Field
 .star-field {
   position: absolute;
   top: 0;
@@ -102,7 +103,7 @@
     radial-gradient(1px 1px at 80% 80%, white 50%, transparent 100%),
     radial-gradient(2px 2px at 10% 90%, white 50%, transparent 100%);
   background-size: 200px 200px;
-  animation: twinkle 4s infinite ease-in-out;
+  animation: twinkle-about 4s infinite ease-in-out;
   
   &::before {
     content: '';
@@ -116,11 +117,11 @@
       radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.8) 50%, transparent 100%),
       radial-gradient(2px 2px at 90% 10%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
     background-size: 300px 300px;
-    animation: twinkle 3s infinite ease-in-out reverse;
+    animation: twinkle-about 3s infinite ease-in-out reverse;
   }
 }
 
-.section-content {
+.about-content {
   position: relative;
   z-index: 2;
   width: 100%;
@@ -417,7 +418,7 @@
   }
 }
 
-@keyframes twinkle {
+@keyframes twinkle-about {
   0%, 100% {
     opacity: 0.5;
   }

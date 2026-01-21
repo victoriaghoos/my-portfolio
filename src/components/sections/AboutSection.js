@@ -55,7 +55,7 @@ const AboutSection = ({ id }) => {
         <div className="star-field"></div>
       </div>
 
-      <div className="section-content">
+      <div className="about-content">
         <motion.div 
           className="about-container"
           variants={staggerVariants}
