@@ -12,7 +12,7 @@ const projects = [
     subtitle: "Blazor • SignalR • C#",
     description: "Real-time match updates using SignalR websockets.",
     image: baseballImg,
-    color: "#ff9d00",
+    color: "#ffbd7a",
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ const projects = [
     subtitle: "Flutter • Dart • Firebase",
     description: "Mobile application for community activity management.",
     image: flutterImg,
-    color: "#8AE6FF",
+    color: "#a5f3fc",
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ const projects = [
     subtitle: "OpenSearch • Docker",
     description: "Internal project optimizing large-scale data retrieval.",
     isClassified: true,
-    color: "#A78BFA",
+    color: "#e9d5ff",
   },
 ];
 
@@ -62,6 +62,10 @@ const ProjectsSection = ({ id }) => {
           />
         ))}
       </div>
+
+      <div className="lofi-doodle note-1">♫</div>
+      <div className="lofi-doodle star-1">✧</div>
+      <div className="lofi-doodle note-2">♪</div>
 
       <div className="section-content">
         <motion.div className="section-header">
