@@ -79,21 +79,21 @@ const ProjectsSection = ({ id }) => {
   }, []);
 
   const stars = useMemo(() => {
-  return [...Array(300)].map((_, i) => {
-    const size = i % 10 === 0 ? 3 : i % 5 === 0 ? 2 : 1; // 80% is maar 1px
-    return {
-      id: i,
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      size: `${size}px`,
-      duration: Math.random() * 3 + 2 + "s",
-      delay: Math.random() * 5 + "s",
-      // Maak de kleinste sterren minder zichtbaar voor diepte
-      opacity: size === 1 ? Math.random() * 0.3 + 0.1 : Math.random() * 0.5 + 0.3,
-      blur: i % 15 === 0 ? "1px" : "0px"
-    };
-  });
-}, []);
+    return [...Array(300)].map((_, i) => {
+      const size = i % 10 === 0 ? 3 : i % 5 === 0 ? 2 : 1;
+      return {
+        id: i,
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        size: `${size}px`,
+        duration: Math.random() * 3 + 2 + "s",
+        delay: Math.random() * 5 + "s",
+        opacity:
+          size === 1 ? Math.random() * 0.3 + 0.1 : Math.random() * 0.5 + 0.3,
+        blur: i % 15 === 0 ? "1px" : "0px",
+      };
+    });
+  }, []);
 
   return (
     <section id={id} className="projects-section">

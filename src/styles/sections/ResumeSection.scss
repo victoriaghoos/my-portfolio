@@ -1,0 +1,120 @@
+.resume-section {
+    scroll-snap-align: start;
+    height: 100vh;
+    width: 100%;
+    background: radial-gradient(circle at center, #0a0a2e 0%, #020205 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+
+    .book-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        width: 100%;
+        max-width: 1300px;
+        // Zorg dat de wrapper zelf een rotsvaste hoogte heeft
+        height: 600px; 
+    }
+
+    .book-container {
+        position: relative;
+        // FIX: Harde breedte en hoogte stoppen het "springen"
+        width: 900px; 
+        height: 600px;
+        perspective: 2000px;
+        // Geen display flex hier!
+        display: block; 
+    }
+
+    .stellar-book {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page {
+        background-color: #161635;
+        // FIX: Verwijder de !important en gebruik vaste maten
+        width: 450px;
+        height: 600px;
+        overflow: hidden;
+        
+        // Stabiliseer de animatie
+        will-change: transform;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .page-content {
+            // FIX: Gebruik vaste margins in plaats van absolute positioning of padding op de root
+            // Dit is veel stabieler voor de bibliotheek
+            margin: 10px;
+            padding: 30px;
+            
+            // Gebruik harde pixels voor de binnenkant (450 - 20px margin)
+            height: 580px; 
+            width: 430px;
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(197, 160, 89, 0.1);
+            box-sizing: border-box;
+            background-color: #161635;
+        }
+    }
+
+    .page-footer {
+        text-align: center;
+        font-size: 0.8rem;
+        color: rgba(197, 160, 89, 0.5);
+        margin-top: auto;
+    }
+
+    // Schaduwen voor diepte
+    .page:nth-child(even) { box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.4); }
+    .page:nth-child(odd) { box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.4); }
+
+    // Bookmark en Navigatie (ongewijzigd qua functionaliteit)
+    .nav-arrow {
+        background: rgba(197, 160, 89, 0.05);
+        border: 1px solid rgba(197, 160, 89, 0.2);
+        border-radius: 50%;
+        color: #c5a059;
+        padding: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        &:hover { background: rgba(197, 160, 89, 0.2); transform: scale(1.1); }
+    }
+
+    .bookmark-tab {
+        position: absolute;
+        top: 30px;
+        right: -30px;
+        background: #c5a059;
+        color: #000;
+        padding: 10px 6px;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        span { writing-mode: vertical-rl; text-orientation: mixed; font-family: 'VT323', monospace; font-weight: bold; }
+        &:hover { transform: translateX(5px); }
+    }
+}

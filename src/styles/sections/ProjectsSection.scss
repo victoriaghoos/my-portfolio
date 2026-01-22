@@ -1,13 +1,14 @@
 .projects-section {
     scroll-snap-align: start;
+
     @supports (scroll-snap-stop: always) {
         scroll-snap-stop: always;
     }
+
     height: 100vh;
     width: 100%;
-    background:
-        radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.4) 100%),
-        linear-gradient(180deg, #020205 0%, #1e1b4b 35%, #3b2d60 60%, #b5838d 100%);
+    background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.4) 100%),
+    linear-gradient(180deg, #020205 0%, #1e1b4b 35%, #3b2d60 60%, #b5838d 100%);
     position: relative;
     overflow: hidden;
     display: flex;
