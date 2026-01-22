@@ -2,119 +2,141 @@
     scroll-snap-align: start;
     height: 100vh;
     width: 100%;
-    background: radial-gradient(circle at center, #0a0a2e 0%, #020205 100%);
+    background: #020215; // Darkest deep blue base
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     overflow: hidden;
 
+    // --- REALISTIC DYNAMIC BACKGROUND ---
+    .cosmic-background {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        overflow: hidden;
+        background: radial-gradient(circle at center, #050530 0%, #020215 100%);
+
+        // Soft Blue Nebula Glows (No Purples)
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        .nebula-1 {
+            width: 80%; height: 80%;
+            top: -10%; left: -10%;
+            background: radial-gradient(circle, #0a1166, transparent);
+        }
+        .nebula-2 {
+            width: 70%; height: 70%;
+            bottom: -10%; right: -10%;
+            background: radial-gradient(circle, #081d4a, transparent);
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+            animation: twinkle linear infinite;
+        }
+    }
+
+    @keyframes twinkle {
+        0%, 100% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    // --- BOOK WRAPPER (STAYING GLITCH-FREE) ---
     .book-wrapper {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 2rem;
-        width: 100%;
-        max-width: 1300px;
-        // Zorg dat de wrapper zelf een rotsvaste hoogte heeft
-        height: 600px; 
+        gap: 3rem;
+        height: 600px;
+        z-index: 2; // Above the stars
     }
 
     .book-container {
         position: relative;
-        // FIX: Harde breedte en hoogte stoppen het "springen"
         width: 900px; 
         height: 600px;
         perspective: 2000px;
-        // Geen display flex hier!
         display: block; 
     }
 
-    .stellar-book {
-        display: block;
-        margin: 0;
-        padding: 0;
-    }
-
     .page {
-        background-color: #161635;
-        // FIX: Verwijder de !important en gebruik vaste maten
+        background-color: #0d0d2b; // Dark blue parchment
         width: 450px;
         height: 600px;
         overflow: hidden;
-        
-        // Stabiliseer de animatie
         will-change: transform;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-
-        &::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 40px;
-            pointer-events: none;
-            z-index: 10;
-        }
 
         .page-content {
-            // FIX: Gebruik vaste margins in plaats van absolute positioning of padding op de root
-            // Dit is veel stabieler voor de bibliotheek
-            margin: 10px;
-            padding: 30px;
-            
-            // Gebruik harde pixels voor de binnenkant (450 - 20px margin)
-            height: 580px; 
-            width: 430px;
-            
+            margin: 12px;
+            padding: 40px;
+            height: 576px; 
+            width: 426px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border: 1px solid rgba(197, 160, 89, 0.1);
             box-sizing: border-box;
-            background-color: #161635;
+            position: relative;
+            background: linear-gradient(145deg, rgba(13, 13, 43, 0.9), rgba(5, 5, 20, 0.95));
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+
+            // Subtle ornament
+            &::before {
+                content: '✦';
+                position: absolute;
+                top: 10px; left: 10px;
+                color: #c5a059;
+                font-size: 0.7rem;
+                opacity: 0.4;
+            }
         }
     }
 
-    .page-footer {
-        text-align: center;
-        font-size: 0.8rem;
-        color: rgba(197, 160, 89, 0.5);
-        margin-top: auto;
-    }
-
-    // Schaduwen voor diepte
-    .page:nth-child(even) { box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.4); }
-    .page:nth-child(odd) { box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.4); }
-
-    // Bookmark en Navigatie (ongewijzigd qua functionaliteit)
+    // --- UI ELEMENTS ---
     .nav-arrow {
         background: rgba(197, 160, 89, 0.05);
         border: 1px solid rgba(197, 160, 89, 0.2);
         border-radius: 50%;
         color: #c5a059;
-        padding: 10px;
+        padding: 12px;
         cursor: pointer;
-        transition: 0.2s;
+        transition: 0.3s;
         &:hover { background: rgba(197, 160, 89, 0.2); transform: scale(1.1); }
     }
 
     .bookmark-tab {
         position: absolute;
-        top: 30px;
-        right: -30px;
+        top: 40px; right: -32px;
         background: #c5a059;
         color: #000;
-        padding: 10px 6px;
+        padding: 12px 8px;
         border-radius: 0 4px 4px 0;
         cursor: pointer;
         z-index: 50;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
         span { writing-mode: vertical-rl; text-orientation: mixed; font-family: 'VT323', monospace; font-weight: bold; }
         &:hover { transform: translateX(5px); }
+    }
+
+    .book-title {
+        font-size: 2rem;
+        color: #fff;
+        text-align: center;
+        text-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
+    }
+    
+    .page-footer {
+        text-align: center;
+        font-family: 'VT323', monospace;
+        color: rgba(197, 160, 89, 0.6);
     }
 }
