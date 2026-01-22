@@ -2,7 +2,7 @@
     scroll-snap-align: start;
     height: 100vh;
     width: 100%;
-    background: #020215; // Darkest deep blue base
+    background: #010208;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +15,61 @@
         inset: 0;
         z-index: 1;
         overflow: hidden;
-        background: radial-gradient(circle at center, #050530 0%, #020215 100%);
+        background: radial-gradient(circle at 50% 50%, #040924 0%, #010208 100%);
+
+        .nebula-transition-top {
+            position: absolute;
+            top: -20%; 
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background: radial-gradient(ellipse at 50% 0%, rgba(181, 131, 141, 0.25), transparent 70%);
+            filter: blur(100px);
+            z-index: 1;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .cosmic-noise {
+            position: absolute;
+            inset: 0;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+            mix-blend-mode: overlay;
+        }
+
+        .nebula-layer {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            pointer-events: none;
+            mix-blend-mode: screen;
+            animation: cloudFloat 25s ease-in-out infinite alternate;
+        }
+
+        .cloud-1 {
+            width: 150vw; height: 100vh;
+            top: -10%; left: -25%;
+            background: radial-gradient(circle, rgba(0, 30, 120, 0.4), transparent 75%);
+            opacity: 0.6;
+        }
+
+        .cloud-2 {
+            width: 120vw; height: 120vh;
+            bottom: -20%; right: -20%;
+            background: radial-gradient(circle, rgba(0, 60, 180, 0.35), transparent 70%);
+            opacity: 0.5;
+            animation-delay: -5s;
+        }
+
+        .cloud-3 {
+            width: 70vw; height: 70vh;
+            top: 15%; left: 25%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2), transparent 50%);
+            opacity: 0.5;
+            animation-delay: -10s;
+        }
 
         // Soft Blue Nebula Glows (No Purples)
         .nebula {
@@ -36,18 +90,76 @@
             background: radial-gradient(circle, #081d4a, transparent);
         }
 
+        .electric-glow {
+            position: absolute;
+            pointer-events: none;
+            mix-blend-mode: color-dodge;
+            border-radius: 50%;
+            filter: blur(110px);
+        }
+
+        .spot-main {
+            width: 120vw; height: 50vh;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(ellipse at center, rgba(0, 100, 255, 0.3), transparent 75%);
+            opacity: 0.7;
+        }
+
+        .spot-core {
+            width: 35vw; height: 35vw;
+            opacity: 0.5;
+            filter: blur(80px);
+        }
+        .core-1 { 
+            top: 25%; left: 15%;
+            background: #0033ff; 
+            animation: pulseGlow 7s infinite alternate;
+        }
+
+        .core-2 { 
+            bottom: 20%; left: 55%; 
+            background: #00bfff; 
+            animation: pulseGlow 10s infinite alternate-reverse;
+        }
+
         .star {
             position: absolute;
             background: #fff;
             border-radius: 50%;
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
-            animation: twinkle linear infinite;
+            pointer-events: none;
+            &.distant { opacity: 0.2; }
+            &.mid {
+                box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+                animation: twinkle linear infinite;
+            }
+            &.hero {
+                background: #fff;
+                box-shadow: 0 0 12px #fff, 0 0 25px rgba(0, 162, 255, 0.8);
+                animation: pulse 4s ease-in-out infinite;
+                &::before, &::after {
+                    content: ''; position: absolute; top: 50%; left: 50%;
+                    transform: translate(-50%, -50%); background: rgba(255,255,255,0.4);
+                }
+                &::before { width: 400%; height: 1px; }
+                &::after { width: 1px; height: 400%; }
+            }
         }
     }
 
-    @keyframes twinkle {
-        0%, 100% { transform: scale(1); opacity: 0.3; }
-        50% { transform: scale(1.2); opacity: 1; }
+   @keyframes twinkle {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    @keyframes cloudFloat {
+        from { transform: translate(0, 0) scale(1); }
+        to { transform: translate(30px, 20px) scale(1.05); }
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); filter: brightness(1); }
+        50% { transform: scale(1.3); filter: brightness(1.8); }
     }
 
     // --- BOOK WRAPPER (STAYING GLITCH-FREE) ---
@@ -69,7 +181,7 @@
     }
 
     .page {
-        background-color: #0d0d2b; // Dark blue parchment
+        background-color: #05071a;
         width: 450px;
         height: 600px;
         overflow: hidden;

@@ -49,6 +49,34 @@ const projects = [
 ];
 
 const ProjectsSection = ({ id }) => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, 
+        delayChildren: 0.3,   
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 40, 
+      scale: 0.9 
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { 
+        type: "spring", 
+        stiffness: 100, 
+        damping: 12 
+      }
+    },
+  };
   const doodleField = useMemo(() => {
     const icons = [Music, Star, Moon, Zap, Orbit, Component];
     const colors = ["#a5f3fc", "#e9d5ff", "#ffbd7a"];
@@ -144,16 +172,36 @@ const ProjectsSection = ({ id }) => {
       ))}
 
       <div className="section-content">
-        <motion.div className="section-header">
+        <motion.div 
+          className="section-header"
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <h2 className="section-title">
             <span className="title-glow">My Projects</span>
           </h2>
           <div className="title-underline"></div>
         </motion.div>
 
-        <motion.div className="projects-container">
+        <motion.div 
+          className="projects-container"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }} 
+        >
           {projects.map((project) => (
-            <motion.div key={project.id} className="music-card">
+            <motion.div 
+              key={project.id} 
+              className="music-card"
+              variants={cardVariants}
+              whileHover={{ 
+                y: -12, 
+                transition: { duration: 0.3 } 
+              }}
+            >
               <div className="card-hardware">
                 {" "}
                 <div className="album-art">
@@ -208,12 +256,13 @@ const ProjectsSection = ({ id }) => {
 
                   <div className="player-controls">
                     <SkipBack size={18} />
-                    <div
-                      className="main-play-btn"
-                      style={{ backgroundColor: project.color }}
-                    >
+                    <motion.div 
+                        className="main-play-btn"
+                        whileTap={{ scale: 0.9 }}
+                        style={{ backgroundColor: project.color }}
+                      >
                       <Play size={18} fill="#1a1a2e" color="#1a1a2e" />
-                    </div>
+                    </motion.div>
                     <SkipForward size={18} />
                   </div>
                 </div>
@@ -228,11 +277,12 @@ const ProjectsSection = ({ id }) => {
           <motion.div
             key={i}
             className="bar"
-            animate={{ height: [5, 30, 15, 35, 5] }}
+            initial={{ height: 0 }}
+            whileInView={{ height: [5, 30, 15, 35, 5] }}
             transition={{
               repeat: Infinity,
               duration: 1 + Math.random(),
-              ease: "easeInOut",
+              delay: i * 0.05 
             }}
           />
         ))}

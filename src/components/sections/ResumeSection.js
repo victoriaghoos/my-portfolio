@@ -6,26 +6,37 @@ import "../../styles/sections/ResumeSection.scss";
 
 const StarBackground = () => {
   const stars = useMemo(() => {
-    return [...Array(200)].map((_, i) => ({
-      id: i,
-      size: Math.random() * 2 + 1,
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      delay: Math.random() * 5,
-      duration: 3 + Math.random() * 4,
-      opacity: 0.3 + Math.random() * 0.7,
-    }));
+    return [...Array(250)].map((_, i) => {
+      const type = Math.random();
+      return {
+        id: i,
+        class: type > 0.96 ? 'hero' : type > 0.7 ? 'mid' : 'distant',
+        size: type > 0.96 ? Math.random() * 3 + 2 : type > 0.7 ? Math.random() * 2 + 1 : Math.random() * 1 + 0.5,
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        delay: Math.random() * 5,
+        duration: 2 + Math.random() * 4,
+        opacity: 0.2 + Math.random() * 0.8,
+      };
+    });
   }, []);
 
   return (
     <div className="cosmic-background">
-      <div className="nebula nebula-1"></div>
-      <div className="nebula nebula-2"></div>
+      <div className="cosmic-noise"></div>
+
+      <div className="nebula-transition-top"></div>
+      <div className="nebula-layer cloud-1"></div>
+      <div className="nebula-layer cloud-2"></div>
+      <div className="nebula-layer cloud-3"></div>
+      <div className="electric-glow spot-main"></div>
+      <div className="electric-glow spot-core core-1"></div>
+      <div className="electric-glow spot-core core-2"></div>
       
       {stars.map((star) => (
         <div
           key={star.id}
-          className="star"
+          className={`star ${star.class}`}
           style={{
             width: `${star.size}px`,
             height: `${star.size}px`,
