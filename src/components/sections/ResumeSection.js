@@ -1,6 +1,5 @@
 import React, { forwardRef, useRef, useMemo, useState } from "react";
 import HTMLFlipBook from "react-pageflip";
-import { motion } from "framer-motion";
 import {
   Code,
   GraduationCap,
@@ -9,7 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
-  Target
+  Target,
 } from "lucide-react";
 import "../../styles/sections/ResumeSection.scss";
 
@@ -66,7 +65,11 @@ const StarBackground = () => {
 
 const Page = forwardRef((props, ref) => {
   return (
-    <div className="page" ref={ref}>
+    <div
+      className={`page ${props.className || ""}`}
+      ref={ref}
+      data-density="hard"
+    >
       <div className="page-content">
         {props.children}
         <div className="page-footer">{props.number}</div>
@@ -109,20 +112,20 @@ const ResumeSection = ({ id }) => {
         </button>
 
         <div className="book-container">
-          <div 
-            className={`bookmark-tab ${getBookmarkState()}`} 
+          <div
+            className={`bookmark-tab ${getBookmarkState()}`}
             onClick={!isCover ? onDownloadCV : undefined}
-            style={{ 
-              cursor: isCover ? 'default' : 'pointer',
-              pointerEvents: isCover ? 'none' : 'auto' 
+            style={{
+              cursor: isCover ? "default" : "pointer",
+              pointerEvents: isCover ? "none" : "auto",
             }}
           >
-            <Download 
-              size={18} 
-              className="bookmark-icon" 
+            <Download
+              size={18}
+              className="bookmark-icon"
               style={{ opacity: isCover ? 0 : 1 }}
             />
-            <span 
+            <span
               className="bookmark-text"
               style={{ opacity: isCover ? 0 : 1 }}
             >
@@ -143,7 +146,7 @@ const ResumeSection = ({ id }) => {
             className="stellar-book"
             ref={bookRef}
             onFlip={onFlip}
-            flippingTime={0}
+            flippingTime={800}
             usePortrait={false}
             startPage={0}
             autoSize={false}
@@ -151,24 +154,35 @@ const ResumeSection = ({ id }) => {
             drawShadow={true}
           >
             {/* Pagina 0: Cover */}
-            <Page number="">
+            <Page number="" className="is-cover page-right">
               <div className="cover-content">
-                <div className="tech-icon">
-                  <Code size={70} strokeWidth={1} />
+                <div className="corner-ornament top-left"></div>
+                <div className="corner-ornament top-right"></div>
+                <div className="corner-ornament bottom-left"></div>
+                <div className="corner-ornament bottom-right"></div>
+
+                <div className="cover-main-visual">
+                  <div className="seal-container">
+                    <Code size={40} strokeWidth={1.5} className="seal-icon" />
+                  </div>
+                  <div className="gold-line-v"></div>
                 </div>
-                <h1 className="book-title">Victoria</h1>
-                <h2 className="book-subtitle">
-                  Software Engineering Portfolio
-                </h2>
-                <div className="divider"></div>
-                <p className="tagline">
-                  Junior Software Engineer – Full-stack development
-                </p>
+
+                <div className="cover-text-group">
+                  <h1 className="book-title">Victoria</h1>
+                  <div className="title-separator">
+                    <span className="dot"></span>
+                    <span className="line"></span>
+                    <span className="dot"></span>
+                  </div>
+                  <h2 className="book-subtitle">Software Engineering</h2>
+                  <div className="edition-badge">Edition 2026 // Portfolio</div>
+                </div>
               </div>
             </Page>
 
             {/* Pagina 1: Professional Profile */}
-            <Page number="">
+            <Page number="" className="page-left">
               <div className="intro-page">
                 <h3>Professional Profile</h3>
                 <p className="summary-text">
@@ -192,7 +206,7 @@ const ResumeSection = ({ id }) => {
             </Page>
 
             {/* Pagina 2: Associate Degree */}
-            <Page number="1">
+            <Page number="1" className="page-right">
               <div className="timeline-page">
                 <h2 className="page-header">
                   <GraduationCap size={18} /> Associate Degree
@@ -232,7 +246,7 @@ const ResumeSection = ({ id }) => {
             </Page>
 
             {/* Pagina 3: Bachelor's Degree */}
-            <Page number="2">
+            <Page number="2" className="page-left">
               <div className="timeline-page">
                 <h2 className="page-header">
                   <TrendingUp size={18} /> Bachelor's Degree
@@ -272,7 +286,7 @@ const ResumeSection = ({ id }) => {
             </Page>
 
             {/* Pagina 4: Merged Experience */}
-            <Page number="3">
+            <Page number="3" className="page-right">
               <div className="internship-page">
                 <h2 className="page-header">
                   <Briefcase size={18} /> Professional Experience
@@ -318,7 +332,7 @@ const ResumeSection = ({ id }) => {
             </Page>
 
             {/* Pagina 5: Career Path */}
-            <Page number="4">
+            <Page number="4" className="page-left">
               <div className="future-page">
                 <h2 className="page-header">
                   <Target size={18} /> Career Vision
@@ -361,7 +375,7 @@ const ResumeSection = ({ id }) => {
             </Page>
 
             {/* Pagina 6: Closing Page */}
-            <Page number="">
+            <Page number="" className="page-right">
               <div className="page-inner-back">
                 <div className="closing-content">
                   <Code size={40} className="faded-icon" />
@@ -389,7 +403,7 @@ const ResumeSection = ({ id }) => {
             </Page>
 
             {/* Pagina 7: Back Cover */}
-            <Page number="">
+            <Page number="" className="is-cover page-left">
               <div className="back-cover-outside">
                 <div className="back-logo">
                   <Code size={50} />

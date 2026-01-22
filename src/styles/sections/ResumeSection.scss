@@ -1,3 +1,7 @@
+$book-gold: #c5a059;
+$cover-color: #080a1a;
+$page-color: #0d0d2b;
+
 .resume-section {
     scroll-snap-align: start;
     height: 100vh;
@@ -9,7 +13,6 @@
     position: relative;
     overflow: hidden;
 
-    // --- REALISTIC DYNAMIC BACKGROUND ---
     .cosmic-background {
         position: absolute;
         inset: 0;
@@ -77,7 +80,6 @@
             animation-delay: -10s;
         }
 
-        // Soft Blue Nebula Glows (No Purples)
         .nebula {
             position: absolute;
             border-radius: 50%;
@@ -228,29 +230,234 @@
         justify-content: center;
         gap: 3rem;
         height: 600px;
-        z-index: 2; 
+        z-index: 2;
     }
 
     .book-container {
         position: relative;
         width: 900px;
         height: 600px;
-        perspective: 2000px;
+        perspective: 2500px;
         display: block;
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 12px;
+            transform: translateX(-50%);
+            background: linear-gradient(to right,
+                    rgba(0, 0, 0, 0.4) 0%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    rgba(0, 0, 0, 0.4) 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+    }
+
+    .stellar-book {
+        filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.7));
+    }
+
+    .is-cover {
+        .page-content {
+            background:
+                radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 70%),
+                linear-gradient(90deg,
+                    rgba(255, 255, 255, 0.12) 0%,
+                    rgba(0, 0, 0, 0.6) 1.5%,
+                    transparent 10%),
+                linear-gradient(rgba(8, 10, 26, 0.88), rgba(5, 6, 20, 0.92)), 
+                url("https://www.transparenttextures.com/patterns/leather.png") !important;
+
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px !important;
+
+            $gold-gradient: linear-gradient(135deg,
+                    #8a6d3b 0%,
+                    #c5a059 25%,
+                    #f1d399 50%,
+                    #c5a059 75%,
+                    #8a6d3b 100%);
+
+            .corner-ornament {
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                pointer-events: none;
+                opacity: 0.8;
+
+                &::before {
+                    content: '✦';
+                    position: absolute;
+                    color: $book-gold;
+                    font-size: 10px;
+                    filter: blur(0.3px) drop-shadow(0 0 3px rgba($book-gold, 0.8));
+                    text-shadow: 0 0 10px rgba($book-gold, 0.5);
+                }
+
+                &.top-left {
+                    top: 30px;
+                    left: 30px;
+                    border-left: 1px solid $book-gold;
+                    border-top: 1px solid $book-gold;
+
+                    &::before {
+                        top: -7px;
+                        left: -5px;
+                    }
+                }
+
+                &.top-right {
+                    top: 30px;
+                    right: 30px;
+                    border-right: 1px solid $book-gold;
+                    border-top: 1px solid $book-gold;
+
+                    &::before {
+                        top: -7px;
+                        right: -5px;
+                    }
+                }
+
+                &.bottom-left {
+                    bottom: 30px;
+                    left: 30px;
+                    border-left: 1px solid $book-gold;
+                    border-bottom: 1px solid $book-gold;
+
+                    &::before {
+                        bottom: -7px;
+                        left: -5px;
+                    }
+                }
+
+                &.bottom-right {
+                    bottom: 30px;
+                    right: 30px;
+                    border-right: 1px solid $book-gold;
+                    border-bottom: 1px solid $book-gold;
+
+                    &::before {
+                        bottom: -7px;
+                        right: -5px;
+                    }
+                }
+            }
+
+            .seal-container {
+                width: 100px;
+                height: 100px;
+                border: 1px solid rgba($book-gold, 0.4);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 40px;
+                background: radial-gradient(circle, rgba($book-gold, 0.1) 0%, transparent 70%);
+                box-shadow:
+                    inset 0 0 10px rgba(0, 0, 0, 0.5),
+                    0 0 20px rgba($book-gold, 0.1);
+
+                .seal-icon {
+                    color: $book-gold;
+                    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+                }
+            }
+
+            .book-title {
+                font-size: 4.8rem;
+                font-family: 'Playfair Display', serif;
+                font-weight: 700;
+                margin-bottom: 5px;
+                background: $gold-gradient;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 1px rgba($book-gold, 0.3));
+                letter-spacing: -1px;
+            }
+
+            .title-separator {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                width: 200px;
+                margin: 20px 0;
+
+                .line {
+                    height: 1px;
+                    flex: 1;
+                    background: $gold-gradient;
+                    opacity: 0.6;
+                }
+
+                .dot {
+                    width: 6px;
+                    height: 6px;
+                    background: #f1d399;
+                    transform: rotate(45deg);
+                    filter: blur(0.3px);
+                    box-shadow: 0 0 12px rgba($book-gold, 0.9);
+                }
+            }
+
+            .book-subtitle {
+                font-family: 'Montserrat', sans-serif;
+                text-transform: uppercase;
+                letter-spacing: 8px;
+                font-size: 0.85rem !important;
+                color: #f1d399;
+                font-weight: 600;
+                opacity: 1;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+                margin-bottom: 0;
+            }
+
+            .edition-badge {
+                margin-top: 25px;
+                font-family: 'VT323', monospace;
+                font-size: 1rem;
+                letter-spacing: 1px;
+                border: 1px solid rgba(241, 211, 153, 0.4);
+                padding: 5px 22px;
+                border-radius: 30px;
+                color: #f1d399;
+                background: rgba(0, 0, 0, 0.3);
+                box-shadow:
+                    0 0 15px rgba(0, 0, 0, 0.5),
+                    inset 0 0 5px rgba($book-gold, 0.1);
+
+                text-shadow: 0 0 5px rgba($book-gold, 0.3);
+                backdrop-filter: blur(8px);
+            }
+        }
     }
 
     .page {
         background-color: #05071a;
-        width: 450px;
-        height: 600px;
         overflow: hidden;
-        will-change: transform;
+
+        &.page-left {
+            box-shadow: inset -10px 0 30px -10px rgba(0, 0, 0, 0.8),
+                -5px 0 5px -2px rgba(255, 255, 255, 0.05);
+        }
+
+        &.page-right {
+            box-shadow: inset 10px 0 30px -10px rgba(0, 0, 0, 0.8),
+                5px 0 5px -2px rgba(255, 255, 255, 0.05);
+        }
 
         .page-content {
-            margin: 12px;
+            margin: 0;
             padding: 40px;
-            height: 576px;
-            width: 426px;
+            height: 100%;
+            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -269,7 +476,26 @@
                 font-size: 0.7rem;
                 opacity: 0.4;
             }
+
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                width: 50px;
+                height: 100%;
+                pointer-events: none;
+            }
         }
+    }
+
+    .page-left .page-content::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent);
+    }
+
+    .page-right .page-content::after {
+        left: 0;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
     }
 
     .nav-arrow {
@@ -287,7 +513,7 @@
         }
     }
 
-.bookmark-tab {
+    .bookmark-tab {
         position: absolute;
         top: 40px;
         background: #c5a059;
@@ -314,51 +540,61 @@
         }
 
         &.is-open {
-            left: 870px; 
+            left: 870px;
             width: 32px;
             padding: 12px 8px;
             border-radius: 0 4px 4px 0;
-            
-            .bookmark-text { opacity: 1; }
-            &:hover { transform: translateX(5px); }
+
+            .bookmark-text {
+                opacity: 1;
+            }
+
+            &:hover {
+                transform: translateX(5px);
+            }
         }
 
         &.is-front {
-            left: 900px; 
+            left: 900px;
             width: 20px;
             padding: 10px 0;
             border-radius: 0 2px 2px 0;
 
-            .bookmark-text { 
-                opacity: 0; 
+            .bookmark-text {
+                opacity: 0;
                 pointer-events: none;
             }
-            .bookmark-icon { transform: scale(0.8); }
 
-            &:hover { left: 675px; width: 25px; }
+            .bookmark-icon {
+                transform: scale(0.8);
+            }
+
+            &:hover {
+                left: 675px;
+                width: 25px;
+            }
         }
 
         &.is-back {
-            left: -20px; 
+            left: -20px;
             width: 20px;
             padding: 10px 0;
             border-radius: 2px 0 0 2px;
 
-            .bookmark-text { 
-                opacity: 0; 
+            .bookmark-text {
+                opacity: 0;
                 pointer-events: none;
             }
-            .bookmark-icon { transform: scale(0.8); }
 
-            &:hover { left: 205px; width: 25px; }
+            .bookmark-icon {
+                transform: scale(0.8);
+            }
+
+            &:hover {
+                left: 205px;
+                width: 25px;
+            }
         }
-    }
-
-    .book-title {
-        font-size: 2rem;
-        color: #fff;
-        text-align: center;
-        text-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
     }
 
     .page-footer {
