@@ -15,7 +15,10 @@ $page-color: #0d0d2b;
 
     .cosmic-background {
         position: absolute;
-        inset: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         z-index: 1;
         overflow: hidden;
         background: radial-gradient(circle at 50% 50%, #040924 0%, #010208 100%);
@@ -35,7 +38,10 @@ $page-color: #0d0d2b;
 
         .cosmic-noise {
             position: absolute;
-            inset: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
             opacity: 0.03;
             pointer-events: none;
             background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
@@ -379,6 +385,7 @@ $page-color: #0d0d2b;
                 margin-bottom: 5px;
                 background: $gold-gradient;
                 -webkit-background-clip: text;
+                background-clip: text;
                 -webkit-text-fill-color: transparent;
                 filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 1px rgba($book-gold, 0.3));
                 letter-spacing: -1px;
@@ -435,6 +442,7 @@ $page-color: #0d0d2b;
                     inset 0 0 5px rgba($book-gold, 0.1);
 
                 text-shadow: 0 0 5px rgba($book-gold, 0.3);
+                -webkit-backdrop-filter: blur(8px);
                 backdrop-filter: blur(8px);
             }
         }
@@ -905,6 +913,7 @@ $page-color: #0d0d2b;
 
         .bookmark-text {
             writing-mode: vertical-rl;
+            -webkit-text-orientation: mixed;
             text-orientation: mixed;
             font-family: 'VT323', monospace;
             font-weight: bold;
