@@ -1,86 +1,123 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Code2, Cpu, Globe, Wrench, Sparkles, Layers } from 'lucide-react';
-import '../../styles/sections/SkillsSection.scss';
+import React from "react";
+import { motion } from "framer-motion";
+import "../../styles/sections/SkillsSection.scss";
+import sakuraTree from "../../assets/images/sakura2.png";
 
-const skillPetals = [
-  { title: "Backend", icon: <Cpu size={18} />, skills: ["C#", ".NET", "Python", "SQL", "MVC"], color: "#8AE6FF", angle: -60 },
-  { title: "Frontend", icon: <Layers size={18} />, skills: ["React", "TS", "JS", "Blazor", "SCSS"], color: "#A78BFA", angle: -30 },
-  { title: "DevOps", icon: <Wrench size={18} />, skills: ["Docker", "Linux", "Git", "APIs", "Postman"], color: "#C084FC", angle: 0 },
-  { title: "Environment", icon: <Sparkles size={18} />, skills: ["VS Code", "Visual Studio", "Ryder", "Flutter"], color: "#FF77C6", angle: 30 },
-  { title: "Languages", icon: <Globe size={18} />, skills: ["NL (Native)", "EN (C2)", "FR (B2)", "JP (N4)"], color: "#F472B6", angle: 60 }
+// ... (Houd je skillClusters en floatAnimation hier hetzelfde als eerst) ...
+const skillClusters = [
+  {
+    category: "The Core (Backend & Languages)",
+    skills: ["C#", ".NET", "Python", "SQL", "Java", "Linux"],
+  },
+  {
+    category: "The Interface (Frontend)",
+    skills: ["React", "Three.js", "JS/TS", "HTML/CSS", "Tailwind", "Blazor"],
+  },
+  {
+    category: "The Ecosystem (Mobile & Tools)",
+    skills: [
+      ".NET MAUI",
+      "Flutter/Dart",
+      "Docker",
+      "Git/GitHub",
+      "Postman",
+      "SignalR",
+    ],
+  },
 ];
 
-const SkillsSection = ({ id }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+const floatAnimation = {
+  initial: { y: 0 },
+  animate: (i) => ({
+    y: [0, -10, 0],
+    transition: {
+      duration: 3 + Math.random() * 2,
+      repeat: Infinity,
+      ease: "easeInOut",
+      delay: Math.random() * 2,
+    },
+  }),
+};
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
-      { threshold: 0.2 }
+// ... (Houd je Petal component hier hetzelfde) ...
+const Petal = () => {
+    const randomX = Math.random() * 100;
+    const duration = 10 + Math.random() * 10;
+    const delay = Math.random() * 5;
+    return (
+        <motion.div
+            className="sakura-petal"
+            initial={{ y: -100, x: `${randomX}vw`, opacity: 0, rotate: 0 }}
+            animate={{
+                y: "110vh",
+                x: `${randomX + (Math.random() * 10 - 5)}vw`,
+                opacity: [0, 1, 0],
+                rotate: 360,
+            }}
+            transition={{
+                duration: duration,
+                repeat: Infinity,
+                delay: delay,
+                ease: "linear",
+            }}
+        />
     );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+};
+
+const SkillsSection = () => {
+  const petals = Array.from({ length: 30 }); // Iets meer blaadjes voor het effect
 
   return (
-    <section id={id} ref={sectionRef} className="skills-section">
-      <div className="section-content">
-        <header className="section-header">
-          <motion.h2 
-            initial={{ opacity: 0, y: -20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            className="section-title"
-          >
-            <span className="title-glow">Skills Bloom</span>
-          </motion.h2>
-          <p className="section-subtitle">A cosmic garden of technical growth</p>
-        </header>
+    <section className="skills-section">
+      {/* 1. Background Glow (Centraal) */}
+      <div className="cosmic-glow" />
 
-        <div className="flower-display">
-          <motion.div 
-            className="flower-heart"
-            initial={{ scale: 0 }}
-            animate={isVisible ? { scale: 1 } : {}}
-            transition={{ type: "spring", stiffness: 100 }}
-          >
-            <Code2 size={32} className="heart-icon" />
-            <div className="pulse-ring"></div>
-          </motion.div>
+      {/* 2. De Bomen (Images i.p.v. SVG) */}
+      <div className="trees-layer">
+        {/* Linker Boom */}
+        <div className="tree-wrapper left">
+             {/* Vervang src door je eigen lokale image: /assets/sakura-tree.png */}
+            <img src={sakuraTree} alt="Sakura Left" className="tree-img" />
+        </div>
+        
+        {/* Rechter Boom (We spiegelen deze met CSS) */}
+        <div className="tree-wrapper right">
+            <img src={sakuraTree} alt="Sakura Right" className="tree-img" />
+        </div>
+      </div>
 
-          <div className="petals-container">
-            {skillPetals.map((petal, idx) => (
-              <div key={idx} className="petal-axis" style={{ transform: `rotate(${petal.angle}deg)` }}>
-                <motion.div 
-                  className="petal-card"
-                  initial={{ opacity: 0, scale: 0, y: 0, rotate: 0 }}
-                  animate={isVisible ? { 
-                    opacity: 1, 
-                    scale: 1, 
-                    y: -280, // Duwt ze naar buiten
-                    rotate: -petal.angle // Zet de tekst weer recht
-                  } : {}}
-                  transition={{ 
-                    delay: 0.4 + (idx * 0.1), 
-                    duration: 0.8,
-                    type: "spring",
-                    stiffness: 40 
-                  }}
-                  style={{ '--petal-color': petal.color }}
-                >
-                  <div className="petal-glass"></div>
-                  <div className="petal-header">
-                    {petal.icon}
-                    <h3>{petal.title}</h3>
-                  </div>
-                  <div className="tag-cloud">
-                    {petal.skills.map((s, i) => <span key={i} className="skill-tag">{s}</span>)}
-                  </div>
-                </motion.div>
+      {/* 3. Falling Petals */}
+      <div className="petals-container">
+        {petals.map((_, index) => (
+          <Petal key={index} />
+        ))}
+      </div>
+
+      {/* 4. Content */}
+      <div className="skills-content">
+        <h2 className="section-title">Technical <span className="highlight">Arsenal</span></h2>
+        
+        <div className="clusters-grid">
+          {skillClusters.map((cluster, clusterIndex) => (
+            <div key={clusterIndex} className="cluster-group">
+              <h3 className="cluster-title">{cluster.category}</h3>
+              <div className="tags-wrapper">
+                {cluster.skills.map((skill, skillIndex) => (
+                  <motion.div
+                    key={skill}
+                    className="skill-tag"
+                    custom={skillIndex}
+                    variants={floatAnimation}
+                    initial="initial"
+                    animate="animate"
+                    whileHover={{ scale: 1.1, borderColor: "#ff69b4", boxShadow: "0 0 15px #ff00cc" }}
+                  >
+                    {skill}
+                  </motion.div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

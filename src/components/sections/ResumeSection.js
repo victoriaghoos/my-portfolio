@@ -529,7 +529,7 @@ const ResumeSection = ({ id }) => {
                     <p className="copyright">© 2026 Victoria Portfolio</p>
 
                     <div className="tech-badge">
-                      Built with React & Framer Motion
+                      Built with React
                     </div>
                   </div>
                 </div>

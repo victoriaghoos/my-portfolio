@@ -1,138 +1,187 @@
+$bg-dark: #0f0c29;
+$neon-pink: #ff00cc;
+$soft-pink: #ff69b4;
+$glass-bg: rgba(15, 12, 41, 0.6); // Iets donkerder glas voor leesbaarheid
+$glass-border: rgba(255, 105, 180, 0.3);
+
 .skills-section {
   scroll-snap-align: start;
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   overflow: hidden;
-  background: radial-gradient(circle at center, #0a0b1e 0%, #05050a 100%);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding-top: 8vh;
-  isolation: isolate;
-}
-
-.section-content {
-  width: 100%;
-  max-width: 1200px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.flower-display {
-  position: relative;
-  flex-grow: 1;
-  width: 100%;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: -5vh;
-}
 
-.flower-heart {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  background: rgba(138, 230, 255, 0.15);
-  border: 1px solid rgba(138, 230, 255, 0.5);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  box-shadow: 0 0 30px rgba(138, 230, 255, 0.3);
-
-  .heart-icon { color: #8AE6FF; }
-  .pulse-ring {
+  // 1. COSMIC GLOW (Achtergrond sfeer)
+  .cosmic-glow {
     position: absolute;
-    width: 100%; height: 100%;
-    border-radius: 50%;
-    border: 1px solid #8AE6FF;
-    animation: heartPulse 3s infinite;
-  }
-}
-
-.petals-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-
-.petal-axis {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.petal-card {
-  position: absolute;
-  left: -90px; 
-  bottom: 0; 
-  width: 180px;
-  padding: 15px;
-  background: rgba(20, 20, 45, 0.9);
-  -webkit-backdrop-filter: blur(15px);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px; 
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    border-color: var(--petal-color);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px var(--petal-color);
-    z-index: 500;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    height: 80vw;
+    background: radial-gradient(
+      circle,
+      rgba($neon-pink, 0.2) 0%, // Iets feller in het midden
+      rgba($bg-dark, 0) 60%
+    );
+    z-index: 0;
+    pointer-events: none;
   }
 
-  .petal-glass {
+  // 2. DE BOMEN (Hier fixen we de "Look")
+// 2. DE BOMEN
+  .trees-layer {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent);
-    border-radius: inherit;
+    inset: 0; // Kortere schrijfwijze voor top/left/right/bottom: 0
+    z-index: 1;
+    pointer-events: none;
+    // We halen display: flex weg, want we willen dat ze over elkaar heen vallen (stacken)
+
+    .tree-wrapper {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      
+      // DE OPLOSSING: Maak ze breder dan de helft!
+      // Hierdoor reiken de takken ver over het midden heen.
+      width: 75%; 
+      
+      // Dit masker zorgt ervoor dat de afbeelding aan het uiteinde (waar de takken stoppen)
+      // zachtjes onzichtbaar wordt. Zo zie je geen harde verticale lijn van de PNG-rand.
+      // Black = zichtbaar, Transparent = onzichtbaar.
+      -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
+      mask-image: linear-gradient(to right, black 60%, transparent 100%);
+
+      .tree-img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        
+        // Zorgt dat de afbeelding het vlak vult zonder te vervormen
+        object-fit: cover; 
+        
+        // CRUCIAAL: Dit houdt de stam in de linker benedenhoek van de container
+        object-position: left bottom; 
+
+        filter: brightness(0.9) drop-shadow(0 0 10px $neon-pink);
+        opacity: 0.95;
+      }
+    }
+
+    // --- LINKER BOOM ---
+    .left {
+      left: 0; // Plak aan de linkerkant
+      z-index: 1; // Ligt onder
+    }
+
+    // --- RECHTER BOOM ---
+    .right {
+      right: 0; // Plak aan de rechterkant
+      z-index: 2; // Ligt boven (takken vallen over de linker heen)
+      
+      // We spiegelen de boom.
+      // Omdat we spiegelen, spiegelt de 'mask' en 'object-position' visueel mee.
+      // Dus de stam komt rechts, en de fade-out komt links (in het midden van scherm).
+      transform: scaleX(-1);
+      
+      // Optioneel: Als de takken van rechts te donker lijken over links, kun je blending gebruiken:
+      // mix-blend-mode: screen; 
+    }
   }
-}
 
-.petal-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 12px;
-  color: var(--petal-color);
-  
-  h3 {
-    font-size: 0.75rem;
-    font-family: 'JetBrains Mono', monospace;
-    margin: 0;
-    text-transform: uppercase;
+  // 3. PETALS
+  .petals-container {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+
+    .sakura-petal {
+      position: absolute;
+      width: 10px;
+      height: 14px; // Iets ovaler
+      background: rgba($soft-pink, 0.8);
+      border-radius: 100% 0 100% 0;
+      box-shadow: 0 0 5px $neon-pink;
+    }
   }
-}
 
-.tag-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 4px;
+  // 4. CONTENT (Skills)
+  .skills-content {
+    position: relative;
+    z-index: 10; // Bovenop de bomen
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center; // Alles centreren
+    
+    .section-title {
+      font-size: 3.5rem;
+      color: white;
+      margin-bottom: 4rem;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      
+      .highlight {
+        color: $soft-pink;
+        text-shadow: 0 0 20px $neon-pink;
+      }
+    }
 
-  .skill-tag {
-    font-size: 0.6rem;
-    padding: 2px 6px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    color: #fff;
+    .clusters-grid {
+      display: flex;
+      flex-wrap: wrap; // Sta toe dat clusters naast elkaar staan op groot scherm
+      justify-content: center;
+      gap: 3rem;
+      width: 100%;
+
+      .cluster-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(0,0,0,0.2); // Beetje achtergrond achter de hele groep
+        padding: 1.5rem;
+        border-radius: 20px;
+        border: 1px solid rgba($neon-pink, 0.1);
+
+        .cluster-title {
+          font-family: monospace;
+          color: $soft-pink;
+          margin-bottom: 1.5rem;
+          font-size: 1.2rem;
+          text-shadow: 0 0 5px rgba($neon-pink, 0.5);
+        }
+
+        .tags-wrapper {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 12px;
+          max-width: 400px; // Zorgt dat het niet te breed wordt
+          
+          .skill-tag {
+            background: $glass-bg;
+            backdrop-filter: blur(10px); // Sterkere blur
+            border: 1px solid $glass-border;
+            padding: 12px 24px;
+            border-radius: 50px; // Pill shape
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            // Belangrijk: Zorg dat de text niet wrapped
+            white-space: nowrap; 
+          }
+        }
+      }
+    }
   }
-}
-
-@keyframes heartPulse {
-  0% { transform: scale(1); opacity: 0.5; }
-  100% { transform: scale(2.2); opacity: 0; }
-}
-
-@media (max-width: 900px) {
-  .skills-section { height: auto; overflow-y: auto; padding-bottom: 50px; }
-  .flower-display { margin-top: 5vh; display: block; }
-  .petals-container { position: relative; top: 0; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-  .petal-axis { position: relative; transform: none !important; width: 90%; height: auto; }
-  .petal-card { position: relative; left: 0; bottom: 0; width: 100%; transform: none !important; opacity: 1 !important; transform: scale(1) !important; }
 }
