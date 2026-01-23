@@ -200,6 +200,15 @@ $page-color: #0d0d2b;
         }
     }
 
+    @keyframes bookmarkUpdate {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
     .book-wrapper {
         display: flex;
         align-items: center;
@@ -215,6 +224,14 @@ $page-color: #0d0d2b;
         height: 600px;
         perspective: 2500px;
         display: block;
+
+        &:hover {
+            cursor: grab;
+        }
+
+        &:active {
+            cursor: grabbing;
+        }
 
         &::after {
             content: "";
@@ -234,7 +251,15 @@ $page-color: #0d0d2b;
     }
 
     .stellar-book {
-        filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.7));
+    filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.7));
+
+    .page {
+        cursor: grab;
+        
+        &:active {
+        cursor: grabbing;
+        }
+    }
     }
 
     .is-cover {
@@ -876,6 +901,7 @@ $page-color: #0d0d2b;
         flex-direction: column;
         align-items: center;
         overflow: hidden;
+        animation: bookmarkUpdate 0.01s forwards;
 
         .bookmark-text {
             writing-mode: vertical-rl;
@@ -902,6 +928,7 @@ $page-color: #0d0d2b;
 
             &:hover {
                 transform: translateX(5px);
+                transition: transform 0.3s ease;
             }
         }
 
@@ -923,6 +950,7 @@ $page-color: #0d0d2b;
             &:hover {
                 left: 675px;
                 width: 25px;
+                transition: transform 0.3s ease;
             }
         }
 
@@ -944,6 +972,7 @@ $page-color: #0d0d2b;
             &:hover {
                 left: 205px;
                 width: 25px;
+                transition: transform 0.3s ease;
             }
         }
     }

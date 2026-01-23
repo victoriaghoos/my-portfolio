@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useMemo, useState } from "react";
+import React, { forwardRef, useRef, useMemo, useState, useEffect } from "react";
 import HTMLFlipBook from "react-pageflip";
 import {
   Code,
@@ -82,23 +82,156 @@ const Page = forwardRef((props, ref) => {
 const ResumeSection = ({ id }) => {
   const bookRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [nextPageDirection, setNextPageDirection] = useState(null);
+  const [flipStartData, setFlipStartData] = useState(null);
   const totalPages = 8;
 
   const onFlip = (e) => {
     setCurrentPage(e.data);
+    setIsFlipping(false);
+    setNextPageDirection(null);
+    setFlipStartData(null);
+  };
+
+  const onFlipStart = (e) => {
+    setIsFlipping(true);
+    setFlipStartData(e.data);
+    
+    // Simpelere logica voor direction bepaling
+    if (e.data === 0) {
+      // Starten vanaf front cover = forward flip
+      setNextPageDirection('next');
+    } else if (e.data === totalPages - 2) {
+      // Van pagina 6 naar back cover = forward flip
+      setNextPageDirection('next');
+    } else if (e.data === totalPages - 1) {
+      // Van back cover naar pagina 6 = backward flip
+      setNextPageDirection('prev');
+    } else if (e.data === 1 && currentPage === 0) {
+      // Van pagina 1 naar front cover = backward flip
+      setNextPageDirection('prev');
+    } else {
+      // Standaard logica voor andere pagina's
+      const direction = e.data > currentPage ? 'next' : 'prev';
+      setNextPageDirection(direction);
+    }
   };
 
   const onDownloadCV = () => {
     window.open("/path-to-your-cv.pdf", "_blank");
   };
 
+  // Get bookmark state with immediate updates during flips
   const getBookmarkState = () => {
+    // Als we aan het flippen zijn, gebruik dan voorspelde state
+    if (isFlipping && nextPageDirection && flipStartData !== null) {
+      let predictedPage;
+      
+      if (nextPageDirection === 'next') {
+        predictedPage = flipStartData + 1;
+      } else {
+        predictedPage = flipStartData - 1;
+      }
+      
+      // Clamp predicted page within bounds
+      predictedPage = Math.max(0, Math.min(totalPages - 1, predictedPage));
+      
+      if (predictedPage === 0) return "is-front";
+      if (predictedPage === totalPages - 1) return "is-back";
+      return "is-open";
+    }
+    
+    // Normale state wanneer niet aan het flippen
     if (currentPage === 0) return "is-front";
     if (currentPage === totalPages - 1) return "is-back";
     return "is-open";
   };
 
-  const isCover = currentPage === 0 || currentPage === totalPages - 1;
+  // Get interactive states with immediate updates during flips
+  const getInteractiveState = () => {
+    if (isFlipping && nextPageDirection && flipStartData !== null) {
+      let predictedPage;
+      
+      if (nextPageDirection === 'next') {
+        predictedPage = flipStartData + 1;
+      } else {
+        predictedPage = flipStartData - 1;
+      }
+      
+      // Clamp predicted page within bounds
+      predictedPage = Math.max(0, Math.min(totalPages - 1, predictedPage));
+      
+      const isPredictedFrontCover = predictedPage === 0;
+      const isPredictedBackCover = predictedPage === totalPages - 1;
+      
+      return {
+        isFrontCover: isPredictedFrontCover,
+        isBackCover: isPredictedBackCover,
+      };
+    }
+    
+    return {
+      isFrontCover: currentPage === 0,
+      isBackCover: currentPage === totalPages - 1,
+    };
+  };
+
+  const { isFrontCover, isBackCover } = getInteractiveState();
+  const bookmarkState = getBookmarkState();
+
+  const handlePrevClick = () => {
+    if (!isFrontCover) {
+      setIsFlipping(true);
+      setNextPageDirection('prev');
+      setFlipStartData(currentPage);
+      bookRef.current.pageFlip().flipPrev();
+    }
+  };
+
+  const handleNextClick = () => {
+    if (!isBackCover) {
+      setIsFlipping(true);
+      setNextPageDirection('next');
+      setFlipStartData(currentPage);
+      bookRef.current.pageFlip().flipNext();
+    }
+  };
+
+  // Voeg event listeners toe voor mouse down op pages (voor drag flips)
+  useEffect(() => {
+    const bookElement = document.querySelector('.stellar-book');
+    if (!bookElement) return;
+
+    const handlePageMouseDown = (e) => {
+      // Check of we op een page klikken (niet op de bookmark of arrows)
+      const pageElement = e.target.closest('.page');
+      if (pageElement) {
+        const pageIndex = Array.from(bookElement.querySelectorAll('.page')).indexOf(pageElement);
+        if (pageIndex !== -1) {
+          setIsFlipping(true);
+          setFlipStartData(pageIndex);
+          
+          // Bepaal direction op basis van welke pagina we zijn
+          if (pageIndex === 0) {
+            setNextPageDirection('next');
+          } else if (pageIndex === totalPages - 2) {
+            setNextPageDirection('next');
+          } else if (pageIndex === totalPages - 1) {
+            setNextPageDirection('prev');
+          } else if (pageIndex === 1 && currentPage === 0) {
+            setNextPageDirection('prev');
+          }
+        }
+      }
+    };
+
+    bookElement.addEventListener('mousedown', handlePageMouseDown);
+    
+    return () => {
+      bookElement.removeEventListener('mousedown', handlePageMouseDown);
+    };
+  }, [currentPage]);
 
   return (
     <section id={id} className="resume-section">
@@ -106,29 +239,35 @@ const ResumeSection = ({ id }) => {
 
       <div className="book-wrapper">
         <button
-          className="nav-arrow left"
-          onClick={() => bookRef.current.pageFlip().flipPrev()}
+          className={`nav-arrow left ${isFrontCover ? 'disabled' : ''}`}
+          onClick={handlePrevClick}
+          disabled={isFrontCover}
+          style={{
+            cursor: isFrontCover ? 'default' : 'pointer',
+            pointerEvents: isFrontCover ? 'none' : 'auto',
+            opacity: isFrontCover ? 0.3 : 1,
+          }}
         >
           <ChevronLeft size={45} />
         </button>
 
         <div className="book-container">
           <div
-            className={`bookmark-tab ${getBookmarkState()}`}
-            onClick={!isCover ? onDownloadCV : undefined}
+            className={`bookmark-tab ${bookmarkState}`}
+            onClick={!isFrontCover && !isBackCover ? onDownloadCV : undefined}
             style={{
-              cursor: isCover ? "default" : "pointer",
-              pointerEvents: isCover ? "none" : "auto",
+              cursor: isFrontCover || isBackCover ? "default" : "pointer",
+              pointerEvents: isFrontCover || isBackCover ? "none" : "auto",
             }}
           >
             <Download
               size={18}
               className="bookmark-icon"
-              style={{ opacity: isCover ? 0 : 1 }}
+              style={{ opacity: isFrontCover || isBackCover ? 0 : 1 }}
             />
             <span
               className="bookmark-text"
-              style={{ opacity: isCover ? 0 : 1 }}
+              style={{ opacity: isFrontCover || isBackCover ? 0 : 1 }}
             >
               PDF CV
             </span>
@@ -147,6 +286,7 @@ const ResumeSection = ({ id }) => {
             className="stellar-book"
             ref={bookRef}
             onFlip={onFlip}
+            onFlipStart={onFlipStart}
             flippingTime={800}
             usePortrait={false}
             startPage={0}
@@ -332,10 +472,6 @@ const ResumeSection = ({ id }) => {
                         <strong>Technical:</strong> Expanding Full-stack
                         expertise.
                       </li>
-                      <li>
-                        <strong>Network:</strong> Targeting Japanese firms in
-                        both Japan and the Benelux.
-                      </li>
                     </ul>
                   </div>
                 </div>
@@ -369,14 +505,12 @@ const ResumeSection = ({ id }) => {
             {/* Pagina 7: Back Cover */}
             <Page number="" className="is-cover is-back-cover page-left">
               <div className="cover-content">
-                {/* Ornamenten voor eenheid (met dezelfde glow als de voorkant) */}
                 <div className="corner-ornament top-left"></div>
                 <div className="corner-ornament top-right"></div>
                 <div className="corner-ornament bottom-left"></div>
                 <div className="corner-ornament bottom-right"></div>
 
                 <div className="back-cover-content">
-                  {/* Embossed Logo */}
                   <div className="back-seal">
                     <Code
                       size={55}
@@ -394,7 +528,6 @@ const ResumeSection = ({ id }) => {
 
                     <p className="copyright">© 2026 Victoria Portfolio</p>
 
-                    {/* Tech Badge - Matcht de Edition Badge op de voorkant */}
                     <div className="tech-badge">
                       Built with React & Framer Motion
                     </div>
@@ -406,8 +539,14 @@ const ResumeSection = ({ id }) => {
         </div>
 
         <button
-          className="nav-arrow right"
-          onClick={() => bookRef.current.pageFlip().flipNext()}
+          className={`nav-arrow right ${isBackCover ? 'disabled' : ''}`}
+          onClick={handleNextClick}
+          disabled={isBackCover}
+          style={{
+            cursor: isBackCover ? 'default' : 'pointer',
+            pointerEvents: isBackCover ? 'none' : 'auto',
+            opacity: isBackCover ? 0.3 : 1,
+          }}
         >
           <ChevronRight size={45} />
         </button>
