@@ -80,30 +80,6 @@ $page-color: #0d0d2b;
             animation-delay: -10s;
         }
 
-        .nebula {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.15;
-            pointer-events: none;
-        }
-
-        .nebula-1 {
-            width: 80%;
-            height: 80%;
-            top: -10%;
-            left: -10%;
-            background: radial-gradient(circle, #0a1166, transparent);
-        }
-
-        .nebula-2 {
-            width: 70%;
-            height: 70%;
-            bottom: -10%;
-            right: -10%;
-            background: radial-gradient(circle, #081d4a, transparent);
-        }
-
         .electric-glow {
             position: absolute;
             pointer-events: none;
@@ -269,7 +245,7 @@ $page-color: #0d0d2b;
                     rgba(255, 255, 255, 0.12) 0%,
                     rgba(0, 0, 0, 0.6) 1.5%,
                     transparent 10%),
-                linear-gradient(rgba(8, 10, 26, 0.88), rgba(5, 6, 20, 0.92)), 
+                linear-gradient(rgba(8, 10, 26, 0.88), rgba(5, 6, 20, 0.92)),
                 url("https://www.transparenttextures.com/patterns/leather.png") !important;
 
 
@@ -439,9 +415,189 @@ $page-color: #0d0d2b;
         }
     }
 
+    .is-back-cover {
+        .page-content {
+            background:
+                linear-gradient(-90deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(0, 0, 0, 0.6) 1.5%,
+                    rgba(255, 255, 255, 0.03) 3%,
+                    transparent 12%),
+                linear-gradient(rgba(8, 10, 26, 0.92), rgba(5, 6, 20, 0.96)),
+                url("https://www.transparenttextures.com/patterns/leather.png") !important;
+
+            .corner-ornament {
+                opacity: 0.4;
+            }
+
+            .back-cover-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                gap: 60px;
+            }
+
+            .back-seal {
+                filter: drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.1)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.8));
+                opacity: 0.7;
+
+                .back-logo-icon {
+                    color: $book-gold;
+                }
+            }
+
+            .back-text-group {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 25px;
+
+                .title-separator.small {
+                    width: 100px;
+                    opacity: 0.4;
+
+                    .dot {
+                        width: 4px;
+                        height: 4px;
+                        filter: blur(0.3px);
+                        box-shadow: 0 0 10px rgba($book-gold, 0.8);
+                    }
+                }
+
+                .copyright {
+                    font-family: 'Montserrat', sans-serif;
+                    text-transform: uppercase;
+                    letter-spacing: 5px;
+                    font-size: 0.75rem;
+                    color: #f1d399;
+                    font-weight: 500;
+                }
+
+                .tech-badge {
+                    font-family: 'VT323', monospace;
+                    font-size: 0.9rem;
+                    color: #f1d399;
+                    padding: 4px 16px;
+                    border: 1px solid rgba($book-gold, 0.3);
+                    border-radius: 20px;
+                    background: rgba(0, 0, 0, 0.2);
+                    opacity: 0.8;
+                    letter-spacing: 1px;
+                }
+            }
+
+            .back-credits {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+
+                .gold-line-h {
+                    width: 30px;
+                    height: 1px;
+                    background: $book-gold;
+                    opacity: 0.3;
+                    margin-bottom: 10px;
+                }
+
+                .tech-stack {
+                    font-family: 'VT323', monospace;
+                    font-size: 0.85rem;
+                    color: rgba($book-gold, 0.4);
+                    letter-spacing: 1px;
+                }
+            }
+        }
+    }
+
     .page {
         background-color: #05071a;
         overflow: hidden;
+
+        .page-inner-centered {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .page-inner-back {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            .closing-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+
+                .faded-icon {
+                    color: #fff;
+                    opacity: 0.8;
+                    margin-bottom: 10px;
+                }
+
+                h3 {
+                    font-family: 'Playfair Display', serif;
+                    font-size: 1.6rem;
+                    font-weight: 700;
+                    color: #fff;
+                    margin: 0;
+                }
+
+                .divider-small {
+                    width: 50px;
+                    height: 1px;
+                    background: $book-gold;
+                    opacity: 0.5;
+                }
+
+                .sub-text {
+                    font-size: 0.95rem;
+                    color: rgba(255, 255, 255, 0.85);
+                    line-height: 1.6;
+                    max-width: 350px;
+                    margin: 0;
+
+                    strong {
+                        color: #fff;
+                        font-weight: 700;
+                    }
+                }
+
+                .download-btn-styled {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 10px 20px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 6px;
+                    color: #fff;
+                    font-family: 'Montserrat', sans-serif;
+                    font-size: 0.9rem;
+                    transition: background 0.3s ease;
+                    cursor: pointer; // This adds the hand cursor on hover
+
+                    &:hover {
+                        background: rgba(255, 255, 255, 0.2);
+                    }
+                }
+
+                .scroll-hint {
+                    font-family: 'VT323', monospace;
+                    font-size: 1rem;
+                    color: rgba($book-gold, 0.6);
+                    margin-top: 10px;
+                }
+            }
+        }
 
         &.page-left {
             box-shadow: inset -10px 0 30px -10px rgba(0, 0, 0, 0.8),
@@ -455,7 +611,7 @@ $page-color: #0d0d2b;
 
         .page-content {
             margin: 0;
-            padding: 40px;
+            padding: 40px 45px !important;
             height: 100%;
             width: 100%;
             display: flex;
@@ -466,6 +622,9 @@ $page-color: #0d0d2b;
             background: linear-gradient(145deg, rgba(13, 13, 43, 0.9), rgba(5, 5, 20, 0.95));
             border: 1px solid rgba(197, 160, 89, 0.3);
             box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+            color: #e0e0e0;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
 
             &::before {
                 content: '✦';
@@ -484,6 +643,198 @@ $page-color: #0d0d2b;
                 width: 50px;
                 height: 100%;
                 pointer-events: none;
+            }
+
+            .distinction-badge {
+                display: block;
+                text-align: center;
+                box-sizing: border-box;
+                width: 100%;
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 600;
+                font-size: 0.9rem;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                color: #f1d399;
+                border: 1px solid rgba($book-gold, 0.35);
+                padding: 10px 15px;
+                border-radius: 30px;
+                margin: 15px 0 25px 0;
+                background: rgba(0, 0, 0, 0.2);
+            }
+
+            h2.page-header {
+                font-family: 'Playfair Display', serif;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: $book-gold;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                border-bottom: 1px solid rgba($book-gold, 0.2);
+                padding-bottom: 12px;
+                width: 100%;
+
+                svg {
+                    color: $book-gold;
+                    opacity: 0.9;
+                    filter: drop-shadow(0 0 5px rgba($book-gold, 0.3));
+                }
+            }
+
+            .section-content {
+                margin-top: 10px;
+                flex: 1;
+                text-align: left;
+
+                h3 {
+                    font-family: 'Playfair Display', serif;
+                    font-size: 1.25rem;
+                    color: #fff;
+                    margin: 0 0 5px 0;
+                    line-height: 1.3;
+                }
+
+                .location-sub {
+                    font-size: 0.85rem;
+                    opacity: 0.6;
+                    margin-bottom: 20px;
+                    font-style: italic;
+                }
+            }
+
+            h3 {
+                font-family: 'Playfair Display', serif;
+                font-size: 1.3rem;
+                color: #fff;
+                margin-bottom: 10px;
+            }
+
+            .year-label {
+                font-family: 'VT323', monospace;
+                color: $book-gold;
+                font-size: 1.1rem;
+                letter-spacing: 2px;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 15px 0;
+
+                li {
+                    position: relative;
+                    padding-left: 25px;
+                    margin-bottom: 10px;
+                    font-size: 0.88rem;
+                    line-height: 1.45;
+                    color: rgba(255, 255, 255, 0.85);
+
+                    &::before {
+                        content: '✦';
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        color: $book-gold;
+                        font-size: 0.75rem;
+                        filter: blur(0.2px) drop-shadow(0 0 2px $book-gold);
+                    }
+
+                    strong {
+                        color: #f1d399;
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            .subtitle-text {
+                font-size: 0.85rem;
+                opacity: 0.7;
+                margin-bottom: 15px;
+                font-style: italic;
+                display: block;
+            }
+
+            .subtitle-gold {
+                color: $book-gold;
+                font-family: 'Playfair Display', serif;
+                font-size: 1.15rem;
+                margin: 25px 0 10px 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .summary-text {
+                font-size: 1.05rem;
+                line-height: 1.8;
+                color: rgba(255, 255, 255, 0.85);
+            }
+
+
+            .highlight-box {
+                background: rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba($book-gold, 0.2);
+                padding: 12px 18px;
+                border-radius: 4px;
+                margin: 15px 0;
+                position: relative;
+                overflow: hidden;
+                font-size: 0.85rem;
+                line-height: 1.4;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 3px;
+                    background: $book-gold;
+                    box-shadow: 2px 0 10px rgba($book-gold, 0.5);
+                }
+
+                strong {
+                    color: $book-gold;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    font-size: 0.75rem;
+                    letter-spacing: 0.5px;
+                }
+            }
+
+            .tech-tags-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 30px;
+
+                span {
+                    font-family: 'VT323', monospace;
+                    font-size: 0.85rem;
+                    padding: 4px 12px;
+                    background: rgba(0, 0, 0, 0.3);
+                    border: 1px solid rgba($book-gold, 0.3);
+                    border-radius: 4px;
+                    color: $book-gold;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        background: rgba($book-gold, 0.1);
+                        border-color: $book-gold;
+                    }
+                }
+            }
+
+            .icon-separator {
+                text-align: center;
+                color: $book-gold;
+                opacity: 0.4;
+                margin: 20px 0;
+                letter-spacing: 10px;
             }
         }
     }
@@ -598,8 +949,14 @@ $page-color: #0d0d2b;
     }
 
     .page-footer {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
         text-align: center;
         font-family: 'VT323', monospace;
-        color: rgba(197, 160, 89, 0.6);
+        font-size: 0.9rem;
+        color: rgba($book-gold, 0.4);
+        pointer-events: none;
     }
 }

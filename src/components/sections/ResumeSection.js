@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Download,
   Target,
+  User,
 } from "lucide-react";
 import "../../styles/sections/ResumeSection.scss";
 
@@ -181,89 +182,78 @@ const ResumeSection = ({ id }) => {
               </div>
             </Page>
 
-            {/* Pagina 1: Professional Profile */}
-            <Page number="" className="page-left">
-              <div className="intro-page">
-                <h3>Professional Profile</h3>
-                <p className="summary-text">
-                  Software Engineering student with hands-on .NET experience and
-                  specialization in search-driven data systems. Combines
-                  academic achievement with production experience in C# and
-                  OpenSearch development.
-                </p>
-                <div className="icon-separator">• • •</div>
-                <div className="career-highlight">
-                  <h4>
-                    <Target size={16} /> Career Direction
-                  </h4>
-                  <p>
-                    Pursuing software engineering opportunities in Japan (2027
-                    target), supported by ongoing Japanese language studies (N4
-                    level).
+            {/* Page 1: Professional Profile */}
+            <Page number="1" className="page-left">
+              <div className="page-inner-centered">
+                <h2 className="page-header">
+                  <User size={18} /> Professional Profile
+                </h2>
+                <div className="section-content">
+                  <p className="summary-text">
+                    Software Engineering student with hands-on .NET experience
+                    and specialization in search-driven data systems. Combines
+                    academic achievement with production experience in C# and
+                    OpenSearch development.
                   </p>
                 </div>
               </div>
             </Page>
 
-            {/* Pagina 2: Associate Degree */}
-            <Page number="1" className="page-right">
-              <div className="timeline-page">
+            {/* Page 2: Associate Degree */}
+            <Page number="2" className="page-right">
+              <div className="page-inner">
                 <h2 className="page-header">
                   <GraduationCap size={18} /> Associate Degree
                 </h2>
-                <div className="timeline-content">
-                  <div className="year">2023 - 2025</div>
+                <div className="section-content">
+                  <span className="year-label">2023 - 2025</span>
                   <h3>Programming (Graduaat)</h3>
-                  <p className="location">
+                  <p className="subtitle-text">
                     Howest University of Applied Sciences
                   </p>
 
-                  <div className="immersion-tag">
-                    <strong>Technical Immersion:</strong> A high-intensity
-                    program focused on production-ready development.
-                  </div>
+                  {/* MOVED AND STYLED AS A HIGHLIGHT */}
+                  <p className="distinction-badge">
+                    Graduated with High Distinction
+                  </p>
 
+                  {/* REFORMATTED FOR SCANNABILITY */}
                   <ul className="achievement-list">
                     <li>
-                      <strong>Graduated with High Distinction</strong>
+                      <strong>Development:</strong> C# & .NET, HTML5, CSS3,
+                      JavaScript
                     </li>
                     <li>
-                      <strong>Development:</strong> C# & .NET backend logic
-                      integrated with
-                      <strong> HTML5, CSS3, and JavaScript</strong> frontend.
+                      <strong>Infrastructure:</strong> MS SQL / T-SQL, Docker
+                      Containerization
                     </li>
                     <li>
-                      <strong>Infrastructure:</strong> Database design (MS SQL /
-                      T-SQL) and <strong>Docker</strong> containerization.
-                    </li>
-                    <li>
-                      <strong>Methodology:</strong> Professional workflows using
-                      Agile/Scrum, Git, and GitHub.
+                      <strong>Methodology:</strong> Agile/Scrum, Git, GitHub
                     </li>
                   </ul>
                 </div>
               </div>
             </Page>
 
-            {/* Pagina 3: Bachelor's Degree */}
-            <Page number="2" className="page-left">
-              <div className="timeline-page">
+            {/* Page 3: Bachelor's Degree (Page 2) */}
+            <Page number="3" className="page-left">
+              <div className="page-inner">
                 <h2 className="page-header">
-                  <TrendingUp size={18} /> Bachelor's Degree
+                  <TrendingUp size={22} /> Bachelor's Degree
                 </h2>
-                <div className="timeline-content">
-                  <div className="year">2025 - 2027</div>
+                <div className="section-content">
+                  <span className="year-label">2025 - 2027</span>
                   <h3>Applied Informatics (Bachelor)</h3>
-                  <p className="location">
+                  <p className="subtitle-text">
                     Software Engineering Specialization
                   </p>
 
-                  <div className="accelerated-badge">
+                  <div className="highlight-box">
                     <strong>Accelerated Track:</strong> Direct Year 2 entry
                     based on prior Associate Degree qualifications.
                   </div>
 
-                  <ul className="current-focus-compact">
+                  <ul>
                     <li>
                       <strong>Architecture:</strong> DDD, Design Patterns &
                       Enterprise Systems
@@ -276,78 +266,63 @@ const ResumeSection = ({ id }) => {
                       <strong>Cloud & .NET:</strong> Advanced ecosystems &
                       Cloud-native deployment
                     </li>
-                    <li>
-                      <strong>Design:</strong> UX Engineering & Information
-                      Architecture
-                    </li>
                   </ul>
                 </div>
               </div>
             </Page>
 
-            {/* Pagina 4: Merged Experience */}
-            <Page number="3" className="page-right">
-              <div className="internship-page">
+            {/* Page 4: Professional Experience (Page 3) */}
+            <Page number="4" className="page-right">
+              <div className="page-inner">
                 <h2 className="page-header">
-                  <Briefcase size={18} /> Professional Experience
+                  <Briefcase size={22} /> Professional Experience
                 </h2>
+                <div className="section-content">
+                  <span className="year-label">INTERNSHIP • 2025</span>
+                  <h3>Vanden Broele</h3>
+                  <p className="subtitle-text">
+                    Search-driven Data Retrieval System
+                  </p>
 
-                <div className="experience-card">
-                  <div className="exp-header">
-                    <p className="role">Software Engineering Intern</p>
-                    <p className="company">
-                      Vanden Broele • <span className="date">2025</span>
-                    </p>
-                  </div>
-
-                  <div className="project-brief">
-                    <strong>Project:</strong> Search-driven Data Retrieval
-                    System
-                  </div>
-
-                  <ul className="impact-list-clean">
+                  <ul>
                     <li>
-                      <strong>Performance:</strong> Achieved sub-second response
-                      times on large-scale datasets using OpenSearch
-                      optimization.
+                      Achieved sub-second response times using{" "}
+                      <strong>OpenSearch</strong>.
                     </li>
                     <li>
-                      <strong>DevOps:</strong> Containerized services with
-                      Docker for production-ready deployment.
-                    </li>
-                    <li>
-                      <strong>Full-stack:</strong> Built RESTful APIs in .NET
-                      Core with a modern TypeScript & Tailwind CSS frontend.
+                      Containerized services with <strong>Docker</strong> for
+                      production.
                     </li>
                   </ul>
 
-                  <div className="tech-tags-resume">
-                    <span>.NET Core</span> <span>C#</span>{" "}
-                    <span>OpenSearch</span>
-                    <span>Docker</span> <span>TypeScript</span>{" "}
-                    <span>Tailwind</span>
+                  <div className="tech-tags-container">
+                    <span>.NET CORE</span> <span>C#</span>{" "}
+                    <span>OPENSEARCH</span> <span>DOCKER</span>{" "}
+                    <span>TYPESCRIPT</span>
                   </div>
                 </div>
               </div>
             </Page>
 
-            {/* Pagina 5: Career Path */}
-            <Page number="4" className="page-left">
-              <div className="future-page">
+            {/* Page 5: Career Vision (Page 4) */}
+            <Page number="5" className="page-left">
+              <div className="page-inner">
                 <h2 className="page-header">
                   <Target size={18} /> Career Vision
                 </h2>
-                <div className="goal-container">
+                <div className="section-content">
                   <div className="goal-section">
-                    <h4>Primary Target: Japan (2027)</h4>
+                    <h4 className="subtitle-gold">
+                      Primary Target: Japan (2027)
+                    </h4>
                     <p>
                       Securing a Software Engineering internship in the
                       Tokyo/Saitama region.
                     </p>
                   </div>
 
-                  <div className="goal-section">
-                    <h4>Strategic Readiness</h4>
+                  <div className="goal-section" style={{ marginTop: "20px" }}>
+                    <h4 className="subtitle-gold">Strategic Readiness</h4>
                     <ul className="goal-list-compact">
                       <li>
                         <strong>Japanese:</strong> Currently JLPT N4 level
@@ -363,54 +338,67 @@ const ResumeSection = ({ id }) => {
                       </li>
                     </ul>
                   </div>
-
-                  <div className="divider-small"></div>
-
-                  <p className="status-note">
-                    <strong>Current Status:</strong> Actively building the
-                    technical and linguistic bridge for international transit.
-                  </p>
                 </div>
               </div>
             </Page>
 
-            {/* Pagina 6: Closing Page */}
-            <Page number="" className="page-right">
+            {/* Page 6: Closing Page */}
+            <Page number="6" className="page-right">
               <div className="page-inner-back">
                 <div className="closing-content">
                   <Code size={40} className="faded-icon" />
                   <h3>Thank you for your time</h3>
-
                   <div className="divider-small"></div>
-
                   <p className="sub-text">
                     If you're looking for a dedicated developer with{" "}
-                    <strong>.NET expertise</strong>
-                    and <strong>international project experience</strong>, I'd
+                    <strong>.NET expertise</strong> and{" "}
+                    <strong>international project experience</strong>, I'd
                     welcome a conversation.
                   </p>
-
                   <button
                     className="download-btn-styled"
                     onClick={onDownloadCV}
                   >
                     <Download size={16} /> Get PDF Version
                   </button>
-
                   <p className="scroll-hint">Discover my socials below</p>
                 </div>
               </div>
             </Page>
 
             {/* Pagina 7: Back Cover */}
-            <Page number="" className="is-cover page-left">
-              <div className="back-cover-outside">
-                <div className="back-logo">
-                  <Code size={50} />
-                </div>
-                <div className="back-footer-text">
-                  <p>© 2026 Victoria Portfolio</p>
-                  <p>Built with React & Framer Motion</p>
+            <Page number="" className="is-cover is-back-cover page-left">
+              <div className="cover-content">
+                {/* Ornamenten voor eenheid (met dezelfde glow als de voorkant) */}
+                <div className="corner-ornament top-left"></div>
+                <div className="corner-ornament top-right"></div>
+                <div className="corner-ornament bottom-left"></div>
+                <div className="corner-ornament bottom-right"></div>
+
+                <div className="back-cover-content">
+                  {/* Embossed Logo */}
+                  <div className="back-seal">
+                    <Code
+                      size={55}
+                      strokeWidth={1}
+                      className="back-logo-icon"
+                    />
+                  </div>
+
+                  <div className="back-text-group">
+                    <div className="title-separator small">
+                      <span className="line"></span>
+                      <span className="dot"></span>
+                      <span className="line"></span>
+                    </div>
+
+                    <p className="copyright">© 2026 Victoria Portfolio</p>
+
+                    {/* Tech Badge - Matcht de Edition Badge op de voorkant */}
+                    <div className="tech-badge">
+                      Built with React & Framer Motion
+                    </div>
+                  </div>
                 </div>
               </div>
             </Page>
