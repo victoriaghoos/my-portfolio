@@ -1,4 +1,6 @@
 .about-section {
+  $sakura-glow: #ff00cc;
+  $space-black: #05020a;
   scroll-snap-align: start;
   @supports (scroll-snap-stop: always) {
     scroll-snap-stop: always;
@@ -7,7 +9,10 @@
   position: relative;
   height: 100vh;
   overflow: hidden;
-  background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 50%, #0f0f23 100%);
+  background:  
+    radial-gradient(circle at 50% 100%, rgba($sakura-glow, 0.15) 0%, transparent 50%),
+    linear-gradient(to bottom, transparent 80%, $space-black 100%),
+    linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 40%, #2a0a2a 100%);; 
   display: flex;
   align-items: center;
   justify-content: center;
