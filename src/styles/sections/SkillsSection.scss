@@ -61,8 +61,10 @@ $star-white: #ffffff;
     height: 125%; 
     top: -25%; 
     width: 75%;   
-    -webkit-mask-image: linear-gradient(to right, black 15%, transparent 100%);
-    mask-image: linear-gradient(to right, black 15%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 10%, transparent 100%),
+                        linear-gradient(to top, transparent 5%, black 40%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
 
     .tree-img {
       display: block;
@@ -70,7 +72,8 @@ $star-white: #ffffff;
       height: 100%;
       object-fit: cover; 
       object-position: left bottom; 
-      filter: brightness(0.8) contrast(1.4) saturate(1.8) drop-shadow(0 0 15px rgba($sakura-glow, 0.5));
+      filter: brightness(0.7) contrast(1.1) saturate(1.8) blur(2px) 
+              drop-shadow(0 0 20px rgba($sakura-glow, 0.4));
       opacity: 1;
       mix-blend-mode:screen;
     }
@@ -103,7 +106,8 @@ $star-white: #ffffff;
       width: 14px; 
       height: auto;
       object-fit: contain;
-      filter: drop-shadow(0 0 8px rgba($sakura-glow, 0.8));
+      filter: blur(1.5px) brightness(0.9) saturate(1.8) 
+              drop-shadow(0 0 8px rgba($sakura-glow, 0.6));
       backface-visibility: visible; 
     }
   }
