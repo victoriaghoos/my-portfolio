@@ -65,8 +65,8 @@ $glass-pink: rgba(255, 0, 204, 0.04);
     // DIT IS DE TRICK:
     // Maak de wrapper hoger dan de sectie (bijv. 130%)
     // Trek hem omhoog met een negatieve top (bijv. -20%)
-    height: 130%; 
-    top: -25%; 
+    height: 110%; 
+    top: -10%; 
     width: 75%; 
     
     -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
