@@ -1,37 +1,56 @@
-$bg-dark: #0f0c29;
-$neon-pink: #ff00cc;
-$soft-pink: #ff69b4;
-$glass-bg: rgba(15, 12, 41, 0.6); // Iets donkerder glas voor leesbaarheid
-$glass-border: rgba(255, 105, 180, 0.3);
+$space-black: #030105; 
+$nebula-magenta: #3a0070;
+$nebula-blue: #000c2a;  
+$sakura-glow: #ff00cc;
+$sakura-bright: #ffb7c5;
+$sakura-soft: #ff85a1;
+$glass-pink: rgba(255, 0, 204, 0.04);
 
 .skills-section {
   scroll-snap-align: start;
   position: relative;
-  min-height: 100vh;
+  height: 100vh; 
+  height: 100dvh;
   width: 100%;
-  overflow: hidden;
+  background: $space-black;
+  overflow: hidden; 
+  
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; // Dit zet het blok 'Titel + Grid' precies in het midden
+  
+  // VERLAAG PADDING: 100px was veel te veel
+  padding: 40px 20px; 
 
-  // 1. COSMIC GLOW (Achtergrond sfeer)
-  .cosmic-glow {
+  .background-elements {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80vw;
-    height: 80vw;
-    background: radial-gradient(
-      circle,
-      rgba($neon-pink, 0.2) 0%, // Iets feller in het midden
-      rgba($bg-dark, 0) 60%
-    );
+    inset: 0;
     z-index: 0;
-    pointer-events: none;
+    // ... nebula en sterren blijven hetzelfde ...
+    .nebula-deep-blue {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 70% 20%, $nebula-blue 0%, transparent 70%);
+      opacity: 0.8;
+    }
+    .nebula-magenta {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 10% 80%, rgba($nebula-magenta, 0.3) 0%, transparent 60%);
+    }
+    .star-particle { position: absolute; z-index: 1; }
+    .stardust {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      filter: blur(0.5px);
+      box-shadow: 0 0 6px white;
+      z-index: 2;
+      pointer-events: none;
+    }
   }
 
-  // 2. DE BOMEN (Hier fixen we de "Look")
 // 2. DE BOMEN
   .trees-layer {
     position: absolute;
@@ -60,15 +79,11 @@ $glass-border: rgba(255, 105, 180, 0.3);
         display: block;
         width: 100%;
         height: 100%;
-        
-        // Zorgt dat de afbeelding het vlak vult zonder te vervormen
         object-fit: cover; 
-        
-        // CRUCIAAL: Dit houdt de stam in de linker benedenhoek van de container
         object-position: left bottom; 
-
-        filter: brightness(0.9) drop-shadow(0 0 10px $neon-pink);
-        opacity: 0.95;
+        filter: brightness(0.7) saturate(1.2) blur(1.5px) drop-shadow(0 0 15px rgba($sakura-glow, 0.4));
+        opacity: 0.8;
+        mix-blend-mode: lighten; // Dit is goed, laten staan!
       }
     }
 
@@ -82,14 +97,7 @@ $glass-border: rgba(255, 105, 180, 0.3);
     .right {
       right: 0; // Plak aan de rechterkant
       z-index: 2; // Ligt boven (takken vallen over de linker heen)
-      
-      // We spiegelen de boom.
-      // Omdat we spiegelen, spiegelt de 'mask' en 'object-position' visueel mee.
-      // Dus de stam komt rechts, en de fade-out komt links (in het midden van scherm).
       transform: scaleX(-1);
-      
-      // Optioneel: Als de takken van rechts te donker lijken over links, kun je blending gebruiken:
-      // mix-blend-mode: screen; 
     }
   }
 
@@ -104,82 +112,67 @@ $glass-border: rgba(255, 105, 180, 0.3);
       position: absolute;
       width: 10px;
       height: 14px; // Iets ovaler
-      background: rgba($soft-pink, 0.8);
+      background: rgba($sakura-glow, 0.8);
       border-radius: 100% 0 100% 0;
-      box-shadow: 0 0 5px $neon-pink;
+      box-shadow: 0 0 5px $sakura-glow;
     }
   }
 
   // 4. CONTENT (Skills)
-  .skills-content {
+  .header-container {
     position: relative;
-    z-index: 10; // Bovenop de bomen
-    width: 100%;
-    max-width: 1200px;
-    padding: 0 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center; // Alles centreren
-    
-    .section-title {
-      font-size: 3.5rem;
+    z-index: 10;
+    text-align: center;
+    margin-bottom: 30px; // Verlaagd van 80px naar 30px
+
+    .main-title {
+      font-size: 4rem; // Iets kleiner
+      font-weight: 900;
       color: white;
-      margin-bottom: 4rem;
-      text-align: center;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      
-      .highlight {
-        color: $soft-pink;
-        text-shadow: 0 0 20px $neon-pink;
-      }
+      letter-spacing: -2px;
+      margin: 0;
     }
+  }
 
-    .clusters-grid {
-      display: flex;
-      flex-wrap: wrap; // Sta toe dat clusters naast elkaar staan op groot scherm
-      justify-content: center;
-      gap: 3rem;
-      width: 100%;
+  // 4. GRID & CARDS (COMPACTER)
+  .skills-grid {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; // Verlaagd van 40px naar 20px
+    max-width: 1100px;
+    width: 100%;
 
-      .cluster-group {
+    .skill-category-card {
+      background: rgba(10, 5, 15, 0.7);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 25px; // Verlaagd van 40px naar 25px
+      
+      h3 {
+        color: white;
+        font-size: 1.2rem; // Iets kleiner
+        margin-bottom: 15px;
         display: flex;
-        flex-direction: column;
         align-items: center;
-        background: rgba(0,0,0,0.2); // Beetje achtergrond achter de hele groep
-        padding: 1.5rem;
-        border-radius: 20px;
-        border: 1px solid rgba($neon-pink, 0.1);
+        gap: 10px;
+        &::before { content: ""; width: 15px; height: 2px; background: $sakura-glow; }
+      }
 
-        .cluster-title {
-          font-family: monospace;
-          color: $soft-pink;
-          margin-bottom: 1.5rem;
-          font-size: 1.2rem;
-          text-shadow: 0 0 5px rgba($neon-pink, 0.5);
-        }
+      .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px; // Iets dichter op elkaar
 
-        .tags-wrapper {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 12px;
-          max-width: 400px; // Zorgt dat het niet te breed wordt
-          
-          .skill-tag {
-            background: $glass-bg;
-            backdrop-filter: blur(10px); // Sterkere blur
-            border: 1px solid $glass-border;
-            padding: 12px 24px;
-            border-radius: 50px; // Pill shape
-            color: white;
-            font-weight: 600;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            // Belangrijk: Zorg dat de text niet wrapped
-            white-space: nowrap; 
-          }
+        .tag {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 6px 14px;
+          border-radius: 10px;
+          font-size: 0.85rem;
         }
       }
     }

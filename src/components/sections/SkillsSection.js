@@ -1,124 +1,117 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import "../../styles/sections/SkillsSection.scss";
 import sakuraTree from "../../assets/images/sakura2.png";
 
-// ... (Houd je skillClusters en floatAnimation hier hetzelfde als eerst) ...
-const skillClusters = [
-  {
-    category: "The Core (Backend & Languages)",
-    skills: ["C#", ".NET", "Python", "SQL", "Java", "Linux"],
-  },
-  {
-    category: "The Interface (Frontend)",
-    skills: ["React", "Three.js", "JS/TS", "HTML/CSS", "Tailwind", "Blazor"],
-  },
-  {
-    category: "The Ecosystem (Mobile & Tools)",
-    skills: [
-      ".NET MAUI",
-      "Flutter/Dart",
-      "Docker",
-      "Git/GitHub",
-      "Postman",
-      "SignalR",
-    ],
-  },
-];
+// STABIELE STER COMPONENT
+const Star = () => {
+  const style = useMemo(() => {
+    const colors = ["#ffffff", "#e0f2ff", "#ffddee"]; 
+    return {
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      width: `${Math.random() * 2 + 0.5}px`,
+      height: `${Math.random() * 2 + 0.5}px`,
+      backgroundColor: colors[Math.floor(Math.random() * colors.length)],
+      opacity: Math.random(),
+    };
+  }, []);
 
-const floatAnimation = {
-  initial: { y: 0 },
-  animate: (i) => ({
-    y: [0, -10, 0],
-    transition: {
-      duration: 3 + Math.random() * 2,
-      repeat: Infinity,
-      ease: "easeInOut",
-      delay: Math.random() * 2,
-    },
-  }),
+  return (
+    <motion.div
+      className="absolute rounded-full pointer-events-none star-particle"
+      style={style}
+      animate={{ 
+        opacity: [0.2, 0.8, 0.2], 
+        scale: [1, 1.2, 1],
+      }}
+      transition={{ 
+        duration: 3 + Math.random() * 4, 
+        repeat: Infinity,
+        ease: "linear" 
+      }}
+    />
+  );
 };
 
-// ... (Houd je Petal component hier hetzelfde) ...
-const Petal = () => {
-    const randomX = Math.random() * 100;
-    const duration = 10 + Math.random() * 10;
-    const delay = Math.random() * 5;
-    return (
-        <motion.div
-            className="sakura-petal"
-            initial={{ y: -100, x: `${randomX}vw`, opacity: 0, rotate: 0 }}
-            animate={{
-                y: "110vh",
-                x: `${randomX + (Math.random() * 10 - 5)}vw`,
-                opacity: [0, 1, 0],
-                rotate: 360,
-            }}
-            transition={{
-                duration: duration,
-                repeat: Infinity,
-                delay: delay,
-                ease: "linear",
-            }}
-        />
-    );
+// NIEUW: STABIELE STARDUST COMPONENT
+// Dit voorkomt dat ze verspringen bij muisbewegingen
+const StardustParticle = () => {
+  const settings = useMemo(() => ({
+    left: `${Math.random() * 100}%`,
+    drift: (Math.random() - 0.5) * 15, // Horizontale afwijking
+    duration: 10 + Math.random() * 15,
+    delay: Math.random() * 10,
+    size: Math.random() * 2 + 1
+  }), []);
+
+  return (
+    <motion.div
+      className="stardust"
+      initial={{ y: "-10vh", x: "0vw", opacity: 0 }}
+      animate={{ 
+        y: "110vh", 
+        x: `${settings.drift}vw`,
+        opacity: [0, 0.7, 0] 
+      }}
+      transition={{ 
+        duration: settings.duration, 
+        repeat: Infinity, 
+        ease: "linear",
+        delay: settings.delay
+      }}
+      style={{
+        left: settings.left,
+        width: `${settings.size}px`,
+        height: `${settings.size}px`
+      }}
+    />
+  );
 };
 
 const SkillsSection = () => {
-  const petals = Array.from({ length: 30 }); // Iets meer blaadjes voor het effect
+  const stars = Array.from({ length: 80 });
+  const stardust = Array.from({ length: 25 });
+  
+  const skillGroups = [
+    { id: "core", title: "Backend & Systems", skills: ["C#", ".NET", "Python", "SQL", "Java", "Linux"] },
+    { id: "front", title: "Frontend & Design", skills: ["React", "Three.js", "TypeScript", "Tailwind", "Blazor"] },
+    { id: "tools", title: "DevOps & Mobile", skills: [".NET MAUI", "Flutter", "Docker", "Git", "Postman", "SignalR"] },
+  ];
 
   return (
     <section className="skills-section">
-      {/* 1. Background Glow (Centraal) */}
-      <div className="cosmic-glow" />
+      <div className="background-elements">
+        <div className="nebula-deep-blue" />
+        <div className="nebula-magenta" />
+        {stars.map((_, i) => <Star key={`star-${i}`} />)}
+        {stardust.map((_, i) => <StardustParticle key={`dust-${i}`} />)}
+      </div>
 
-      {/* 2. De Bomen (Images i.p.v. SVG) */}
       <div className="trees-layer">
-        {/* Linker Boom */}
         <div className="tree-wrapper left">
-             {/* Vervang src door je eigen lokale image: /assets/sakura-tree.png */}
-            <img src={sakuraTree} alt="Sakura Left" className="tree-img" />
+          <img src={sakuraTree} alt="Sakura Left" className="tree-img" />
         </div>
-        
-        {/* Rechter Boom (We spiegelen deze met CSS) */}
         <div className="tree-wrapper right">
-            <img src={sakuraTree} alt="Sakura Right" className="tree-img" />
+          <img src={sakuraTree} alt="Sakura Right" className="tree-img" />
         </div>
       </div>
 
-      {/* 3. Falling Petals */}
-      <div className="petals-container">
-        {petals.map((_, index) => (
-          <Petal key={index} />
-        ))}
-      </div>
+      <header className="header-container">
+        <motion.h2 className="main-title">SKILLS</motion.h2>
+      </header>
 
-      {/* 4. Content */}
-      <div className="skills-content">
-        <h2 className="section-title">Technical <span className="highlight">Arsenal</span></h2>
-        
-        <div className="clusters-grid">
-          {skillClusters.map((cluster, clusterIndex) => (
-            <div key={clusterIndex} className="cluster-group">
-              <h3 className="cluster-title">{cluster.category}</h3>
-              <div className="tags-wrapper">
-                {cluster.skills.map((skill, skillIndex) => (
-                  <motion.div
-                    key={skill}
-                    className="skill-tag"
-                    custom={skillIndex}
-                    variants={floatAnimation}
-                    initial="initial"
-                    animate="animate"
-                    whileHover={{ scale: 1.1, borderColor: "#ff69b4", boxShadow: "0 0 15px #ff00cc" }}
-                  >
-                    {skill}
-                  </motion.div>
-                ))}
-              </div>
+      <div className="skills-grid">
+        {skillGroups.map((group, index) => (
+          <motion.div key={group.id} className="skill-category-card">
+            <h3>{group.title}</h3>
+            <div className="skill-tags">
+              {group.skills.map((skill) => (
+                <span key={skill} className="tag">{skill}</span>
+              ))}
             </div>
-          ))}
-        </div>
+          </motion.div>
+        ))}
       </div>
     </section>
   );
