@@ -2,117 +2,203 @@ import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import "../../styles/sections/SkillsSection.scss";
 import sakuraTree from "../../assets/images/sakura2.png";
+import petalImg from "../../assets/images/petal.png";
 
-// STABIELE STER COMPONENT
+// 1. EENVOUDIGE STER (Achtergrond, beweegt nauwelijks, focus op aantal)
 const Star = () => {
-  const style = useMemo(() => {
-    const colors = ["#ffffff", "#e0f2ff", "#ffddee"]; 
-    return {
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      width: `${Math.random() * 2 + 0.5}px`,
-      height: `${Math.random() * 2 + 0.5}px`,
-      backgroundColor: colors[Math.floor(Math.random() * colors.length)],
-      opacity: Math.random(),
-    };
-  }, []);
+  const style = useMemo(() => ({
+    top: `${Math.random() * 100}%`,
+    left: `${Math.random() * 100}%`,
+    width: `${Math.random() * 2}px`,
+    height: `${Math.random() * 2}px`,
+    opacity: Math.random() * 0.7 + 0.3,
+    animationDelay: `${Math.random() * 5}s`,
+  }), []);
 
-  return (
-    <motion.div
-      className="absolute rounded-full pointer-events-none star-particle"
-      style={style}
-      animate={{ 
-        opacity: [0.2, 0.8, 0.2], 
-        scale: [1, 1.2, 1],
-      }}
-      transition={{ 
-        duration: 3 + Math.random() * 4, 
-        repeat: Infinity,
-        ease: "linear" 
-      }}
-    />
-  );
+  return <div className="star-static" style={style} />;
 };
 
-// NIEUW: STABIELE STARDUST COMPONENT
-// Dit voorkomt dat ze verspringen bij muisbewegingen
-const StardustParticle = () => {
+// 2. REALISTISCHE VALLENDE PETAL
+const FallingPetal = () => {
   const settings = useMemo(() => ({
-    left: `${Math.random() * 100}%`,
-    drift: (Math.random() - 0.5) * 15, // Horizontale afwijking
+    left: Math.random() * 100,
     duration: 10 + Math.random() * 15,
-    delay: Math.random() * 10,
-    size: Math.random() * 2 + 1
+    delay: Math.random() * 20,
+    scale: 0.3 + Math.random() * 0.7, 
+    drift: (Math.random() - 0.5) * 100, 
   }), []);
 
   return (
-    <motion.div
-      className="stardust"
-      initial={{ y: "-10vh", x: "0vw", opacity: 0 }}
-      animate={{ 
+    <motion.img
+      src={petalImg}
+      className="sakura-petal-real"
+      style={{ 
+        left: `${settings.left}%`, 
+        scale: settings.scale,
+        filter: `brightness(${0.7 + Math.random() * 0.5})`
+      }}
+      initial={{ y: -50, opacity: 0, rotate: 0, rotateX: 0, rotateY: 0 }}
+      animate={{
         y: "110vh", 
-        x: `${settings.drift}vw`,
-        opacity: [0, 0.7, 0] 
+        opacity: [0, 1, 1, 0], 
+        x: [0, settings.drift, -settings.drift / 2, settings.drift, 0], 
+        rotate: [0, 360 + Math.random() * 180], 
+        rotateX: [0, 180, 360], 
+        rotateY: [0, 180, 360],
       }}
-      transition={{ 
-        duration: settings.duration, 
-        repeat: Infinity, 
+      transition={{
+        duration: settings.duration,
+        repeat: Infinity,
+        delay: settings.delay,
         ease: "linear",
-        delay: settings.delay
-      }}
-      style={{
-        left: settings.left,
-        width: `${settings.size}px`,
-        height: `${settings.size}px`
       }}
     />
   );
 };
 
+
 const SkillsSection = () => {
-  const stars = Array.from({ length: 80 });
-  const stardust = Array.from({ length: 25 });
-  
+  const stars = useMemo(() => Array.from({ length: 250 }), []);
+  const petals = useMemo(() => Array.from({ length: 20 }), []);
+
   const skillGroups = [
-    { id: "core", title: "Backend & Systems", skills: ["C#", ".NET", "Python", "SQL", "Java", "Linux"] },
-    { id: "front", title: "Frontend & Design", skills: ["React", "Three.js", "TypeScript", "Tailwind", "Blazor"] },
-    { id: "tools", title: "DevOps & Mobile", skills: [".NET MAUI", "Flutter", "Docker", "Git", "Postman", "SignalR"] },
+    {
+      id: "languages",
+      title: "Programming Languages",
+      skills: [
+        "C#",
+        "Python",
+        "JavaScript",
+        "TypeScript",
+        "Dart",
+        "SQL",
+      ]
+    },
+    {
+      id: "backend",
+      title: "Backend Development",
+      skills: [
+        ".NET",
+        "ASP.NET MVC",
+        "REST APIs",
+        "SignalR",
+        "OpenSearch",
+      ]
+    },
+    {
+      id: "frontend",
+      title: "Frontend Development",
+      skills: [
+        "React",
+        "Three.js",
+        "HTML",
+        "CSS",
+        "Tailwind CSS",
+        "Blazor",
+      ]
+    },
+    {
+      id: "mobile-desktop",
+      title: "Mobile & Desktop Development",
+      skills: [
+        ".NET MAUI",
+        "Flutter",
+        "WPF",
+      ]
+    },
+    {
+      id: "devops",
+      title: "DevOps & Infrastructure",
+      skills: [
+        "Docker",
+        "Linux",
+        "Virtual Machines",
+      ]
+    },
+    {
+      id: "tooling",
+      title: "Tooling & Version Control",
+      skills: [
+        "Git",
+        "GitHub",
+        "GitLab",
+        "Postman",
+      ]
+    },
   ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.3 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
 
   return (
     <section className="skills-section">
+      {/* 1. ACHTERGROND */}
       <div className="background-elements">
-        <div className="nebula-deep-blue" />
-        <div className="nebula-magenta" />
+        <div className="nebula-bg" />
+        <div className="cosmic-dust" />
         {stars.map((_, i) => <Star key={`star-${i}`} />)}
-        {stardust.map((_, i) => <StardustParticle key={`dust-${i}`} />)}
       </div>
 
+      {/* 2. BOMEN & PETALS */}
       <div className="trees-layer">
         <div className="tree-wrapper left">
-          <img src={sakuraTree} alt="Sakura Left" className="tree-img" />
+          <img src={sakuraTree} alt="Sakura" className="tree-img" />
         </div>
         <div className="tree-wrapper right">
-          <img src={sakuraTree} alt="Sakura Right" className="tree-img" />
+          <img src={sakuraTree} alt="Sakura" className="tree-img" />
         </div>
       </div>
 
-      <header className="header-container">
-        <motion.h2 className="main-title">SKILLS</motion.h2>
-      </header>
-
-      <div className="skills-grid">
-        {skillGroups.map((group, index) => (
-          <motion.div key={group.id} className="skill-category-card">
-            <h3>{group.title}</h3>
-            <div className="skill-tags">
-              {group.skills.map((skill) => (
-                <span key={skill} className="tag">{skill}</span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
+      <div className="petals-layer">
+        {petals.map((_, i) => <FallingPetal key={`petal-${i}`} />)}
       </div>
+
+      {/* 3. CONTENT */}
+      <motion.div
+        className="content-wrapper"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        viewport={{ once: true }}
+      >
+        <header className="header-container">
+          <motion.h2 className="main-title" variants={itemVariants}>
+            SKILLS
+          </motion.h2>
+          <motion.div className="title-underline" variants={itemVariants} />
+        </header>
+
+        <div className="skills-grid">
+          {skillGroups.map((group) => (
+            <motion.div
+              key={group.id}
+              className="skill-category-card"
+              variants={itemVariants}
+            >
+              <h3>{group.title}</h3>
+              <div className="skill-tags">
+                {group.skills.map((skill) => (
+                  <span key={skill} className="tag">{skill}</span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
     </section>
   );
 };
