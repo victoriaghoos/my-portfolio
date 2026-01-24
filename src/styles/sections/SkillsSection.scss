@@ -53,53 +53,53 @@ $glass-pink: rgba(255, 0, 204, 0.04);
 
 // 2. DE BOMEN
   .trees-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+
+  .tree-wrapper {
     position: absolute;
-    inset: 0; // Kortere schrijfwijze voor top/left/right/bottom: 0
-    z-index: 1;
-    pointer-events: none;
-    // We halen display: flex weg, want we willen dat ze over elkaar heen vallen (stacken)
+    
+    // DIT IS DE TRICK:
+    // Maak de wrapper hoger dan de sectie (bijv. 130%)
+    // Trek hem omhoog met een negatieve top (bijv. -20%)
+    height: 130%; 
+    top: -25%; 
+    width: 75%; 
+    
+    -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
+    mask-image: linear-gradient(to right, black 60%, transparent 100%);
 
-    .tree-wrapper {
-      position: absolute;
-      top: 0;
-      bottom: 0;
+    .tree-img {
+      display: block;
+      width: 100%;
       height: 100%;
+      object-fit: cover; 
       
-      // DE OPLOSSING: Maak ze breder dan de helft!
-      // Hierdoor reiken de takken ver over het midden heen.
-      width: 75%; 
-      
-      // Dit masker zorgt ervoor dat de afbeelding aan het uiteinde (waar de takken stoppen)
-      // zachtjes onzichtbaar wordt. Zo zie je geen harde verticale lijn van de PNG-rand.
-      // Black = zichtbaar, Transparent = onzichtbaar.
-      -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
-      mask-image: linear-gradient(to right, black 60%, transparent 100%);
+      // We houden de stammen 'gegrond' aan de onderkant van de wrapper
+      object-position: left bottom; 
 
-      .tree-img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover; 
-        object-position: left bottom; 
-        filter: brightness(0.7) saturate(1.2) blur(1.5px) drop-shadow(0 0 15px rgba($sakura-glow, 0.4));
-        opacity: 0.8;
-        mix-blend-mode: lighten; // Dit is goed, laten staan!
-      }
-    }
-
-    // --- LINKER BOOM ---
-    .left {
-      left: 0; // Plak aan de linkerkant
-      z-index: 1; // Ligt onder
-    }
-
-    // --- RECHTER BOOM ---
-    .right {
-      right: 0; // Plak aan de rechterkant
-      z-index: 2; // Ligt boven (takken vallen over de linker heen)
-      transform: scaleX(-1);
+      filter: brightness(0.7) saturate(1.2) blur(1.5px) drop-shadow(0 0 15px rgba($sakura-glow, 0.4));
+      opacity: 0.8;
+      mix-blend-mode: lighten;
     }
   }
+
+  .left {
+    left: 0;
+    z-index: 1;
+  }
+
+  .right {
+    right: 0;
+    z-index: 2;
+    transform: scaleX(-1);
+    // Voor de rechterkant blijft object-position 'left bottom' werken 
+    // omdat de hele wrapper gespiegeld wordt door scaleX(-1)
+  }
+}
 
   // 3. PETALS
   .petals-container {
