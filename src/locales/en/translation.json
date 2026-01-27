@@ -16,5 +16,13 @@
   "projects": "Projects",
   "resume": "Resume",
   "skills": "Skills",
+  "skills_categories": {
+    "languages": "Programming Languages",
+    "backend": "Backend Development",
+    "frontend": "Frontend Development",
+    "mobile_desktop": "Mobile & Desktop Development",
+    "devops": "DevOps & Infrastructure",
+    "tooling": "Tooling & Version Control"
+  },
   "contact": "Contact"
 }

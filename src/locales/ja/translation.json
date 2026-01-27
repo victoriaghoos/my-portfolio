@@ -16,5 +16,13 @@
   "projects": "プロジェクト",
   "resume": "履歴書",
   "skills": "スキル",
+  "skills_categories": {
+    "languages": "プログラミング言語",
+    "backend": "バックエンド開発",
+    "frontend": "フロントエンド開発",
+    "mobile_desktop": "モバイル・デスクトップ開発",
+    "devops": "DevOps・インフラ",
+    "tooling": "ツール・バージョン管理"
+  },
   "contact": "連絡先"
 }

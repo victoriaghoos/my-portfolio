@@ -16,5 +16,13 @@
   "projects": "Projecten",
   "resume": "CV",
   "skills": "Vaardigheden",
+  "skills_categories": {
+    "languages": "Programmeertalen",
+    "backend": "Backend-ontwikkeling",
+    "frontend": "Frontend-ontwikkeling",
+    "mobile_desktop": "Mobiele & desktopontwikkeling",
+    "devops": "DevOps & infrastructuur",
+    "tooling": "Tools & versiebeheer"
+  },
   "contact": "Contact"
 }

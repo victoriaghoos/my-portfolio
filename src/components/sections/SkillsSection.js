@@ -59,74 +59,54 @@ const FallingPetal = () => {
 
 
 const SkillsSection = () => {
+  const { t } = useTranslation();
   const stars = useMemo(() => Array.from({ length: 250 }), []);
   const petals = useMemo(() => Array.from({ length: 20 }), []);
 
-  const skillGroups = [
+  const skillGroups = useMemo(() => [
     {
       id: "languages",
-      title: "Programming Languages",
+      title: t('skills_categories.languages'),
       skills: [
-        "C#",
-        "Python",
-        "JavaScript",
-        "TypeScript",
-        "Dart",
-        "SQL",
+        "C#", "Python", "JavaScript", "TypeScript", "Dart", "SQL",
       ]
     },
     {
       id: "backend",
-      title: "Backend Development",
+      title: t('skills_categories.backend'),
       skills: [
-        ".NET",
-        "ASP.NET MVC",
-        "REST APIs",
-        "SignalR",
-        "OpenSearch",
+        ".NET", "ASP.NET MVC", "REST APIs", "SignalR", "OpenSearch",
       ]
     },
     {
       id: "frontend",
-      title: "Frontend Development",
+      title: t('skills_categories.frontend'),
       skills: [
-        "React",
-        "Three.js",
-        "HTML",
-        "CSS",
-        "Tailwind CSS",
-        "Blazor",
+        "React", "Three.js", "HTML", "CSS", "Tailwind CSS", "Blazor",
       ]
     },
     {
       id: "mobile-desktop",
-      title: "Mobile & Desktop Development",
+      title: t('skills_categories.mobile_desktop'),
       skills: [
-        ".NET MAUI",
-        "Flutter",
-        "WPF",
+        ".NET MAUI", "Flutter", "WPF",
       ]
     },
     {
       id: "devops",
-      title: "DevOps & Infrastructure",
+      title: t('skills_categories.devops'),
       skills: [
-        "Docker",
-        "Linux",
-        "Virtual Machines",
+        "Docker", "Linux", "Virtual Machines",
       ]
     },
     {
       id: "tooling",
-      title: "Tooling & Version Control",
+      title: t('skills_categories.tooling'),
       skills: [
-        "Git",
-        "GitHub",
-        "GitLab",
-        "Postman",
+        "Git", "GitHub", "GitLab", "Postman",
       ]
     },
-  ];
+  ], [t]); 
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -145,7 +125,6 @@ const SkillsSection = () => {
     },
   };
 
-  const { t } = useTranslation();
   return (
     <section className="skills-section">
       {/* 1. ACHTERGROND */}
