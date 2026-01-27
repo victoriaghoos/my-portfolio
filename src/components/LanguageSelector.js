@@ -1,32 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import '../styles/home.scss'; 
 
 const languages = [
-  { code: 'nl', label: 'Nederlands' },
-  { code: 'fr', label: 'Français' },
-  { code: 'ja', label: '日本語' },
+  { code: 'en', label: 'English', flag: 'US' },
+  { code: 'nl', label: 'Nederlands', flag: 'BE' },
+  { code: 'fr', label: 'Français', flag: 'FR' },
+  { code: 'ja', label: '日本語', flag: 'JP' },
 ];
 
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
 
-  const handleChange = (e) => {
-    i18n.changeLanguage(e.target.value);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const changeLanguage = (lngCode) => {
+    i18n.changeLanguage(lngCode);
+    setIsOpen(false);
   };
 
+  const currentLang = languages.find((l) => l.code === i18n.language) || languages[0];
+
   return (
-    <select
-      onChange={handleChange}
-      value={i18n.language}
-      style={{ position: 'fixed', top: 16, left: 16, zIndex: 1000 }}
-      aria-label="Select language"
-    >
-      {languages.map((lang) => (
-        <option key={lang.code} value={lang.code}>
-          {lang.label}
-        </option>
-      ))}
-    </select>
+    <div className="language-selector-container" ref={containerRef}>
+      <button 
+        className={`lang-pill ${isOpen ? 'active' : ''}`} 
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Select Language"
+      >
+        <span className="lang-code">{currentLang.code.toUpperCase()}</span>
+        <span className="dropdown-arrow">▼</span>
+      </button>
+
+      {isOpen && (
+        <div className="lang-dropdown">
+          {languages.map((lang) => (
+            <button
+              key={lang.code}
+              className={`lang-option ${i18n.language === lang.code ? 'selected' : ''}`}
+              onClick={() => changeLanguage(lang.code)}
+            >
+              {lang.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

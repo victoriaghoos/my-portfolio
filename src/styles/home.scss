@@ -260,3 +260,100 @@ body {
     font-size: 0.6rem; 
   }
 }
+
+.language-selector-container {
+  position: fixed;
+  top: 30px;
+  right: 30px; 
+  z-index: 10000; 
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.lang-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  background: rgba(16, 23, 41, 0.4);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(124, 158, 255, 0.2);
+  border-radius: 50px;
+  
+  color: #7c9eff;
+  font-size: 0.75rem; 
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  outline: none;
+
+  &:hover {
+    background: rgba(124, 158, 255, 0.15);
+    border-color: rgba(124, 158, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(124, 158, 255, 0.15);
+  }
+
+  &.active {
+    border-color: rgba(138, 99, 242, 0.4);
+    color: #8a63f2;
+  }
+
+  .dropdown-arrow {
+    font-size: 0.6rem;
+    transition: transform 0.3s ease;
+  }
+
+  &.active .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+}
+
+.lang-dropdown {
+  position: absolute;
+  top: 120%; 
+  right: 0;
+  width: 140px;
+  background: rgba(16, 23, 41, 0.9);
+  border: 1px solid rgba(124, 158, 255, 0.2);
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  animation: fadeInDropdown 0.2s ease-out forwards;
+}
+
+.lang-option {
+  background: transparent;
+  border: none;
+  color: #7c9eff;
+  padding: 8px 12px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(124, 158, 255, 0.1);
+    color: #fff;
+  }
+
+  &.selected {
+    background: rgba(138, 99, 242, 0.2);
+    color: #8a63f2;
+    font-weight: bold;
+  }
+}
+
+@keyframes fadeInDropdown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
