@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import '../../styles/sections/AboutSection.scss';
 import foto1 from '../../assets/images/foto1.jpg';
 
 const AboutSection = ({ id }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
+  const { t } = useTranslation(); 
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,7 +45,6 @@ const AboutSection = ({ id }) => {
     }
   };
 
-  const { t } = useTranslation();
   return (
     <section id={id} ref={sectionRef} className="about-section">
       <div className="cosmic-background">
@@ -65,7 +65,7 @@ const AboutSection = ({ id }) => {
         >
           <motion.div className="section-header" variants={textVariants}>
             <h2 className="section-title">
-              <span className="title-glow">{t('about')}</span>
+              <span className="title-glow">{t('about.title')}</span>
             </h2>
             <div className="title-underline"></div>
           </motion.div>
@@ -90,24 +90,32 @@ const AboutSection = ({ id }) => {
 
             <motion.div className="bio-container" variants={textVariants}>
               <div className="bio-content">
-  <h3 className="bio-greeting">
-    Hello, I'm <span className="name-glow">Victoria</span> 👋
-  </h3>
-  
-  <div className="bio-text">
-    <p>
-      I'm a <span className="highlight">Belgian software engineering student</span> with a passion that grew from hobbyist Python coding into a professional career path. What started as solving LeetCode problems for fun led me to pursue an associate's degree at Howest, where I graduated <span className="highlight">with high honors</span>.
-    </p>
-    
-    <p>
-      Currently further expanding my skills with a Bachelor of Applied Computer Science specializing in software engineering, I'm balancing academic projects with personal ventures like building this website. When I'm not coding, you'll find me <span className="highlight">learning Japanese N4</span>, hiking the Belgian countryside, or capturing moments through photography.
-    </p>
+                <h3 className="bio-greeting">
+                  <Trans i18nKey="about.greeting">
+                    Hello, I'm <span className="name-glow">Victoria</span> 👋
+                  </Trans>
+                </h3>
+                
+                <div className="bio-text">
+                  <p>
+                    <Trans i18nKey="about.bio_p1">
+                      I'm a <span className="highlight">Belgian software engineering student</span> with a passion that grew from hobbyist Python coding into a professional career path. What started as solving LeetCode problems for fun led me to pursue an associate's degree at Howest, where I graduated <span className="highlight">with high honors</span>.
+                    </Trans>
+                  </p>
+                  
+                  <p>
+                    <Trans i18nKey="about.bio_p2">
+                      Currently further expanding my skills with a Bachelor of Applied Computer Science specializing in software engineering, I'm balancing academic projects with personal ventures like building this website. When I'm not coding, you'll find me <span className="highlight">learning Japanese N4</span>, hiking the Belgian countryside, or capturing moments through photography.
+                    </Trans>
+                  </p>
 
-    <p>
-      I'm actively working toward my goal of a <span className="highlight">Tokyo internship in 2027</span>, with plans to relocate permanently to Saitama after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture.
-    </p>
-  </div>
-</div>
+                  <p>
+                    <Trans i18nKey="about.bio_p3">
+                      I'm actively working toward my goal of a <span className="highlight">Tokyo internship in 2027</span>, with plans to relocate permanently to Saitama after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture.
+                    </Trans>
+                  </p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </motion.div>

@@ -1,6 +1,11 @@
 {
-  "welcome": "Welkom!",
-  "about": "Over mij",
+  "about": {
+    "title": "Over mij",
+    "greeting": "Hallo, ik ben <1>Victoria</1> 👋",
+    "bio_p1": "Ik ben een <1>Belgische studente software engineering</1>. Wat begon als wat Python programmeren uit interesse, groeide al snel uit tot een serieuze passie. Voor de fun LeetCode-problemen oplossen bracht me uiteindelijk bij mijn graduaat aan Howest, waar ik <3>met grote onderscheiding</3> afstudeerde.",
+    "bio_p2": "Momenteel volg ik een Bachelor Toegepaste Informatica met specialisatie software engineering. Ik combineer schoolprojecten met eigen projecten, zoals het bouwen van deze website. Buiten het coderen leer ik <1>Japans (JLPT N4)</1>, ga ik graag wandelen in de Belgische natuur en neem ik foto’s.",
+    "bio_p3": "Ik werk toe naar een <1>stage in Tokio in 2027</1> en plan om na mijn afstuderen naar Saitama te verhuizen. Ik hou ervan om technische nauwkeurigheid te combineren met creativiteit, of dat nu in code is of achter de camera."
+  },
   "projects": "Projecten",
   "resume": "CV",
   "skills": "Vaardigheden",
