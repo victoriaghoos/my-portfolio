@@ -1,4 +1,11 @@
 {
+  "nav": {
+    "socials": "Réseaux",
+    "resume": "CV",
+    "projects": "Projets",
+    "about": "À propos",
+    "skills": "Compétences"
+  },
   "about": {
     "title": "À propos de moi",
     "greeting": "Salut, moi c’est <1>Victoria</1> 👋",

@@ -1,4 +1,11 @@
 {
+  "nav": {
+    "socials": "Socials",
+    "resume": "CV",
+    "projects": "Projecten",
+    "about": "Over mij",
+    "skills": "Vaardigheden"
+  },
   "about": {
     "title": "Over mij",
     "greeting": "Hallo, ik ben <1>Victoria</1> 👋",

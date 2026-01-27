@@ -1,4 +1,11 @@
 {
+    "nav": {
+        "socials": "Socials",
+        "resume": "Resume",
+        "projects": "Projects",
+        "about": "About",
+        "skills": "Skills"
+    },
   "about": {
     "title": "About Me",
     "greeting": "Hello, I'm <1>Victoria</1> 👋",

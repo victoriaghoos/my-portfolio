@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
+import { useTranslation } from "react-i18next";
 import { Environment } from "@react-three/drei";
 import { motion, useInView } from "framer-motion";
 import * as THREE from "three";
@@ -29,38 +30,6 @@ import cameraPoints from "../cameraPoints.json";
 import bookPoints from "../bookPoints.json";
 import flowerPoints from "../flowerPoints.json";
 import headsetPoints from "../headsetPoints.json";
-const icons = [
-  {
-    png: socialsPng,
-    video: socialsVideo,
-    label: "Socials",
-    color: new THREE.Color(0.4, 0.7, 0.9),
-  },
-  {
-    png: resumePng,
-    video: resumeVideo,
-    label: "Resume",
-    color: new THREE.Color(0.9, 0.6, 0.4),
-  },
-  {
-    png: codePng,
-    video: codeVideo,
-    label: "Projects",
-    color: new THREE.Color(0.4, 0.8, 0.6),
-  },
-  {
-    png: avatarPng,
-    video: avatarVideo,
-    label: "About",
-    color: new THREE.Color(0.8, 0.5, 0.9),
-  },
-  {
-    png: skillPng,
-    video: skillVideo,
-    label: "Skills",
-    color: new THREE.Color(0.7, 0.5, 0.9),
-  },
-];
 
 const DragHint = ({ isVisible }) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
@@ -84,6 +53,44 @@ const DragHint = ({ isVisible }) => {
 };
 
 const Home = () => {
+  const { t } = useTranslation();
+  const icons = useMemo(() => [
+    {
+      id: "Socials", 
+      label: t('nav.socials'), 
+      png: socialsPng,
+      video: socialsVideo,
+      color: new THREE.Color(0.4, 0.7, 0.9),
+    },
+    {
+      id: "Resume",
+      label: t('nav.resume'),
+      png: resumePng,
+      video: resumeVideo,
+      color: new THREE.Color(0.9, 0.6, 0.4),
+    },
+    {
+      id: "Projects",
+      label: t('nav.projects'),
+      png: codePng,
+      video: codeVideo,
+      color: new THREE.Color(0.4, 0.8, 0.6),
+    },
+    {
+      id: "About",
+      label: t('nav.about'), 
+      png: avatarPng,
+      video: avatarVideo,
+      color: new THREE.Color(0.8, 0.5, 0.9),
+    },
+    {
+      id: "Skills",
+      label: t('nav.skills'),
+      png: skillPng,
+      video: skillVideo,
+      color: new THREE.Color(0.7, 0.5, 0.9),
+    },
+  ], [t]); 
   const [active, setActive] = useState(null);
   const homeRef = useRef(null);
   const radius = 10;
@@ -96,7 +103,7 @@ const Home = () => {
     startX: 0,
     startRot: 0,
     hasInteracted: false,
-  });
+  });  
 
   const [initialRotationComplete, setInitialRotationComplete] = useState(false);
   const rotationSpeedRef = useRef(0.2);
@@ -117,8 +124,7 @@ const Home = () => {
     }
   };
 
-  // Update handleIconClick to include navigation
-  const handleIconClick = (iconLabel) => {
+  const handleIconClick = (iconId) => {
     const sectionMap = {
       About: "about-section",
       Skills: "skills-section",
@@ -126,7 +132,7 @@ const Home = () => {
       Resume: "resume-section",
       Socials: "socials-section",
     };
-    scrollToSection(sectionMap[iconLabel]);
+    scrollToSection(sectionMap[iconId]);
   };
 
   useEffect(() => {
@@ -247,7 +253,7 @@ const Home = () => {
                       setActive={setActive}
                       index={i}
                       position={panelPositions[i]}
-                      onIconClick={handleIconClick}
+                      onIconClick={() => handleIconClick(icon.id)} 
                       isParentVisible={isInView}
                     />
                   </motion.group>
