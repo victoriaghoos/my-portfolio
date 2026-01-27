@@ -40,7 +40,7 @@ const projects = [
   {
     id: 3,
     title: "Search Infrastructure",
-    subtitle: "OpenSearch • Docker",
+    subtitle: "OpenSearch • Docker • Vue • .NET",
     description: "Internal project optimizing large-scale data retrieval.",
     isClassified: true,
     color: "#e9d5ff",
