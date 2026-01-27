@@ -213,13 +213,12 @@ const Home = () => {
                   : "default",
           }}
         >
-          <div className="home-3d">
+          <div id="home-3d" className="home-3d">
             <NightSkyBackground mouse={mouse} clicks={clicks} />
 
             {initialRotationComplete && !hasDragged && (
               <DragHint isVisible={!hasDragged} />
             )}
-
             <Canvas
               camera={{ position: [0, 5, 20], fov: 45 }}
               eventSource={document.getElementById("root")}
