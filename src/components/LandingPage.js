@@ -49,7 +49,11 @@ const LandingPage = () => {
       </div>
 
       {showSkipButton && !transitionActive && (
-        <button className="skip-intro-button" onClick={() => setTransitionActive(true)}>
+        <button 
+          className="skip-intro-button" 
+          onClick={() => setTransitionActive(true)}
+          style={{ pointerEvents: showSkipButton ? 'auto' : 'none', opacity: showSkipButton ? 1 : 0 }}
+        >
           Skip Intro
         </button>
       )}
