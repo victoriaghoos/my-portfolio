@@ -4,7 +4,9 @@ import { Environment } from "@react-three/drei";
 import { motion, useInView } from "framer-motion";
 import * as THREE from "three";
 import "../styles/home.scss";
+
 import MusicPlayer from "./MusicPlayer.js";
+import LanguageSelector from "./LanguageSelector.js";
 
 import avatarVideo from "../assets/images/avatar.mp4";
 import avatarPng from "../assets/images/avatar.png";
@@ -193,6 +195,7 @@ const Home = () => {
   return (
     <>
       <div className="main-container">
+        <LanguageSelector />
         <MusicPlayer />
         <section
           ref={homeRef}

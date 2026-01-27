@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
 import sakuraTree from "../../assets/images/sakura2.png";
 import petalImg from "../../assets/images/petal.png";
@@ -144,6 +145,7 @@ const SkillsSection = () => {
     },
   };
 
+  const { t } = useTranslation();
   return (
     <section className="skills-section">
       {/* 1. ACHTERGROND */}
@@ -177,7 +179,7 @@ const SkillsSection = () => {
       >
         <header className="header-container">
           <motion.h2 className="main-title" variants={itemVariants}>
-            SKILLS
+            {t('skills')}
           </motion.h2>
           <motion.div className="title-underline" variants={itemVariants} />
         </header>

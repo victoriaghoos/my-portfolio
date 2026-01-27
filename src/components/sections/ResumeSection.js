@@ -1,5 +1,6 @@
 import React, { forwardRef, useRef, useMemo, useState, useEffect } from "react";
 import HTMLFlipBook from "react-pageflip";
+import { useTranslation } from 'react-i18next';
 import {
   Code,
   GraduationCap,
@@ -233,6 +234,7 @@ const ResumeSection = ({ id }) => {
     };
   }, [currentPage]);
 
+  const { t } = useTranslation();
   return (
     <section id={id} className="resume-section">
       <StarBackground />
@@ -269,7 +271,7 @@ const ResumeSection = ({ id }) => {
               className="bookmark-text"
               style={{ opacity: isFrontCover || isBackCover ? 0 : 1 }}
             >
-              PDF CV
+              {t('resume')}
             </span>
           </div>
 

@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Cloud, Stars, Sparkles, Float } from "@react-three/drei";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail, ArrowUpCircle } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SocialsSection.scss";
 
 const CLOUD_URL = "https://raw.githubusercontent.com/pmndrs/drei-assets/456060a26bbeb8fdf9d32ff4dd80fa95863c129e/cloud.png";
@@ -103,6 +104,7 @@ const SocialsSection = ({ id }) => {
     }
   };
 
+  const { t } = useTranslation();
   return (
     <section id={id} className="socials-section">
       <div className="transition-gradient-top"></div>
@@ -119,7 +121,7 @@ const SocialsSection = ({ id }) => {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
         >
-          <h2 className="section-title">Establish Connection</h2>
+          <h2 className="section-title">{t('contact')}</h2>
           <p className="section-subtitle">A new horizon awaits.</p>
         </motion.div>
 

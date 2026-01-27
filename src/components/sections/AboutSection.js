@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import '../../styles/sections/AboutSection.scss';
 import foto1 from '../../assets/images/foto1.jpg';
 
@@ -43,6 +44,7 @@ const AboutSection = ({ id }) => {
     }
   };
 
+  const { t } = useTranslation();
   return (
     <section id={id} ref={sectionRef} className="about-section">
       <div className="cosmic-background">
@@ -63,7 +65,7 @@ const AboutSection = ({ id }) => {
         >
           <motion.div className="section-header" variants={textVariants}>
             <h2 className="section-title">
-              <span className="title-glow">About Me</span>
+              <span className="title-glow">{t('about')}</span>
             </h2>
             <div className="title-underline"></div>
           </motion.div>

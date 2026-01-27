@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import {
   Music,
   Star,
@@ -123,6 +124,7 @@ const ProjectsSection = ({ id }) => {
     });
   }, []);
 
+  const { t } = useTranslation();
   return (
     <section id={id} className="projects-section">
       <div className="stars-container">
@@ -180,7 +182,7 @@ const ProjectsSection = ({ id }) => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h2 className="section-title">
-            <span className="title-glow">My Projects</span>
+            <span className="title-glow">{t('projects')}</span>
           </h2>
           <div className="title-underline"></div>
         </motion.div>
