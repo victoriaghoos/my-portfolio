@@ -69,7 +69,6 @@ const SilkSkyScene = memo(() => {
   );
 });
 
-// Verbeterde SocialCard met aanpasbare strokeWidth voor visuele balans
 const SocialCard = ({ icon: Icon, title, handle, link, delay, strokeWidth = 1.5 }) => {
   return (
     <motion.a
@@ -122,33 +121,33 @@ const SocialsSection = ({ id }) => {
           transition={{ duration: 1 }}
         >
           <h2 className="section-title">{t('contact')}</h2>
-          <p className="section-subtitle">A new horizon awaits.</p>
+          <p className="section-subtitle">{t('socials.subtitle')}</p>
         </motion.div>
 
-        <div className="cards-grid">
+        <div className="cards-grid">  
           <SocialCard
             icon={Linkedin}
             title="LinkedIn"
-            handle="Let's Connect"
+            handle={t('socials.linkedin_handle')}
             link="https://linkedin.com/in/jouwnaam"
             delay={0.2}
-            strokeWidth={1.5} // Standaard
+            strokeWidth={1.5}
           />
           <SocialCard
             icon={Github}
             title="GitHub"
-            handle="View Projects"
+            handle={t('socials.github_handle')} 
             link="https://github.com/victoriaghoos"
             delay={0.4}
-            strokeWidth={1.7} // Iets dikker omdat Github veel kleine details heeft
+            strokeWidth={1.7} 
           />
           <SocialCard
             icon={Mail}
             title="Email"
-            handle="Contact Me"
+            handle={t('socials.email_handle')}
             link="mailto:victoriamarinus@gmail.com"
             delay={0.6}
-            strokeWidth={1.2} // Dunner omdat een envelop een "zware" dichte vorm is
+            strokeWidth={1.2} 
           />
         </div>
 
@@ -165,7 +164,7 @@ const SocialsSection = ({ id }) => {
             whileTap={{ scale: 0.95 }}
           >
             <ArrowUpCircle size={24} strokeWidth={1.5} />
-            <span>Return to Cosmos</span>
+            <span>{t('socials.return_cosmos')}</span>
           </motion.button>
           <p className="copyright">© 2026 Victoria Portfolio.</p>
         </motion.div>

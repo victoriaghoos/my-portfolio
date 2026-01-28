@@ -40,5 +40,12 @@
     "devops": "DevOps & infrastructuur",
     "tooling": "Tools & versiebeheer"
   },
-  "contact": "Contact"
+  "contact": "Neem contact op",
+  "socials": {
+    "subtitle": "Een nieuwe horizon wacht.",
+    "linkedin_handle": "Laten we connecteren",
+    "github_handle": "Bekijk projecten",
+    "email_handle": "Stuur een bericht",
+    "return_cosmos": "Terug naar de Cosmos"
+  }
 }

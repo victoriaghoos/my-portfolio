@@ -40,5 +40,12 @@
     "devops": "DevOps・インフラ",
     "tooling": "ツール・バージョン管理"
   },
-  "contact": "連絡先"
+  "contact": "お問い合わせ",
+  "socials": {
+    "subtitle": "新しい地平線が待っています。",
+    "linkedin_handle": "つながりましょう",
+    "github_handle": "プロジェクトを見る",
+    "email_handle": "連絡する",
+    "return_cosmos": "コスモスに戻る"
+  }
 }

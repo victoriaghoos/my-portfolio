@@ -40,5 +40,12 @@
     "devops": "DevOps & Infrastructure",
     "tooling": "Tooling & Version Control"
   },
-  "contact": "Contact"
+  "contact": "Get in Touch",
+  "socials": {
+    "subtitle": "A new horizon awaits.",
+    "linkedin_handle": "Let's Connect",
+    "github_handle": "View Projects",
+    "email_handle": "Contact Me",
+    "return_cosmos": "Return to Cosmos"
+  }
 }

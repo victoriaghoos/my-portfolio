@@ -40,5 +40,12 @@
     "devops": "DevOps et infrastructure",
     "tooling": "Outils et gestion de versions"
   },
-  "contact": "Contact"
+  "contact": "Contact",
+  "socials": {
+    "subtitle": "Un nouvel horizon t'attend.",
+    "linkedin_handle": "On se connecte ?",
+    "github_handle": "Découvrir mes projets",
+    "email_handle": "Contacte-moi",
+    "return_cosmos": "Retour au Cosmos"
+  }
 }
