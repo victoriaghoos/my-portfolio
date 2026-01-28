@@ -14,6 +14,22 @@
     "bio_p3": "Ik werk toe naar een <1>stage in Tokio in 2027</1> en plan om na mijn afstuderen naar Saitama te verhuizen. Ik hou ervan om technische nauwkeurigheid te combineren met creativiteit, of dat nu in code is of achter de camera."
   },
   "projects": "Projecten",
+  "classified": "GECLASSIFICEERD",
+  "project_items": {
+    "p1": {
+      "desc": "Realtime wedstrijdupdates met SignalR-websockets.",
+      "context": "SOLO PROJECT"
+    },
+    "p2": {
+      "desc": "Mobiele applicatie voor het beheren van community-activiteiten.",
+      "context": "GROEPSPROJECT"
+    },
+    "p3": {
+      "title": "Zoekinfrastructuur",
+      "desc": "Intern project voor het optimaliseren van grootschalige dataverwerking.",
+      "context": "STAGE"
+    }
+  },
   "resume": "CV",
   "skills": "Vaardigheden",
   "skills_categories": {

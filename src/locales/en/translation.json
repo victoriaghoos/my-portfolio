@@ -14,6 +14,22 @@
     "bio_p3": "I'm actively working toward my goal of a <1>Tokyo internship in 2027</1>, with plans to relocate permanently to Saitama after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture."
   },
   "projects": "Projects",
+  "classified": "CLASSIFIED",
+  "project_items": {
+    "p1": {
+      "desc": "Real-time match updates using SignalR websockets.",
+      "context": "SOLO PROJECT"
+    },
+    "p2": {
+      "desc": "Mobile application for community activity management.",
+      "context": "GROUP EFFORT"
+    },
+    "p3": {
+      "title": "Search Infrastructure",
+      "desc": "Internal project optimizing large-scale data retrieval.",
+      "context": "INTERNSHIP"
+    }
+  },
   "resume": "Resume",
   "skills": "Skills",
   "skills_categories": {

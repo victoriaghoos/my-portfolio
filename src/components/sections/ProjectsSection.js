@@ -16,40 +16,41 @@ import "../../styles/sections/ProjectsSection.scss";
 import baseballImg from "../../assets/images/BaseballLive.png";
 import flutterImg from "../../assets/images/VrijeTeid.png";
 
-const projects = [
-  {
-    id: 1,
-    title: "BaseballLive",
-    subtitle: "Blazor • SignalR • C#",
-    description: "Real-time match updates using SignalR websockets.",
-    image: baseballImg,
-    color: "#ffbd7a",
-    year: "2024",
-    context: "SOLO PROJECT",
-  },
-  {
-    id: 2,
-    title: "Vrije Teid!",
-    subtitle: "Flutter • Dart • Firebase",
-    description: "Mobile application for community activity management.",
-    image: flutterImg,
-    color: "#a5f3fc",
-    year: "2024",
-    context: "GROUP EFFORT",
-  },
-  {
-    id: 3,
-    title: "Search Infrastructure",
-    subtitle: "OpenSearch • Docker • Vue • .NET",
-    description: "Internal project optimizing large-scale data retrieval.",
-    isClassified: true,
-    color: "#e9d5ff",
-    year: "2025",
-    context: "INTERNSHIP",
-  },
-];
-
 const ProjectsSection = ({ id }) => {
+  const { t } = useTranslation();
+  const projects = useMemo(() => [
+    {
+      id: 1,
+      title: "BaseballLive", 
+      subtitle: "Blazor • SignalR • C#",
+      description: t('project_items.p1.desc'),
+      image: baseballImg,
+      color: "#ffbd7a",
+      year: "2024",
+      context: t('project_items.p1.context'), 
+    },
+    {
+      id: 2,
+      title: "Vrije Teid!", 
+      subtitle: "Flutter • Dart • Firebase",
+      description: t('project_items.p2.desc'), 
+      image: flutterImg,
+      color: "#a5f3fc",
+      year: "2024",
+      context: t('project_items.p2.context'), 
+    },
+    {
+      id: 3,
+      title: t('project_items.p3.title'), 
+      subtitle: "OpenSearch • Docker • Vue • .NET",
+      description: t('project_items.p3.desc'),
+      isClassified: true,
+      color: "#e9d5ff",
+      year: "2025",
+      context: t('project_items.p3.context'), 
+    },
+  ], [t]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -124,7 +125,6 @@ const ProjectsSection = ({ id }) => {
     });
   }, []);
 
-  const { t } = useTranslation();
   return (
     <section id={id} className="projects-section">
       <div className="stars-container">
@@ -209,7 +209,7 @@ const ProjectsSection = ({ id }) => {
                 <div className="album-art">
                   {project.isClassified ? (
                     <div className="classified-overlay">
-                      <span>CLASSIFIED</span>
+                      <span>{t('classified')}</span>
                     </div>
                   ) : (
                     <>

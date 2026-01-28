@@ -14,6 +14,22 @@
     "bio_p3": "Mon objectif est de décrocher un <1>stage à Tokyo en 2027</1>, puis de m’installer à Saitama après mes études. J’aime mélanger rigueur technique et créativité, que ce soit en débuggant du code ou en cherchant la photo parfaite."
   },
   "projects": "Projets",
+  "classified": "CLASSIFIÉ",
+  "project_items": {
+    "p1": {
+      "desc": "Mises à jour de matchs en temps réel avec SignalR WebSockets.",
+      "context": "PROJET SOLO"
+    },
+    "p2": {
+      "desc": "Application mobile pour la gestion des activités communautaires.",
+      "context": "PROJET COLLECTIF"
+    },
+    "p3": {
+      "title": "Recherche",
+      "desc": "Projet interne optimisant la récupération de données à grande échelle.",
+      "context": "STAGE"
+    }
+  },
   "resume": "CV",
   "skills": "Compétences",
   "skills_categories": {
