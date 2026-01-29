@@ -30,7 +30,6 @@
       "context": "INTERNSHIP"
     }
   },
-  "resume": "Resume",
   "skills": "Skills",
   "skills_categories": {
     "languages": "Programming Languages",
@@ -47,5 +46,56 @@
     "github_handle": "View Projects",
     "email_handle": "Contact Me",
     "return_cosmos": "Return to Cosmos"
+  },
+  "resume": "Resume",
+  "resume_content": {
+    "cover": {
+      "subtitle": "Software Engineering",
+      "edition": "Edition 2026 // Portfolio",
+      "built_with": "Built with React"
+    },
+    "p1": {
+      "title": "Professional Profile",
+      "text": "Software engineering student with a strong focus on backend development within the .NET ecosystem. I combine a hands-on background in C# with a bachelor’s degree that deepens my understanding of software architecture and theoretical foundations. I have practical experience building complex search systems using OpenSearch."
+    },
+    "p2": {
+      "title": "Associate Degree",
+      "program": "Programming",
+      "school": "Howest University of Applied Sciences",
+      "distinction": "Graduated with High Distinction",
+      "list_dev": "<1>Development:</1> C# & .NET, HTML5, CSS3, JavaScript",
+      "list_infra": "<1>Infrastructure:</1> MS SQL / T-SQL, Docker",
+      "list_method": "<1>Methodology:</1> Agile/Scrum, Git, GitHub"
+    },
+    "p3": {
+      "title": "Bachelor's Degree",
+      "program": "Applied Informatics",
+      "specialization": "Software Engineering Specialization",
+      "track_info": "<1>Accelerated Track:</1> Direct Year 2 entry based on prior Associate Degree qualifications.",
+      "list_arch": "<1>Architecture:</1> DDD, Design Patterns & Enterprise Systems",
+      "list_eng": "<1>Engineering:</1> Data Structures, Algorithms & QA",
+      "list_cloud": "<1>Cloud & .NET:</1> Advanced ecosystems & Cloud-native deployment"
+    },
+    "p4": {
+      "title": "Experience",
+      "context": "INTERNSHIP • 2025",
+      "role": "Search-driven Data Retrieval System",
+      "bullet_1": "Achieved sub-second response times using <1>OpenSearch</1>.",
+      "bullet_2": "Containerized services with <1>Docker</1> for production."
+    },
+    "p5": {
+      "title": "Goals?",
+      "target_title": "Primary Target: Japan (2027)",
+      "target_text": "Securing a Software Engineering internship in the Tokyo/Saitama region.",
+      "readiness_title": "Skills in Progress",
+      "list_jp": "<1>Japanese:</1> Currently JLPT N4 level (Active study).",
+      "list_tech": "<1>Technical:</1> Expanding Full-stack expertise and building on personal projects."
+    },
+    "p6": {
+      "title": "Thank you for your time",
+      "text": "If you're looking for a dedicated developer with <1>.NET expertise</1> and <3>international project experience</3>, I’d be happy to connect.",
+      "btn_pdf": "Get PDF Version",
+      "scroll_hint": "Discover my socials below"
+    }
   }
 }

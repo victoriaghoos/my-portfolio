@@ -21,7 +21,7 @@
       "context": "SOLO PROJECT"
     },
     "p2": {
-      "desc": "Mobiele applicatie voor het beheren van community-activiteiten.",
+      "desc": "Mobiele app voor het beheren van community-activiteiten.",
       "context": "GROEPSPROJECT"
     },
     "p3": {
@@ -30,7 +30,6 @@
       "context": "STAGE"
     }
   },
-  "resume": "CV",
   "skills": "Vaardigheden",
   "skills_categories": {
     "languages": "Programmeertalen",
@@ -47,5 +46,56 @@
     "github_handle": "Bekijk projecten",
     "email_handle": "Stuur een bericht",
     "return_cosmos": "Terug naar de Cosmos"
+  },
+  "resume": "CV",
+  "resume_content": {
+    "cover": {
+      "subtitle": "Software Engineering",
+      "edition": "Editie 2026 // Portfolio",
+      "built_with": "Gebouwd met React"
+    },
+    "p1": {
+      "title": "Professioneel Profiel",
+      "text": "Software-engineeringstudente met een sterke focus op backend development binnen het .NET-ecosysteem. Ik combineer een praktijkgerichte achtergrond in C# met een bacheloropleiding waarin ik me verdiep in software-architectuur en theoretische fundamenten. Ik deed hands-on ervaring op met het bouwen van complexe zoeksystemen met OpenSearch."
+    },
+    "p2": {
+      "title": "Graduaat",
+      "program": "Programmeren (Graduaat)",
+      "school": "Howest",
+      "distinction": "Afgestudeerd met grote onderscheiding",
+      "list_dev": "<1>Ontwikkeling:</1> C# & .NET, HTML5, CSS3, JavaScript",
+      "list_infra": "<1>Infrastructuur:</1> MS SQL / T-SQL, Docker",
+      "list_method": "<1>Methodologie:</1> Agile/Scrum, Git, GitHub"
+    },
+    "p3": {
+      "title": "Bacheloropleiding",
+      "program": "Toegepaste Informatica",
+      "specialization": "Afstudeerrichting Software Engineering",
+      "track_info": "<1>Verkort traject:</1> Instroom in jaar 2 op basis van mijn behaalde graduaat.",
+      "list_arch": "<1>Architectuur:</1> DDD, Design Patterns & Enterprise-systemen",
+      "list_eng": "<1>Engineering:</1> Datastructuren, algoritmes & QA",
+      "list_cloud": "<1>Cloud & .NET:</1> Geavanceerde ecosystemen & cloud-native deployment"
+    },
+    "p4": {
+      "title": "Ervaring",
+      "context": "STAGE • 2025",
+      "role": "Zoekgestuurd Data-ophaalsysteem",
+      "bullet_1": "Sub-seconde responstijden gerealiseerd met <0>OpenSearch</0>.",
+      "bullet_2": "Services gecontaineriseerd met <0>Docker</0> voor productie."
+    },
+    "p5": {
+      "title": "Goals?",
+      "target_title": "Hoofddoel: Japan (2027)",
+      "target_text": "Mijn doel is een software engineering-stage in de regio Tokio/Saitama zien te vinden.",
+      "readiness_title": "Waar ik nu aan werk",
+      "list_jp": "<1>Japans:</1> Actief bezig met JLPT N4.",
+      "list_tech": "<1>Technisch:</1> Mijn full-stack kennis verder uitbouwen en werken aan persoonlijke projecten."
+    },
+    "p6": {
+      "title": "Bedankt voor je tijd",
+      "text": "Ben je op zoek naar een gedreven developer met <1>.NET-expertise</1> en <3>internationale projectervaring</3>, dan hoor ik graag van je.",
+      "btn_pdf": "PDF-versie bekijken",
+      "scroll_hint": "Ontdek mijn socials hieronder"
+    }
   }
 }

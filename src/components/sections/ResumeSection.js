@@ -1,6 +1,6 @@
 import React, { forwardRef, useRef, useMemo, useState, useEffect } from "react";
 import HTMLFlipBook from "react-pageflip";
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import {
   Code,
   GraduationCap,
@@ -13,6 +13,7 @@ import {
   User,
 } from "lucide-react";
 import "../../styles/sections/ResumeSection.scss";
+import resumePDF from "../../assets/files/Resume2026.pdf";
 
 const StarBackground = () => {
   const stars = useMemo(() => {
@@ -87,6 +88,7 @@ const ResumeSection = ({ id }) => {
   const [nextPageDirection, setNextPageDirection] = useState(null);
   const [flipStartData, setFlipStartData] = useState(null);
   const totalPages = 8;
+  const { t } = useTranslation();
 
   const onFlip = (e) => {
     setCurrentPage(e.data);
@@ -120,7 +122,7 @@ const ResumeSection = ({ id }) => {
   };
 
   const onDownloadCV = () => {
-    window.open("/path-to-your-cv.pdf", "_blank");
+    window.open(resumePDF, "_blank");
   };
 
   // Get bookmark state with immediate updates during flips
@@ -234,7 +236,6 @@ const ResumeSection = ({ id }) => {
     };
   }, [currentPage]);
 
-  const { t } = useTranslation();
   return (
     <section id={id} className="resume-section">
       <StarBackground />
@@ -318,8 +319,8 @@ const ResumeSection = ({ id }) => {
                     <span className="line"></span>
                     <span className="dot"></span>
                   </div>
-                  <h2 className="book-subtitle">Software Engineering</h2>
-                  <div className="edition-badge">Edition 2026 // Portfolio</div>
+                  <h2 className="book-subtitle">{t('resume_content.cover.subtitle')}</h2>
+                  <div className="edition-badge">{t('resume_content.cover.edition')}</div>
                 </div>
               </div>
             </Page>
@@ -327,16 +328,9 @@ const ResumeSection = ({ id }) => {
             {/* Page 1: Professional Profile */}
             <Page number="1" className="page-left">
               <div className="page-inner-centered">
-                <h2 className="page-header">
-                  <User size={18} /> Professional Profile
-                </h2>
+                <h2 className="page-header"><User size={18} /> {t('resume_content.p1.title')}</h2>
                 <div className="section-content">
-                  <p className="summary-text">
-                    Software Engineering student with hands-on .NET experience
-                    and specialization in search-driven data systems. Combines
-                    academic achievement with production experience in C# and
-                    OpenSearch development.
-                  </p>
+                  <p className="summary-text">{t('resume_content.p1.text')}</p>
                 </div>
               </div>
             </Page>
@@ -344,33 +338,21 @@ const ResumeSection = ({ id }) => {
             {/* Page 2: Associate Degree */}
             <Page number="2" className="page-right">
               <div className="page-inner">
-                <h2 className="page-header">
-                  <GraduationCap size={18} /> Associate Degree
-                </h2>
+                <h2 className="page-header"><GraduationCap size={18} /> {t('resume_content.p2.title')}</h2>
                 <div className="section-content">
                   <span className="year-label">2023 - 2025</span>
-                  <h3>Programming (Graduaat)</h3>
-                  <p className="subtitle-text">
-                    Howest University of Applied Sciences
-                  </p>
-
-                  {/* MOVED AND STYLED AS A HIGHLIGHT */}
-                  <p className="distinction-badge">
-                    Graduated with High Distinction
-                  </p>
-
-                  {/* REFORMATTED FOR SCANNABILITY */}
+                  <h3>{t('resume_content.p2.program')}</h3>
+                  <p className="subtitle-text">{t('resume_content.p2.school')}</p>
+                  <p className="distinction-badge">{t('resume_content.p2.distinction')}</p>
                   <ul className="achievement-list">
                     <li>
-                      <strong>Development:</strong> C# & .NET, HTML5, CSS3,
-                      JavaScript
+                      <Trans i18nKey="resume_content.p2.list_dev"><strong>Development:</strong></Trans>
                     </li>
                     <li>
-                      <strong>Infrastructure:</strong> MS SQL / T-SQL, Docker
-                      Containerization
+                      <Trans i18nKey="resume_content.p2.list_infra"><strong>Infrastructure:</strong></Trans>
                     </li>
                     <li>
-                      <strong>Methodology:</strong> Agile/Scrum, Git, GitHub
+                      <Trans i18nKey="resume_content.p2.list_method"><strong>Methodology:</strong></Trans>
                     </li>
                   </ul>
                 </div>
@@ -380,67 +362,38 @@ const ResumeSection = ({ id }) => {
             {/* Page 3: Bachelor's Degree (Page 2) */}
             <Page number="3" className="page-left">
               <div className="page-inner">
-                <h2 className="page-header">
-                  <TrendingUp size={22} /> Bachelor's Degree
-                </h2>
+                <h2 className="page-header"><TrendingUp size={22} /> {t('resume_content.p3.title')}</h2>
                 <div className="section-content">
                   <span className="year-label">2025 - 2027</span>
-                  <h3>Applied Informatics (Bachelor)</h3>
-                  <p className="subtitle-text">
-                    Software Engineering Specialization
-                  </p>
-
+                  <h3>{t('resume_content.p3.program')}</h3>
+                  <p className="subtitle-text">{t('resume_content.p3.specialization')}</p>
                   <div className="highlight-box">
-                    <strong>Accelerated Track:</strong> Direct Year 2 entry
-                    based on prior Associate Degree qualifications.
+                    <Trans i18nKey="resume_content.p3.track_info"><strong>Accelerated Track:</strong></Trans>
                   </div>
-
                   <ul>
-                    <li>
-                      <strong>Architecture:</strong> DDD, Design Patterns &
-                      Enterprise Systems
-                    </li>
-                    <li>
-                      <strong>Engineering:</strong> Data Structures, Algorithms
-                      & QA
-                    </li>
-                    <li>
-                      <strong>Cloud & .NET:</strong> Advanced ecosystems &
-                      Cloud-native deployment
-                    </li>
+                    <li><Trans i18nKey="resume_content.p3.list_arch"><strong>Architecture:</strong></Trans></li>
+                    <li><Trans i18nKey="resume_content.p3.list_eng"><strong>Engineering:</strong></Trans></li>
+                    <li><Trans i18nKey="resume_content.p3.list_cloud"><strong>Cloud & .NET:</strong></Trans></li>
                   </ul>
                 </div>
               </div>
             </Page>
 
+
             {/* Page 4: Professional Experience (Page 3) */}
             <Page number="4" className="page-right">
               <div className="page-inner">
-                <h2 className="page-header">
-                  <Briefcase size={22} /> Professional Experience
-                </h2>
+                <h2 className="page-header"><Briefcase size={22} /> {t('resume_content.p4.title')}</h2>
                 <div className="section-content">
-                  <span className="year-label">INTERNSHIP • 2025</span>
+                  <span className="year-label">{t('resume_content.p4.context')}</span>
                   <h3>Vanden Broele</h3>
-                  <p className="subtitle-text">
-                    Search-driven Data Retrieval System
-                  </p>
-
+                  <p className="subtitle-text">{t('resume_content.p4.role')}</p>
                   <ul>
-                    <li>
-                      Achieved sub-second response times using{" "}
-                      <strong>OpenSearch</strong>.
-                    </li>
-                    <li>
-                      Containerized services with <strong>Docker</strong> for
-                      production.
-                    </li>
+                    <li><Trans i18nKey="resume_content.p4.bullet_1"><strong>OpenSearch</strong></Trans></li>
+                    <li><Trans i18nKey="resume_content.p4.bullet_2"><strong>Docker</strong></Trans></li>
                   </ul>
-
                   <div className="tech-tags-container">
-                    <span>.NET CORE</span> <span>C#</span>{" "}
-                    <span>OPENSEARCH</span> <span>DOCKER</span>{" "}
-                    <span>TYPESCRIPT</span>
+                    <span>.NET CORE</span> <span>C#</span> <span>OPENSEARCH</span> <span>DOCKER</span> <span>TYPESCRIPT</span>
                   </div>
                 </div>
               </div>
@@ -449,31 +402,17 @@ const ResumeSection = ({ id }) => {
             {/* Page 5: Career Vision (Page 4) */}
             <Page number="5" className="page-left">
               <div className="page-inner">
-                <h2 className="page-header">
-                  <Target size={18} /> Career Vision
-                </h2>
+                <h2 className="page-header"><Target size={18} /> {t('resume_content.p5.title')}</h2>
                 <div className="section-content">
                   <div className="goal-section">
-                    <h4 className="subtitle-gold">
-                      Primary Target: Japan (2027)
-                    </h4>
-                    <p>
-                      Securing a Software Engineering internship in the
-                      Tokyo/Saitama region.
-                    </p>
+                    <h4 className="subtitle-gold">{t('resume_content.p5.target_title')}</h4>
+                    <p>{t('resume_content.p5.target_text')}</p>
                   </div>
-
                   <div className="goal-section" style={{ marginTop: "20px" }}>
-                    <h4 className="subtitle-gold">Strategic Readiness</h4>
+                    <h4 className="subtitle-gold">{t('resume_content.p5.readiness_title')}</h4>
                     <ul className="goal-list-compact">
-                      <li>
-                        <strong>Japanese:</strong> Currently JLPT N4 level
-                        (Active study).
-                      </li>
-                      <li>
-                        <strong>Technical:</strong> Expanding Full-stack
-                        expertise.
-                      </li>
+                      <li><Trans i18nKey="resume_content.p5.list_jp"><strong>Japanese:</strong></Trans></li>
+                      <li><Trans i18nKey="resume_content.p5.list_tech"><strong>Technical:</strong></Trans></li>
                     </ul>
                   </div>
                 </div>
@@ -485,21 +424,17 @@ const ResumeSection = ({ id }) => {
               <div className="page-inner-back">
                 <div className="closing-content">
                   <Code size={40} className="faded-icon" />
-                  <h3>Thank you for your time</h3>
+                  <h3>{t('resume_content.p6.title')}</h3>
                   <div className="divider-small"></div>
                   <p className="sub-text">
-                    If you're looking for a dedicated developer with{" "}
-                    <strong>.NET expertise</strong> and{" "}
-                    <strong>international project experience</strong>, I'd
-                    welcome a conversation.
+                    <Trans i18nKey="resume_content.p6.text">
+                      If you're looking for a dedicated developer with <strong>.NET expertise</strong> and <strong>international project experience</strong>, I'd welcome a conversation.
+                    </Trans>
                   </p>
-                  <button
-                    className="download-btn-styled"
-                    onClick={onDownloadCV}
-                  >
-                    <Download size={16} /> Get PDF Version
+                  <button className="download-btn-styled" onClick={onDownloadCV}>
+                    <Download size={16} /> {t('resume_content.p6.btn_pdf')}
                   </button>
-                  <p className="scroll-hint">Discover my socials below</p>
+                  <p className="scroll-hint">{t('resume_content.p6.scroll_hint')}</p>
                 </div>
               </div>
             </Page>
@@ -511,28 +446,12 @@ const ResumeSection = ({ id }) => {
                 <div className="corner-ornament top-right"></div>
                 <div className="corner-ornament bottom-left"></div>
                 <div className="corner-ornament bottom-right"></div>
-
                 <div className="back-cover-content">
-                  <div className="back-seal">
-                    <Code
-                      size={55}
-                      strokeWidth={1}
-                      className="back-logo-icon"
-                    />
-                  </div>
-
+                  <div className="back-seal"><Code size={55} strokeWidth={1} className="back-logo-icon" /></div>
                   <div className="back-text-group">
-                    <div className="title-separator small">
-                      <span className="line"></span>
-                      <span className="dot"></span>
-                      <span className="line"></span>
-                    </div>
-
+                    <div className="title-separator small"><span className="line"></span><span className="dot"></span><span className="line"></span></div>
                     <p className="copyright">© 2026 Victoria Portfolio</p>
-
-                    <div className="tech-badge">
-                      Built with React
-                    </div>
+                    <div className="tech-badge">{t('resume_content.cover.built_with')}</div>
                   </div>
                 </div>
               </div>

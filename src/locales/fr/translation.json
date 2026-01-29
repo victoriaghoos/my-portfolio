@@ -1,6 +1,6 @@
 {
   "nav": {
-    "socials": "Réseaux",
+    "socials": "Socials",
     "resume": "CV",
     "projects": "Projets",
     "about": "À propos",
@@ -17,28 +17,27 @@
   "classified": "CLASSIFIÉ",
   "project_items": {
     "p1": {
-      "desc": "Mises à jour de matchs en temps réel avec SignalR WebSockets.",
+      "desc": "Met à jour les scores en temps réel via SignalR WebSockets.",
       "context": "PROJET SOLO"
     },
     "p2": {
-      "desc": "Application mobile pour la gestion des activités communautaires.",
+      "desc": "Application mobile facilitant la gestion des activités communautaires.",
       "context": "PROJET COLLECTIF"
     },
     "p3": {
       "title": "Recherche",
-      "desc": "Projet interne optimisant la récupération de données à grande échelle.",
+      "desc": "Projet interne visant à optimiser la récupération de grandes quantités de données.",
       "context": "STAGE"
     }
   },
-  "resume": "CV",
   "skills": "Compétences",
   "skills_categories": {
     "languages": "Langages de programmation",
     "backend": "Développement backend",
     "frontend": "Développement frontend",
-    "mobile_desktop": "Développement mobile et desktop",
+    "mobile_desktop": "Applications mobiles et desktop",
     "devops": "DevOps et infrastructure",
-    "tooling": "Outils et gestion de versions"
+    "tooling": "Outils et contrôle de version"
   },
   "contact": "Contact",
   "socials": {
@@ -47,5 +46,56 @@
     "github_handle": "Découvrir mes projets",
     "email_handle": "Contacte-moi",
     "return_cosmos": "Retour au Cosmos"
+  },
+  "resume": "CV",
+  "resume_content": {
+    "cover": {
+      "subtitle": "Software Engineering",
+      "edition": "Édition 2026 // Portfolio",
+      "built_with": "Développé avec React"
+    },
+    "p1": {
+      "title": "Profil professionnel",
+      "text": "Je suis étudiante en informatique et me spécialise dans le développement back-end avec .NET. J’ai une solide expérience pratique en C# et je complète ma formation par des connaissances approfondies en architecture logicielle. J’ai également travaillé sur des systèmes de recherche complexes avec OpenSearch."
+    },
+    "p2": {
+      "title": "Diplôme professionnel",
+      "program": "Programmation",
+      "school": "Howest – Haute École",
+      "distinction": "Diplômée avec grande distinction",
+      "list_dev": "<1>Développement :</1> C# & .NET, HTML5, CSS3, JavaScript",
+      "list_infra": "<1>Infrastructure :</1> MS SQL / T-SQL, conteneurisation Docker",
+      "list_method": "<1>Méthodologie :</1> Agile/Scrum, Git, GitHub"
+    },
+    "p3": {
+      "title": "Bachelier",
+      "program": "Informatique appliquée",
+      "specialization": "Orientation Software Engineering",
+      "track_info": "<1>Parcours accéléré :</1> Accès direct en 2e année sur base du diplôme professionnel.",
+      "list_arch": "<1>Architecture :</1> DDD, Design Patterns & systèmes d’entreprise",
+      "list_eng": "<1>Ingénierie :</1> Structures de données, algorithmes & qualité logicielle",
+      "list_cloud": "<1>Cloud & .NET :</1> Écosystèmes avancés & déploiement cloud-native"
+    },
+    "p4": {
+      "title": "Expérience",
+      "context": "STAGE • 2025",
+      "role": "Système de recherche de données",
+      "bullet_1": "Réduction du temps de réponse à moins d’une seconde grâce à <1>OpenSearch</1>.",
+      "bullet_2": "Déploiement des services en production avec <1>Docker</1>."
+    },
+    "p5": {
+      "title": "Objectifs?",
+      "target_title": "Objectif principal : Japon (2027)",
+      "target_text": "Viser un stage en développement d’applications dans la région de Tokyo / Saitama.",
+      "readiness_title": "Compétences en développement",
+      "list_jp": "<1>Japonais :</1> Niveau JLPT N4 (en cours).",
+      "list_tech": "<1>Technique :</1> Renforcement continu de mes compétences full-stack et création de projets personnels."
+    },
+    "p6": {
+      "title": "Merci pour votre temps",
+      "text": "Si vous recherchez une développeuse motivée avec une <1>expertise .NET</1> et une <3>expérience sur des projets internationaux</3>, n’hésitez pas à me contacter.",
+      "btn_pdf": "Version PDF",
+      "scroll_hint": "Découvrez mes réseaux ci-dessous"
+    }
   }
 }
