@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
-import videoSrc from "../assets/videos/intro.mp4"; // video from https://pixabay.com/videos/skyscrapers-buildings-city-urban-91744/
+import videoSrc from "../assets/videos/intro.mp4"; 
 import posterSrc from "../assets/images/intro.png"; 
 import "../styles/landingPage.scss";
 
@@ -53,6 +53,7 @@ const LandingPage = () => {
           className="skip-intro-button" 
           onClick={() => setTransitionActive(true)}
           style={{ pointerEvents: showSkipButton ? 'auto' : 'none', opacity: showSkipButton ? 1 : 0 }}
+          aria-label="Skip Intro" 
         >
           Skip Intro
         </button>

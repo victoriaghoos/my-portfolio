@@ -1,3 +1,5 @@
+$mobile-breakpoint: 600px;
+
 .landing-page {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -6,14 +8,15 @@
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh; 
+  
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000; // Cruciaal voor de naadloze start
+  background: #000;
   z-index: 1000;
 
-  // De animatie die we gebruiken voor alle elementen
   @keyframes entranceFade {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -28,7 +31,6 @@
     object-fit: cover;
     z-index: 1;
     opacity: 0; 
-    // Fadet direct in gedurende 2 seconden
     animation: entranceFade 2s ease-out forwards;
     transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -45,7 +47,6 @@
         rgba(0, 0, 0, 0.3) 100%);
     z-index: 2;
     opacity: 0;
-    // Begint na 0.5s en fadet heel rustig in (3s)
     animation: entranceFade 3s ease-out 0.5s forwards;
   }
 
@@ -55,17 +56,20 @@
     text-align: center;
     font-family: "Poppins", sans-serif;
     font-weight: 600;
-    font-size: clamp(1.8rem, 4vw, 2.8rem); 
-    max-width: 80vw;
+    font-size: clamp(2.5rem, 5vw, 4rem); 
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%; 
+    max-width: 800px;
     color: white;
     letter-spacing: 1px;
     opacity: 0;
-    // Verschijnt bijna direct (0.2s delay) zodat het typen snel begint
     animation: entranceFade 1.5s ease-out 0.2s forwards;
     transition: all 0.5s ease;
 
-    .message-backdrop {
-      display: none;
+    @media (max-width: $mobile-breakpoint) {
+      padding: 0 15px; 
+      font-size: clamp(1.5rem, 6vw, 2.2rem); 
     }
 
     .typewriter-text {
@@ -87,7 +91,7 @@
     height: 100%;
     z-index: 2;
     opacity: 0;
-    // De bolletjes faden het allertraagst in na 1 seconde voor een cinematic effect
+    pointer-events: none; 
     animation: entranceFade 4s ease-out 1s forwards;
   }
 
@@ -100,6 +104,7 @@
     background: rgba(255, 255, 255, 0.8);
     border-radius: 50%;
     animation: float 3s ease-in-out var(--delay) infinite;
+    will-change: transform; 
 
     &::after {
       content: "";
@@ -115,7 +120,6 @@
     }
   }
 
-  // Animatie voor het verlaten van de pagina
   &.page-exit {
     .background-video {
       transform: scale(1.1);
@@ -149,8 +153,10 @@
 
   .skip-intro-button {
     position: fixed;
-    top: 25px;
-    right: 25px;
+    top: max(25px, env(safe-area-inset-top) + 15px);
+    right: max(25px, env(safe-area-inset-right) + 15px);
+    bottom: auto; 
+    left: auto;
     background: rgba(10, 10, 42, 0.6);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
@@ -168,6 +174,15 @@
     transform: translateY(-10px) scale(0.95);
     animation: buttonEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) 2s forwards;
 
+    @media (max-width: $mobile-breakpoint) {
+      top: auto;  
+      right: auto; 
+      left: 50%;  
+      bottom: max(30px, env(safe-area-inset-bottom) + 20px); 
+      transform: translateX(-50%) translateY(10px) scale(0.95); 
+      animation: buttonEntranceMobile 0.6s cubic-bezier(0.4, 0, 0.2, 1) 2s forwards;
+    }
+
     &::before {
       content: '';
       position: absolute;
@@ -179,16 +194,14 @@
       transition: opacity 0.4s ease;
     }
 
-    &:hover {
+    &:hover, &:active {
       background: rgba(26, 26, 74, 0.8);
       color: #ffffff;
-      transform: translateY(-2px) scale(1.02);
       box-shadow: 0 8px 25px rgba(168, 192, 255, 0.15), 0 0 0 1px rgba(168, 192, 255, 0.2);
       &::before { opacity: 1; }
     }
   }
 
-  // Keyframes voor diverse animaties
   @keyframes float {
     0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
     50% { transform: translateY(-20px) scale(1.1); opacity: 1; }
@@ -212,6 +225,11 @@
   @keyframes buttonEntrance {
     0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  
+  @keyframes buttonEntranceMobile {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.95); }
+    100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
   }
 
   @keyframes buttonExit {
