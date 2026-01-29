@@ -58,7 +58,7 @@ const FallingPetal = () => {
 };
 
 
-const SkillsSection = () => {
+const SkillsSection = ({ id }) => {
   const { t } = useTranslation();
   const stars = useMemo(() => Array.from({ length: 250 }), []);
   const petals = useMemo(() => Array.from({ length: 20 }), []);
@@ -126,7 +126,7 @@ const SkillsSection = () => {
   };
 
   return (
-    <section className="skills-section">
+    <section id={id} className="skills-section">
       {/* 1. ACHTERGROND */}
       <div className="background-elements">
         <div className="nebula-bg" />

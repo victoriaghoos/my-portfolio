@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
-import videoSrc from "../assets/videos/intro.mp4";
+import videoSrc from "../assets/videos/intro.mp4"; // video from https://pixabay.com/videos/skyscrapers-buildings-city-urban-91744/
 import posterSrc from "../assets/images/intro.png"; 
 import "../styles/landingPage.scss";
 

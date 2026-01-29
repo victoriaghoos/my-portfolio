@@ -274,37 +274,43 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 8px 16px;
   cursor: pointer;
-  background: rgba(16, 23, 41, 0.4);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(124, 158, 255, 0.2);
-  border-radius: 50px;
   
-  color: #7c9eff;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.75rem; 
   font-weight: 600;
-  letter-spacing: 1px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
   outline: none;
 
   &:hover {
-    background: rgba(124, 158, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     border-color: rgba(124, 158, 255, 0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(124, 158, 255, 0.15);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(124, 158, 255, 0.3);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
   }
 
   &.active {
-    border-color: rgba(138, 99, 242, 0.4);
-    color: #8a63f2;
+    color: #fff;
+    border-color: #8a63f2;
+    box-shadow: 0 0 15px rgba(138, 99, 242, 0.4);
   }
 
   .dropdown-arrow {
     font-size: 0.6rem;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    opacity: 0.5;
+  }
+
+  &:hover .dropdown-arrow {
+    opacity: 1;
   }
 
   &.active .dropdown-arrow {
@@ -314,42 +320,48 @@ body {
 
 .lang-dropdown {
   position: absolute;
-  top: 120%; 
+  top: calc(100% + 10px); 
   right: 0;
-  width: 140px;
-  background: rgba(16, 23, 41, 0.9);
-  border: 1px solid rgba(124, 158, 255, 0.2);
-  border-radius: 12px;
-  padding: 8px;
+  width: 120px;
+  background: rgba(10, 10, 20, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 6px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-  animation: fadeInDropdown 0.2s ease-out forwards;
+  gap: 2px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  animation: fadeInDropdown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: top right;
 }
+
 
 .lang-option {
   background: transparent;
   border: none;
-  color: #7c9eff;
+  color: rgba(255, 255, 255, 0.6);
   padding: 8px 12px;
   text-align: left;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 4px;
   transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
 
   &:hover {
-    background: rgba(124, 158, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: #fff;
+    padding-left: 16px;
   }
 
   &.selected {
-    background: rgba(138, 99, 242, 0.2);
-    color: #8a63f2;
+    background: linear-gradient(90deg, rgba(138, 99, 242, 0.2), transparent);
+    color: #a184f5;
     font-weight: bold;
+    border-left: 2px solid #a184f5;
   }
 }
 

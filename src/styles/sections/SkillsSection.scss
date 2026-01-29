@@ -124,7 +124,7 @@ $star-white: #ffffff;
   }
 
 
-  // 4. CONTENT (Skills)
+  // 4. CONTENT
   .header-container {
     text-align: center;
     margin-bottom: 5%;
@@ -168,7 +168,7 @@ $star-white: #ffffff;
     }
   }
 
-  // 4. GRID & CARDS (COMPACTER)
+  // 4. GRID & CARDS 
   .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -201,7 +201,7 @@ $star-white: #ffffff;
       }
       
       h3 {
-        color: white; // Gewoon wit voor max contrast, glow doet de rest
+        color: white; 
         font-size: 1.1rem;
         margin: 0;
         font-weight: 700;
@@ -222,9 +222,9 @@ $star-white: #ffffff;
           color: rgba(255, 255, 255, 0.9);
           background: rgba(255, 255, 255, 0.05);
           border: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 6px 14px; // Iets grotere padding
+          padding: 6px 14px; 
           border-radius: 8px;
-          font-size: 0.85rem; // Iets leesbaarder
+          font-size: 0.85rem; 
           font-weight: 500;
           transition: all 0.3s ease;
           

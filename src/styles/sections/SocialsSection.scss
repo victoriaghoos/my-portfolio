@@ -67,7 +67,6 @@ $night-glow: #f0abfc;
             margin-bottom: 20px;
 
             .section-title {
-                font-family: 'Playfair Display', serif;
                 font-size: 3.8rem;
                 color: #fff;
                 margin-bottom: 10px;
@@ -75,7 +74,6 @@ $night-glow: #f0abfc;
             }
 
             .section-subtitle {
-                font-family: 'Montserrat', sans-serif;
                 font-size: 1.1rem;
                 color: rgba(255, 255, 255, 0.9);
                 font-weight: 500;
@@ -141,7 +139,6 @@ $night-glow: #f0abfc;
         z-index: 2;
 
         h3 {
-            font-family: 'Playfair Display', serif;
             color: #fff;
             font-size: 1.6rem;
             margin: 0 0 5px 0;
@@ -150,7 +147,6 @@ $night-glow: #f0abfc;
         }
 
         .handle {
-            font-family: 'VT323', monospace;
             color: rgba(255, 255, 255, 0.8);
             font-size: 1.1rem;
             letter-spacing: 1px;
@@ -206,7 +202,6 @@ $night-glow: #f0abfc;
         display: flex;
         align-items: center;
         gap: 12px;
-        font-family: 'Montserrat', sans-serif;
         font-size: 0.95rem;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -227,8 +222,6 @@ $night-glow: #f0abfc;
     }
 
     .copyright {
-        font-family: 'VT323', monospace;
-        // Donkerpaars/zwart voor contrast met de lichte horizon
         color: #1e1b4b; 
         font-size: 1.1rem;
         font-weight: 700;
