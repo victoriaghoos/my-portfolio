@@ -11,7 +11,9 @@ import {
   Download,
   Target,
   User,
+  ArrowDown
 } from "lucide-react";
+import { motion } from "framer-motion";
 import "../../styles/sections/ResumeSection.scss";
 import resumePDF from "../../assets/files/Resume2026.pdf";
 
@@ -236,12 +238,45 @@ const ResumeSection = ({ id }) => {
     };
   }, [currentPage]);
 
+  const scrollToSocials = () => {
+    const socialsSection = document.getElementById("socials-section");
+    if (socialsSection) {
+      socialsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.8, 
+        ease: "easeOut",
+        when: "beforeChildren", 
+        staggerChildren: 0.2
+      } 
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } }
+  };
+
   return (
     <section id={id} className="resume-section">
       <StarBackground />
 
-      <div className="book-wrapper">
-        <button
+      <motion.div 
+        className="book-wrapper"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.3 }}
+      >
+        <motion.button
+          variants={itemVariants}
           className={`nav-arrow left ${isFrontCover ? 'disabled' : ''}`}
           onClick={handlePrevClick}
           disabled={isFrontCover}
@@ -252,9 +287,9 @@ const ResumeSection = ({ id }) => {
           }}
         >
           <ChevronLeft size={45} />
-        </button>
+        </motion.button>
 
-        <div className="book-container">
+        <motion.div className="book-container" variants={itemVariants}>
           <div
             className={`bookmark-tab ${bookmarkState}`}
             onClick={!isFrontCover && !isBackCover ? onDownloadCV : undefined}
@@ -434,7 +469,21 @@ const ResumeSection = ({ id }) => {
                   <button className="download-btn-styled" onClick={onDownloadCV}>
                     <Download size={16} /> {t('resume_content.p6.btn_pdf')}
                   </button>
-                  <p className="scroll-hint">{t('resume_content.p6.scroll_hint')}</p>
+                  <p 
+                    className="scroll-hint" 
+                    onClick={scrollToSocials}
+                    style={{ 
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      marginTop: '15px' 
+                    }}
+                  >
+                    {t('resume_content.p6.scroll_hint')} 
+                    <ArrowDown size={18} />
+                  </p>
                 </div>
               </div>
             </Page>
@@ -457,9 +506,10 @@ const ResumeSection = ({ id }) => {
               </div>
             </Page>
           </HTMLFlipBook>
-        </div>
+        </motion.div>
 
-        <button
+        <motion.button 
+          variants={itemVariants}
           className={`nav-arrow right ${isBackCover ? 'disabled' : ''}`}
           onClick={handleNextClick}
           disabled={isBackCover}
@@ -470,8 +520,8 @@ const ResumeSection = ({ id }) => {
           }}
         >
           <ChevronRight size={45} />
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </section>
   );
 };

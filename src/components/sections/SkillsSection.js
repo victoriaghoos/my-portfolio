@@ -153,8 +153,11 @@ const SkillsSection = () => {
         className="content-wrapper"
         variants={containerVariants}
         initial="hidden"
-        animate="visible"
-        viewport={{ once: true }}
+        whileInView="visible"
+        viewport={{ 
+          once: false,   
+          amount: 0.3   
+        }}
       >
         <header className="header-container">
           <motion.h2 className="main-title" variants={itemVariants}>
