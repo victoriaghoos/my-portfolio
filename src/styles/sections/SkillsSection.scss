@@ -13,21 +13,34 @@ $star-white: #ffffff;
 .skills-section {
   scroll-snap-align: start;
   position: relative;
-  height: 100vh; 
-  height: 100dvh;
   width: 100%;
   background: $space-black;
+  height: 100vh; 
+  height: 100dvh;
   overflow: hidden;  
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center; 
+  box-sizing: border-box;
+  &, * { box-sizing: border-box; }
 
-.background-elements {
+  @media (max-width: 1024px) {
+    height: auto;        
+    min-height: 100vh; 
+    min-height: 100dvh;    
+    overflow: hidden;  
+    justify-content: flex-start; 
+    padding-top: 100px;    
+    padding: 10vh 2rem; 
+  }
+
+  .background-elements {
     position: absolute;
     inset: 0;
     z-index: 0;
     pointer-events: none;
+    overflow: hidden;
 
     .nebula-bg {
       position: absolute;
@@ -48,53 +61,63 @@ $star-white: #ffffff;
     }
   }
 
-// 2. DE BOMEN
+  // 2. THE TREES
   .trees-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-
-  .tree-wrapper {
     position: absolute;
-    height: 125%; 
-    top: -25%; 
-    width: 75%;   
-    -webkit-mask-image: linear-gradient(to right, black 10%, transparent 100%),
-                        linear-gradient(to top, transparent 5%, black 40%);
-    -webkit-mask-composite: source-in;
-    mask-composite: intersect;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+    transition: opacity 0.3s ease;
 
-    .tree-img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover; 
-      object-position: left bottom; 
-      filter: brightness(0.7) contrast(1.1) saturate(1.8) blur(2px) 
-              drop-shadow(0 0 20px rgba($sakura-glow, 0.4));
-      opacity: 1;
-      mix-blend-mode:screen;
+    .tree-wrapper {
+      position: absolute;
+      height: 125%; 
+      top: -25%; 
+      width: 75%;   
+      -webkit-mask-image: linear-gradient(to right, black 10%, transparent 100%),
+                          linear-gradient(to top, transparent 5%, black 40%);
+      mask-image: linear-gradient(to right, black 10%, transparent 100%),
+                  linear-gradient(to top, transparent 5%, black 40%);
+      -webkit-mask-composite: source-in;
+      mask-composite: intersect;
+
+      .tree-img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+        object-position: left bottom; 
+        filter: brightness(0.7) contrast(1.1) saturate(1.8) blur(2px) 
+                drop-shadow(0 0 20px rgba($sakura-glow, 0.4));
+        opacity: 1;
+        mix-blend-mode: screen;
+      }
+    }
+
+    .left {
+      left: -3%;
+      width: 78%; 
+      top: -24%;  
+      transform: rotate(-2deg);
+    }
+    .right {
+      right: 0%;
+      width: 65%;
+      top: -25%;
+      transform: scaleX(-1) rotate(1.1deg) scale(1.02); 
+    }
+
+    @media (max-width: 1024px) {
+      opacity: 0.4;
+    }
+    @media (max-width: 768px) {
+      opacity: 0.2;
     }
   }
 
-  .left {
-    left: -3%;
-    width: 78%; 
-    top: -24%;  
-    transform: rotate(-2deg);
-  }
-  .right {
-    right: 0%;
-    width: 65%;
-    top: -25%;
-    transform: scaleX(-1) rotate(1.1deg) scale(1.02); 
-  }
-}
-
   // 3. PETALS
-.petals-layer {
+  .petals-layer {
     position: absolute;
     inset: 0;
     z-index: 5; 
@@ -103,12 +126,18 @@ $star-white: #ffffff;
     
     .sakura-petal-real {
       position: absolute;
-      width: 14px; 
+      width: clamp(8px, 1.2vw, 16px); 
       height: auto;
       object-fit: contain;
       filter: blur(1.5px) brightness(0.9) saturate(1.8) 
               drop-shadow(0 0 8px rgba($sakura-glow, 0.6));
+      -webkit-backface-visibility: visible;
       backface-visibility: visible; 
+
+      @media (max-width: 600px) {
+        opacity: 0.8;
+        filter: blur(1px) brightness(0.9); 
+      }
     }
   }
 
@@ -120,16 +149,26 @@ $star-white: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
-     max-height: 95vh;
+    max-height: 95vh;
+    
+    @media (max-width: 1024px) {
+      max-height: none;
+      justify-content: center;
+    }
   }
 
 
   // 4. CONTENT
   .header-container {
     text-align: center;
-    margin-bottom: 5%;
-    margin-top: 5%;
+    margin-top: 0;
     position: relative;
+    margin-bottom: clamp(1.5rem, 4vh, 3rem); 
+    flex-shrink: 0;
+
+    @media (max-width: 768px) {
+      margin-bottom: 2rem;
+    }
 
     &::before {
       content: '';
@@ -145,7 +184,7 @@ $star-white: #ffffff;
     }
     
     .main-title {
-      font-size: clamp(2rem, 6vh, 3.5rem);
+      font-size: clamp(2.5rem, 6vh, 3.5rem);
       font-weight: 900;
       color: white;
       text-transform: uppercase;
@@ -155,6 +194,10 @@ $star-white: #ffffff;
       filter: drop-shadow(0 0 30px rgba($sakura-glow, 0.4));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      
+      @media (max-width: 600px) {
+        font-size: 2.2rem;
+      }
     }
     
     .title-underline {
@@ -168,20 +211,33 @@ $star-white: #ffffff;
     }
   }
 
-  // 4. GRID & CARDS 
+  // 5. GRID & CARDS 
   .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px; 
+    gap: clamp(15px, 2.5vh, 25px); 
     width: 100%;
     max-width: 1200px;
     padding: 0 20px;
     margin-bottom: 40px; 
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 0 2rem;
+    }
+
+    @media (max-width: 700px) {
+      grid-template-columns: 1fr;
+      padding: 0 1.5rem;
+      gap: 15px;
+    }
 
     .skill-category-card {  
       background: linear-gradient(160deg, rgba(30, 10, 50, 0.4) 0%, rgba(5, 2, 12, 0.8) 100%);
       border: 1px solid rgba($sakura-glow, 0.15);
       border-top: 1px solid rgba(255, 255, 255, 0.15);
+      -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(8px);
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       border-radius: 20px; 
@@ -192,6 +248,10 @@ $star-white: #ffffff;
       flex-direction: column;
       align-items: center; 
       gap: 15px;
+
+      @media (max-width: 700px) {
+        padding: 20px;
+      }
 
       &:hover {
         transform: translateY(-5px);
@@ -238,6 +298,13 @@ $star-white: #ffffff;
         }
       }
     }
+  }
+}
+
+@media (max-height: 700px) and (max-width: 1024px) {
+  .skills-section {
+    justify-content: flex-start;
+    padding-top: 80px; 
   }
 }
 

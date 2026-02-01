@@ -507,8 +507,7 @@ $white: #ffffff;
   .about-section {
     height: auto; 
     min-height: 100vh; 
-    overflow-y: visible; 
-    overflow-x: hidden;
+    overflow: hidden;
     display: flex;       
     flex-direction: column;
     justify-content: flex-start; 
