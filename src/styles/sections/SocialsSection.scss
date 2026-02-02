@@ -7,23 +7,22 @@ $night-indigo: #2e1065;  // Midden: Diep paars
 $night-magenta: #a21caf; // De band boven de horizon: Magenta
 $night-glow: #f0abfc;
 
+
 .socials-section {
     scroll-snap-align: start;
     position: relative;
-    height: 100vh;
-    width: 100%;
+    width: 100vw;
+    min-height: 100vh;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    // LINEAIRE GRADIENT (Zoals een echte luchtlaag)
     background: linear-gradient(to bottom, 
-        $night-space 0%,     /* De ruimte */
-        $night-space 30%,    /* Blijft lang donker */
-        $night-indigo 60%,   /* Overgang naar paars */
-        $night-magenta 85%,  /* De roze band */
-        $night-glow 100%     /* Het licht achter de wolken */
+        $night-space 0%,
+        $night-space 30%,
+        $night-indigo 60%,
+        $night-magenta 85%,
+        $night-glow 100%
     );
 
     .transition-gradient-top {
@@ -31,16 +30,12 @@ $night-glow: #f0abfc;
         top: 0;
         left: 0;
         width: 100%;
-        height: 250px; // Iets langer voor zachtere overgang
-        background: linear-gradient(to bottom, 
-            $cosmos-dark 0%, 
-            transparent 100%
-        );
+        height: 250px;
+        background: linear-gradient(to bottom, $cosmos-dark 0%, transparent 100%);
         z-index: 5;
         pointer-events: none;
     }
 
-    // ... De rest van je CSS (cards, etc) blijft hetzelfde ...
     .canvas-container {
         position: absolute;
         top: 0;
@@ -48,7 +43,7 @@ $night-glow: #f0abfc;
         width: 100%;
         height: 100%;
         z-index: 1;
-        pointer-events: none; 
+        pointer-events: none;
     }
 
     .content-overlay {
@@ -87,9 +82,68 @@ $night-glow: #f0abfc;
             display: flex;
             justify-content: center;
             gap: 30px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             width: 100%;
+            max-width: 100vw;
+            padding-left: min(3vw, 32px);
+            padding-right: min(3vw, 32px);
+            box-sizing: border-box;
         }
+    }
+}
+
+// Alleen op desktop: alles past altijd binnen 1 scherm, geen wrapping
+@media (min-width: 1024px) {
+    .socials-section {
+        height: 100vh;
+        min-height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+        .content-overlay {
+            gap: 2.5vw;
+            .cards-grid {
+                flex-wrap: nowrap;
+                gap: 2vw;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+    .social-card {
+        width: clamp(220px, 28vw, 300px);
+        height: clamp(140px, 18vw, 190px);
+        padding: clamp(18px, 2.5vw, 30px);
+        margin-left: min(1vw, 12px);
+        margin-right: min(1vw, 12px);
+        box-sizing: border-box;
+    }
+}
+
+// Op kleinere schermen: stacking, wrapping, scrollen toegestaan
+@media (max-width: 1023px) {
+    .socials-section {
+        min-height: 100vh;
+        height: auto;
+        .content-overlay {
+            gap: 5vw;
+            padding: 0 1vw;
+            .cards-grid {
+                flex-wrap: wrap;
+                flex-direction: column;
+                align-items: center;
+                gap: 4vw;
+            }
+        }
+    }
+    .social-card {
+        width: 95vw;
+        max-width: 350px;
+        min-width: 180px;
+        height: clamp(110px, 28vw, 160px);
+        padding: clamp(10px, 3vw, 18px);
+        margin-left: min(2vw, 16px);
+        margin-right: min(2vw, 16px);
+        box-sizing: border-box;
     }
 }
 
