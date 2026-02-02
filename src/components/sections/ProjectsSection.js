@@ -173,20 +173,20 @@ const ProjectsSection = ({ id }) => {
         </motion.div>
       ))}
 
-      <div className="section-content">
-        <motion.div 
-          className="section-header"
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          <h2 className="section-title">
-            <span className="title-glow">{t('projects')}</span>
-          </h2>
-          <div className="title-underline"></div>
-        </motion.div>
+      <motion.div 
+        className="section-header"
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <h2 className="section-title">
+          <span className="title-glow">{t('projects')}</span>
+        </h2>
+        <div className="title-underline"></div>
+      </motion.div>
 
+      <div className="section-content">
         <motion.div 
           className="projects-container"
           variants={containerVariants}
@@ -205,7 +205,6 @@ const ProjectsSection = ({ id }) => {
               }}
             >
               <div className="card-hardware">
-                {" "}
                 <div className="album-art">
                   {project.isClassified ? (
                     <div className="classified-overlay">

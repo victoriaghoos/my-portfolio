@@ -87,6 +87,18 @@ $white: #ffffff;
         padding: 4rem 1.25rem;
     }
 
+    .section-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        z-index: 10;
+        flex-shrink: 0;
+        width: 100%;
+        padding-top: 0.5rem;
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+
     .section-content {
         position: relative;
         z-index: 5;
@@ -98,7 +110,13 @@ $white: #ffffff;
         flex: 1;
         justify-content: center;
         min-height: 0;
-        box-sizing: border-box; 
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 1024px) {
+        .section-content {
+            justify-content: center;
+        }
     }
 
     .section-header {
