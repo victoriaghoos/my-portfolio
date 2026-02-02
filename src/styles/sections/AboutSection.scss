@@ -11,6 +11,7 @@ $white: #ffffff;
   z-index: 1000;
   position: relative;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background:  
     radial-gradient(circle at 50% 100%, rgba($sakura-glow, 0.15) 0%, transparent 50%),
