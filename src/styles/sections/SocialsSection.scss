@@ -1,10 +1,8 @@
 $cosmos-dark: #010208;
 $book-gold: #c5a059;
-
-// EXACTE PALET VAN FOTO 2
-$night-space: #0f1020;   // Bovenste stuk: Diep donkerblauw/zwart
-$night-indigo: #2e1065;  // Midden: Diep paars
-$night-magenta: #a21caf; // De band boven de horizon: Magenta
+$night-space: #0f1020;   
+$night-indigo: #2e1065;  
+$night-magenta: #a21caf; 
 $night-glow: #f0abfc;
 
 
@@ -92,7 +90,6 @@ $night-glow: #f0abfc;
     }
 }
 
-// Alleen op desktop: alles past altijd binnen 1 scherm, geen wrapping
 @media (min-width: 1024px) {
     .socials-section {
         height: 100vh;
@@ -119,7 +116,6 @@ $night-glow: #f0abfc;
     }
 }
 
-// Op kleinere schermen: stacking, wrapping, scrollen toegestaan
 @media (max-width: 1023px) {
     .socials-section {
         min-height: 100vh;
@@ -151,7 +147,7 @@ $night-glow: #f0abfc;
     position: relative;
     width: 300px;
     height: 190px;
-    background: rgba(15, 16, 32, 0.4); // Donkerblauw glas
+    background: rgba(15, 16, 32, 0.4); 
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -230,7 +226,7 @@ $night-glow: #f0abfc;
 
         .icon-wrapper {
             transform: scale(1.15);
-            color: $night-glow; // Icon wordt roze/lila
+            color: $night-glow; 
         }
 
         .card-shine {
