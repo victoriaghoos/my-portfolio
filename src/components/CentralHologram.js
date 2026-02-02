@@ -4,7 +4,8 @@ import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import circularImage from "../assets/images/me.png";
 
-const CentralHologram = () => {
+
+const CentralHologram = ({ scale = 1, radius = 5, halo = [5.2, 5.4] }) => {
   const texture = useTexture(circularImage);
   const ref = useRef();
   const haloRef = useRef();
@@ -22,9 +23,9 @@ const CentralHologram = () => {
   });
 
   return (
-    <group ref={ref}>
+    <group ref={ref} scale={[scale, scale, scale]}>
       <mesh ref={haloRef}>
-        <ringGeometry args={[5.2, 5.4, 64]} />
+        <ringGeometry args={[halo[0], halo[1], 64]} />
         <meshBasicMaterial
           color="#7c9eff"
           transparent={true}
@@ -34,7 +35,7 @@ const CentralHologram = () => {
       </mesh>
 
       <mesh position={[0, 0, 0]}>
-        <circleGeometry args={[5, 64]} />
+        <circleGeometry args={[radius, 64]} />
         <meshStandardMaterial
           map={texture}
           transparent={true}

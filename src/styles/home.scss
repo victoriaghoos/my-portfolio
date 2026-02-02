@@ -1,3 +1,82 @@
+// --- Mobile-specific layout for home icons and hologram ---
+@media (max-width: 599px) {
+  .home-3d {
+    height: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 32px;
+    padding-bottom: 24px;
+    overflow: visible;
+  }
+
+  .mobile-home-layout {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 24px;
+    margin-top: 0;
+  }
+
+  .mobile-hologram-wrapper {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .mobile-icons-row {
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 0 12px 8px 12px;
+    scrollbar-width: thin;
+    scrollbar-color: #8a63f2 #0b0e14;
+  }
+
+  .mobile-icon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background: none;
+    border: none;
+    cursor: pointer;
+    min-width: 64px;
+    padding: 0 2px;
+    transition: transform 0.15s;
+  }
+  .mobile-icon-btn:active {
+    transform: scale(0.96);
+  }
+  .mobile-icon-label {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    color: #2c3e50;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.85);
+    border-radius: 4px;
+    padding: 2px 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+
+  .drag-hint {
+    display: none !important;
+  }
+}
 html, body {
   margin: 0;
   padding: 0;
@@ -100,6 +179,10 @@ body {
   animation: floatHint 3s ease-in-out infinite, 
              fadeInUp 0.6s ease-out;
   z-index: 10;
+  // Hide drag hint on mobile (redundant, but for safety)
+  @media (max-width: 599px) {
+    display: none !important;
+  }
 }
 
 @keyframes floatHint {

@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Html, useTexture, Float } from "@react-three/drei";
 import * as THREE from "three";
 
-const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, onIconClick }) => {
+const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, onIconClick, iconScale = 0.7, iconPlaneSize = 1.6, ringInner = 0.9, ringOuter = 1.0, labelMargin = 70 }) => {
   const ref = useRef();
   const pngTexture = useTexture(icon.png);
   const [hovered, setHovered] = useState(false);
@@ -125,7 +125,7 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
     <group ref={ref} position={position}>
       <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
         <mesh ref={ringRef}>
-          <ringGeometry args={[0.9, 1.0, 32]} />
+          <ringGeometry args={[ringInner, ringOuter, 32]} />
           <meshBasicMaterial
             color={icon.color}
             transparent
@@ -134,17 +134,17 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
           />
         </mesh>
 
-        <group ref={iconRef} scale={[0.7, 0.7, 1]}>
+        <group ref={iconRef} scale={[iconScale, iconScale, 1]}>
           <mesh
             ref={meshRef}
             onPointerOver={handlePointerOver}
             onPointerOut={handlePointerOut}
             onClick={(e) => {
-            e.stopPropagation();
-            onIconClick(icon.label);
-          }}
+              e.stopPropagation();
+              onIconClick(icon.label);
+            }}
           >
-            <planeGeometry args={[1.6, 1.6]} />
+            <planeGeometry args={[iconPlaneSize, iconPlaneSize]} />
             <meshStandardMaterial
               map={
                 hovered && videoTextureRef.current
@@ -167,7 +167,7 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
               width: "100%",
               display: isParentVisible ? "flex" : "none",
               justifyContent: "center",
-              marginTop: "70px",
+              marginTop: `${labelMargin}px`,
               pointerEvents: "none",
               opacity: hovered ? 1 : 0.9,
               transition: "none",
