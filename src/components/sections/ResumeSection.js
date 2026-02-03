@@ -83,8 +83,30 @@ const Page = forwardRef((props, ref) => {
   );
 });
 
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined,
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  return windowSize;
+};
+
 const ResumeSection = ({ id }) => {
   const bookRef = useRef(null);
+  const { width: windowWidth } = useWindowSize();
+  const isMobile = windowWidth < 1000; 
   const [currentPage, setCurrentPage] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
   const [nextPageDirection, setNextPageDirection] = useState(null);
@@ -129,7 +151,7 @@ const ResumeSection = ({ id }) => {
 
   // Get bookmark state with immediate updates during flips
   const getBookmarkState = () => {
-    // Als we aan het flippen zijn, gebruik dan voorspelde state
+    if (isMobile) return "is-mobile-hidden"; 
     if (isFlipping && nextPageDirection && flipStartData !== null) {
       let predictedPage;
       
@@ -269,7 +291,7 @@ const ResumeSection = ({ id }) => {
       <StarBackground />
 
       <motion.div 
-        className="book-wrapper"
+        className={`book-wrapper ${isMobile ? 'mobile-mode' : ''}`}
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -286,10 +308,11 @@ const ResumeSection = ({ id }) => {
             opacity: isFrontCover ? 0.3 : 1,
           }}
         >
-          <ChevronLeft size={45} />
+          <ChevronLeft size={isMobile ? 30 : 45} />
         </motion.button>
 
         <motion.div className="book-container" variants={itemVariants}>
+          {!isMobile && (
           <div
             className={`bookmark-tab ${bookmarkState}`}
             onClick={!isFrontCover && !isBackCover ? onDownloadCV : undefined}
@@ -298,6 +321,7 @@ const ResumeSection = ({ id }) => {
               pointerEvents: isFrontCover || isBackCover ? "none" : "auto",
             }}
           >
+
             <Download
               size={18}
               className="bookmark-icon"
@@ -310,7 +334,7 @@ const ResumeSection = ({ id }) => {
               {t('resume')}
             </span>
           </div>
-
+          )}
           <HTMLFlipBook
             width={450}
             height={600}
@@ -326,9 +350,9 @@ const ResumeSection = ({ id }) => {
             onFlip={onFlip}
             onFlipStart={onFlipStart}
             flippingTime={800}
-            usePortrait={false}
+            usePortrait={isMobile} 
             startPage={0}
-            autoSize={false}
+            autoSize={true}
             showPageCorners={false}
             drawShadow={true}
           >
@@ -519,7 +543,7 @@ const ResumeSection = ({ id }) => {
             opacity: isBackCover ? 0.3 : 1,
           }}
         >
-          <ChevronRight size={45} />
+          <ChevronRight size={isMobile ? 30 : 45} />
         </motion.button>
       </motion.div>
     </section>
