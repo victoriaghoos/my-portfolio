@@ -84,9 +84,10 @@ const Page = forwardRef((props, ref) => {
 });
 
 const useWindowSize = () => {
+  // Initialize with actual window size immediately
   const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
+    width: typeof window !== 'undefined' ? window.innerWidth : 0,
+    height: typeof window !== 'undefined' ? window.innerHeight : 0,
   });
 
   useEffect(() => {
@@ -97,7 +98,6 @@ const useWindowSize = () => {
       });
     }
     window.addEventListener("resize", handleResize);
-    handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   return windowSize;
@@ -105,8 +105,8 @@ const useWindowSize = () => {
 
 const ResumeSection = ({ id }) => {
   const bookRef = useRef(null);
-  const { width: windowWidth } = useWindowSize();
-  const isMobile = windowWidth < 1000; 
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
+  const isMobile = windowWidth < 1050; 
   const [currentPage, setCurrentPage] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
   const [nextPageDirection, setNextPageDirection] = useState(null);
@@ -227,6 +227,7 @@ const ResumeSection = ({ id }) => {
 
   // Voeg event listeners toe voor mouse down op pages (voor drag flips)
   useEffect(() => {
+    if (isMobile) return;
     const bookElement = document.querySelector('.stellar-book');
     if (!bookElement) return;
 
@@ -258,7 +259,7 @@ const ResumeSection = ({ id }) => {
     return () => {
       bookElement.removeEventListener('mousedown', handlePageMouseDown);
     };
-  }, [currentPage]);
+  }, [currentPage, isMobile]);
 
   const scrollToSocials = () => {
     const socialsSection = document.getElementById("socials-section");
@@ -290,7 +291,36 @@ const ResumeSection = ({ id }) => {
     <section id={id} className="resume-section">
       <StarBackground />
 
+      {isMobile ? (
+        <motion.div 
+          key = "mobile-view"
+          className="mobile-resume-view"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+        >
+          <div className="mobile-card">
+            <div className="icon-circle">
+              <Code size={40} className="mobile-icon" />
+            </div>
+            <h1 className="mobile-title">Victoria</h1>
+            <p className="mobile-subtitle">{t('resume_content.cover.subtitle')}</p>
+            
+            <div className="mobile-divider"></div>
+            
+            <p className="mobile-desc">
+              {t('resume_content.p1.text')}
+            </p>
+
+            <button className="mobile-download-btn" onClick={onDownloadCV}>
+              <Download size={20} />
+              <span>{t('resume_content.p6.btn_pdf')}</span>
+            </button>
+          </div>
+        </motion.div>
+      ) : (
       <motion.div 
+        key = "desktop-view"
         className={`book-wrapper ${isMobile ? 'mobile-mode' : ''}`}
         variants={containerVariants}
         initial="hidden"
@@ -335,6 +365,7 @@ const ResumeSection = ({ id }) => {
             </span>
           </div>
           )}
+          {console.log("HTMLFlipBook usePortrait:", isMobile)}
           <HTMLFlipBook
             width={450}
             height={600}
@@ -350,7 +381,7 @@ const ResumeSection = ({ id }) => {
             onFlip={onFlip}
             onFlipStart={onFlipStart}
             flippingTime={800}
-            usePortrait={isMobile} 
+            usePortrait={false} 
             startPage={0}
             autoSize={true}
             showPageCorners={false}
@@ -543,9 +574,10 @@ const ResumeSection = ({ id }) => {
             opacity: isBackCover ? 0.3 : 1,
           }}
         >
-          <ChevronRight size={isMobile ? 30 : 45} />
-        </motion.button>
-      </motion.div>
+          <ChevronRight size={45} />
+          </motion.button>
+        </motion.div>
+      )}
     </section>
   );
 };
