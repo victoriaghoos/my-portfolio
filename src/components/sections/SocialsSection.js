@@ -97,11 +97,15 @@ const SocialCard = ({ icon: Icon, title, handle, link, delay, strokeWidth = 1.5 
 
 const SocialsSection = ({ id }) => {
   const flyToCosmos = () => {
-    const home = document.getElementById("home-3d");
-    if (home) {
+  const home = document.getElementById("home-3d");
+  if (home) {
+    window.scrollTo({ top: window.scrollY, behavior: 'auto' });
+    
+    setTimeout(() => {
       home.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
+    }, 10);
+  }
+};
 
   const { t } = useTranslation();
   return (
@@ -158,7 +162,7 @@ const SocialsSection = ({ id }) => {
           transition={{ delay: 1 }}
         >
           <motion.button 
-            onClick={flyToCosmos} 
+            onTap={flyToCosmos} 
             className="return-orb"
             whileHover={{ y: -5 }}
             whileTap={{ scale: 0.95 }}
