@@ -104,7 +104,7 @@ const useWindowSize = () => {
 
 const ResumeSection = ({ id }) => {
   const bookRef = useRef(null);
-  const { width: windowWidth, height: windowHeight } = useWindowSize();
+  const { width: windowWidth } = useWindowSize();
   const isMobile = windowWidth < 1050; 
   const [currentPage, setCurrentPage] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
