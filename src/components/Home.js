@@ -398,10 +398,10 @@ const Home = () => {
 
             {!show3DNav && (
               <motion.div 
-                className="static-menu-overlay"
+                className="static-menu-overlay mobile-home-layout"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5, duration: 0.8 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
               >
                 <div className="menu-grid">
                   {icons.map((icon) => (
