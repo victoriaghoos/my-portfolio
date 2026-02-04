@@ -73,7 +73,7 @@ const Page = forwardRef((props, ref) => {
     <div
       className={`page ${props.className || ""}`}
       ref={ref}
-      data-density="hard"
+      data-density={props.density || "soft"} 
     >
       <div className="page-content">
         {props.children}
@@ -365,15 +365,16 @@ const ResumeSection = ({ id }) => {
             ref={bookRef}
             onFlip={onFlip}
             onFlipStart={onFlipStart}
-            flippingTime={800}
+            flippingTime={900}
             usePortrait={false} 
             startPage={0}
             autoSize={true}
-            showPageCorners={false}
+            showPageCorners={true}
             drawShadow={true}
+            maxShadowOpacity={0.5}
           >
             {/* Pagina 0: Cover */}
-            <Page number="" className="is-cover page-right">
+            <Page number="" className="is-cover page-right" density="hard">
               <div className="cover-content">
                 <div className="corner-ornament top-left"></div>
                 <div className="corner-ornament top-right"></div>
@@ -529,7 +530,7 @@ const ResumeSection = ({ id }) => {
             </Page>
 
             {/* Pagina 7: Back Cover */}
-            <Page number="" className="is-cover is-back-cover page-left">
+            <Page number="" className="is-cover is-back-cover page-left" density="hard">
               <div className="cover-content">
                 <div className="corner-ornament top-left"></div>
                 <div className="corner-ornament top-right"></div>
