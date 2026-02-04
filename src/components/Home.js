@@ -170,15 +170,16 @@ const Home = () => {
   const numberOfIcons = icons.length;
 
   const [rotationY, setRotationY] = useState(0);
+  
   const dragRef = useRef({
     dragging: false,
     startX: 0,
+    startY: 0, 
     startRot: 0,
     hasInteracted: false,
   });  
 
   const [initialRotationComplete, setInitialRotationComplete] = useState(false);
-  // Start met een hogere rotatiesnelheid
   const rotationSpeedRef = useRef(0.5);
 
   const [mouse, setMouse] = useState(null);
@@ -212,7 +213,6 @@ const Home = () => {
     const rotationInterval = setInterval(() => {
       if (!initialRotationComplete) {
         setRotationY((prev) => prev + rotationSpeedRef.current);
-        // Laat de rotatie veel sneller afnemen
         rotationSpeedRef.current *= 0.90;
         if (rotationSpeedRef.current < 0.001) {
           setInitialRotationComplete(true);
@@ -226,9 +226,16 @@ const Home = () => {
   useEffect(() => {
     const onMouseMove = (e) => {
       if (!dragRef.current.dragging || !initialRotationComplete || !show3DNav) return;
+      
       const deltaX = e.clientX - dragRef.current.startX;
       const rotationSpeed = 0.003;
-      setRotationY(dragRef.current.startRot + deltaX * rotationSpeed);
+
+      const centerY = window.innerHeight / 2;
+      const isFront = dragRef.current.startY > centerY;
+      
+      const direction = isFront ? -1 : 1;
+
+      setRotationY(dragRef.current.startRot + (deltaX * rotationSpeed * direction));
 
       if (!hasDragged && Math.abs(deltaX) > 5) {
         setHasDragged(true);
@@ -292,6 +299,7 @@ const Home = () => {
             if (!initialRotationComplete) return;
             dragRef.current.dragging = true;
             dragRef.current.startX = e.clientX;
+            dragRef.current.startY = e.clientY; 
             dragRef.current.startRot = rotationY;
           } : undefined}
           style={{
