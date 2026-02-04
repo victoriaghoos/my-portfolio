@@ -122,7 +122,6 @@ const NightSkyBackground = ({ mouse, clicks }) => {
         twinkleOffset: Math.random() * Math.PI * 2,
       };
     });
-    // base positions
     stars.forEach((s) => {
       s.baseX = s.x;
       s.baseY = s.y;
@@ -148,19 +147,14 @@ const NightSkyBackground = ({ mouse, clicks }) => {
       });
     };
 
-    // Shockwaves from clicks
     const shockwaves = [];
-
-    // Nebula animation params
     let nebulaOffset = 0;
 
-    // Aurora ribbons params
     const auroraParams = [
       { amp: 120, speed: 0.02, hue: 250, alpha: 0.25 },
       { amp: 70, speed: 0.04, hue: 300, alpha: 0.18 },
     ];
 
-    // spawn shockwave
     const spawnShock = (x, y) => {
       shockwaves.push({
         x,
@@ -172,7 +166,6 @@ const NightSkyBackground = ({ mouse, clicks }) => {
       });
     };
 
-    // Animation loop
     let lastTime = performance.now();
     const draw = (time) => {
       const t = time * 0.001;
@@ -184,7 +177,6 @@ const NightSkyBackground = ({ mouse, clicks }) => {
       const W = window.innerWidth;
       const H = window.innerHeight;
 
-      // Background gradient base
       const bg = ctx.createLinearGradient(0, 0, 0, H);
       const colors = ["#030217", "#07102b", "#0a1b4b", "#122555", "#1f2e83"];
       colors.forEach((c, i) => bg.addColorStop(i / (colors.length - 1), c));
@@ -200,7 +192,7 @@ const NightSkyBackground = ({ mouse, clicks }) => {
         { scale: 0.0009, speed: 0.01, color: [60, 90, 220], intensity: 0.12 },
       ];
 
-      // draw many soft circles where noise > threshold
+      // noise > threshold
       const step = 40;
       for (const layer of layers) {
         const { scale, speed, color, intensity } = layer;
@@ -235,7 +227,7 @@ const NightSkyBackground = ({ mouse, clicks }) => {
           }
         }
       }
-      // Aurora ribbons
+
       auroraParams.forEach((ap, idx) => {
         ctx.save();
         ctx.globalCompositeOperation = "lighter";
@@ -265,7 +257,6 @@ const NightSkyBackground = ({ mouse, clicks }) => {
         ctx.restore();
       });
 
-      // shockwaves
       for (let i = shockwaves.length - 1; i >= 0; i--) {
         const sw = shockwaves[i];
         sw.r += dt * (sw.maxR * 0.8);
@@ -291,12 +282,10 @@ const NightSkyBackground = ({ mouse, clicks }) => {
         ctx.globalCompositeOperation = "lighter";
       }
 
-      // Stars - only shockwaves + drift, no mouse influence
       stars.forEach((s) => {
         s.vx *= 0.92;
         s.vy *= 0.92;
 
-        // shockwaves push
         shockwaves.forEach((sw) => {
           const dx = s.x - sw.x;
           const dy = s.y - sw.y;

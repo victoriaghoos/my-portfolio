@@ -83,7 +83,7 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
   const handlePointerOver = (e) => {
     e.stopPropagation();
     setHovered(true);
-    setActive(icon.label);
+    setActive(icon.id);
 
     document.body.style.cursor = 'pointer';
 
