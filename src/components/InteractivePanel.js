@@ -94,6 +94,8 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
       video.muted = true;
       video.playsInline = true;
       video.crossOrigin = "anonymous";
+      video.autoplay = true;
+      video.style.display = "none";
       video.play().catch(console.log);
 
       const videoTexture = new THREE.VideoTexture(video);

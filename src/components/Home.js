@@ -77,10 +77,10 @@ const Home = () => {
       color: new THREE.Color(0.4, 0.8, 0.6),
     },
     {
-      id: "About",
+      id: "About", 
       label: t('nav.about'), 
       png: avatarPng,
-      video: avatarVideo,
+      video: avatarVideo, 
       color: new THREE.Color(0.8, 0.5, 0.9),
     },
     {
