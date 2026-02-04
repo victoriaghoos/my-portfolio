@@ -84,7 +84,6 @@ const Page = forwardRef((props, ref) => {
 });
 
 const useWindowSize = () => {
-  // Initialize with actual window size immediately
   const [windowSize, setWindowSize] = useState({
     width: typeof window !== 'undefined' ? window.innerWidth : 0,
     height: typeof window !== 'undefined' ? window.innerHeight : 0,
@@ -125,21 +124,15 @@ const ResumeSection = ({ id }) => {
     setIsFlipping(true);
     setFlipStartData(e.data);
     
-    // Simpelere logica voor direction bepaling
     if (e.data === 0) {
-      // Starten vanaf front cover = forward flip
       setNextPageDirection('next');
     } else if (e.data === totalPages - 2) {
-      // Van pagina 6 naar back cover = forward flip
       setNextPageDirection('next');
     } else if (e.data === totalPages - 1) {
-      // Van back cover naar pagina 6 = backward flip
       setNextPageDirection('prev');
     } else if (e.data === 1 && currentPage === 0) {
-      // Van pagina 1 naar front cover = backward flip
       setNextPageDirection('prev');
     } else {
-      // Standaard logica voor andere pagina's
       const direction = e.data > currentPage ? 'next' : 'prev';
       setNextPageDirection(direction);
     }
@@ -149,7 +142,6 @@ const ResumeSection = ({ id }) => {
     window.open(resumePDF, "_blank");
   };
 
-  // Get bookmark state with immediate updates during flips
   const getBookmarkState = () => {
     if (isMobile) return "is-mobile-hidden"; 
     if (isFlipping && nextPageDirection && flipStartData !== null) {
@@ -161,7 +153,6 @@ const ResumeSection = ({ id }) => {
         predictedPage = flipStartData - 1;
       }
       
-      // Clamp predicted page within bounds
       predictedPage = Math.max(0, Math.min(totalPages - 1, predictedPage));
       
       if (predictedPage === 0) return "is-front";
@@ -169,13 +160,11 @@ const ResumeSection = ({ id }) => {
       return "is-open";
     }
     
-    // Normale state wanneer niet aan het flippen
     if (currentPage === 0) return "is-front";
     if (currentPage === totalPages - 1) return "is-back";
     return "is-open";
   };
 
-  // Get interactive states with immediate updates during flips
   const getInteractiveState = () => {
     if (isFlipping && nextPageDirection && flipStartData !== null) {
       let predictedPage;
@@ -186,7 +175,6 @@ const ResumeSection = ({ id }) => {
         predictedPage = flipStartData - 1;
       }
       
-      // Clamp predicted page within bounds
       predictedPage = Math.max(0, Math.min(totalPages - 1, predictedPage));
       
       const isPredictedFrontCover = predictedPage === 0;
@@ -225,14 +213,12 @@ const ResumeSection = ({ id }) => {
     }
   };
 
-  // Voeg event listeners toe voor mouse down op pages (voor drag flips)
   useEffect(() => {
     if (isMobile) return;
     const bookElement = document.querySelector('.stellar-book');
     if (!bookElement) return;
 
     const handlePageMouseDown = (e) => {
-      // Check of we op een page klikken (niet op de bookmark of arrows)
       const pageElement = e.target.closest('.page');
       if (pageElement) {
         const pageIndex = Array.from(bookElement.querySelectorAll('.page')).indexOf(pageElement);
@@ -240,7 +226,6 @@ const ResumeSection = ({ id }) => {
           setIsFlipping(true);
           setFlipStartData(pageIndex);
           
-          // Bepaal direction op basis van welke pagina we zijn
           if (pageIndex === 0) {
             setNextPageDirection('next');
           } else if (pageIndex === totalPages - 2) {

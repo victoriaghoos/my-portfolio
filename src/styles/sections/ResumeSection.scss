@@ -14,11 +14,15 @@ $page-color: #0d0d2b;
     overflow: hidden;
 
     @media (max-width: 1000px) {
-        height: auto;
-        min-height: 100vh;
-        padding: 80px 20px; 
-        overflow-y: auto;
-        display: block; 
+        height: 100vh;
+        height: 100dvh; 
+        width: 100%;
+        overflow: hidden; 
+        padding: 20px;   
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
     }
 
     .cosmic-background {
@@ -231,15 +235,18 @@ $page-color: #0d0d2b;
         height: 600px;
         z-index: 2;
 
-        @media (max-width: 1200px) {
-            transform: scale(0.85);
-            gap: 1.5rem;
+        @media (max-width: 1000px) {
+        display: none !important;
         }
 
-        @media (max-height: 630px) and (min-width: 1000px) {
-            transform: scale(0.65);
-            height: 400px;
-            gap: 1rem;
+        @media (max-width: 1200px) {
+            transform: scale(0.9); 
+            gap: 2rem;
+        }
+
+        @media (max-width: 1100px), (max-height: 720px) {
+            transform: scale(0.8) !important; 
+            gap: 1.5rem;
         }
     }
 
@@ -247,76 +254,106 @@ $page-color: #0d0d2b;
         position: relative;
         z-index: 10;
         width: 100%;
+        height: 100%;
         display: flex;
         justify-content: center;
-        padding-top: 40px; // Ruimte vanaf de top
+        align-items: center;
+        padding: 0; 
+        box-sizing: border-box;
 
         .mobile-card {
             background: linear-gradient(145deg, rgba(13, 13, 43, 0.9), rgba(5, 5, 20, 0.95));
             border: 1px solid rgba($book-gold, 0.3);
-            border-radius: 12px;
-            padding: 40px 25px;
-            width: 100%;
-            max-width: 400px;
+            border-radius: 16px; 
+            padding: 25px; 
+            width: 100%;           
+            max-width: 600px;     
+            box-sizing: border-box; 
+            height: auto;
+            max-height: 100%;      
+            
             display: flex;
             flex-direction: column;
+            justify-content: space-evenly;
             align-items: center;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             position: relative;
+            backdrop-filter: blur(10px);
 
-            // Sierhoeken (optioneel, zoals op het boek)
-            &::before {
-                content: '✦'; position: absolute; top: 10px; left: 10px; color: $book-gold; opacity: 0.5;
-            }
-            &::after {
-                content: '✦'; position: absolute; bottom: 10px; right: 10px; color: $book-gold; opacity: 0.5;
+            &::before { content: '✦'; position: absolute; top: 15px; left: 15px; color: $book-gold; opacity: 0.5; font-size: 1.2rem; }
+            &::after { content: '✦'; position: absolute; bottom: 15px; right: 15px; color: $book-gold; opacity: 0.5; font-size: 1.2rem; }
+
+             @media (max-height: 700px) {
+                padding: 25px 30px;
+                
+                .icon-circle {
+                    width: 60px; height: 60px;
+                    margin-bottom: 15px;
+                    svg { width: 30px; height: 30px; }
+                }
+
+                .mobile-divider { margin: 15px 0; }
+                .mobile-desc { margin-bottom: 20px; line-height: 1.5; }
+                .mobile-title { margin-bottom: 5px; }
             }
 
             .icon-circle {
-                width: 80px; height: 80px;
+                width: 100px; height: 100px;
                 border-radius: 50%;
                 border: 1px solid rgba($book-gold, 0.4);
                 display: flex; align-items: center; justify-content: center;
                 background: radial-gradient(circle, rgba($book-gold, 0.1) 0%, transparent 70%);
-                margin-bottom: 20px;
+                margin-bottom: 30px;
                 color: $book-gold;
+                flex-shrink : 0;
+                svg { width: 45px; height: 45px; } 
             }
 
             .mobile-title {
                 font-family: 'Playfair Display', serif;
-                font-size: 2.5rem;
+                font-size: clamp(2.5rem, 5vw, 4rem); 
                 background: linear-gradient(135deg, #8a6d3b 0%, #c5a059 50%, #f1d399 100%);
                 -webkit-background-clip: text;
                 background-clip: text;
                 -webkit-text-fill-color: transparent;
-                margin: 0 0 5px 0;
+                margin: 0 0 10px 0;
+                line-height: 1.1;
             }
 
             .mobile-subtitle {
                 font-family: 'Montserrat', sans-serif;
                 text-transform: uppercase;
-                letter-spacing: 3px;
-                font-size: 0.8rem;
+                letter-spacing: 5px;
+                font-size: clamp(0.8rem, 2vw, 1.1rem);
                 color: #f1d399;
                 margin: 0;
-                opacity: 0.8;
+                opacity: 0.9;
             }
 
             .mobile-divider {
-                width: 50px;
+                width: 80px; 
                 height: 2px;
                 background: $book-gold;
-                opacity: 0.3;
-                margin: 20px 0;
+                opacity: 0.4;
+                margin: 30px 0;
             }
 
             .mobile-desc {
-                color: rgba(255,255,255,0.8);
-                font-size: 0.95rem;
+                color: rgba(255,255,255,0.9);
+                font-size: clamp(0.85rem, 2vh, 1.1rem); 
                 line-height: 1.6;
-                margin-bottom: 30px;
+                margin-bottom: 15px;
                 font-family: 'Montserrat', sans-serif;
+                text-align: left;
+                width: 100%;
+                
+                flex: 1 1 auto; 
+                overflow-y: auto; 
+                min-height: 0; 
+
+                &::-webkit-scrollbar { width: 3px; }
+                &::-webkit-scrollbar-thumb { background: rgba($book-gold, 0.3); }
             }
 
             .mobile-download-btn {
@@ -324,25 +361,21 @@ $page-color: #0d0d2b;
                 border: 1px solid $book-gold;
                 color: #fff;
                 font-family: 'VT323', monospace;
-                font-size: 1.1rem;
-                padding: 12px 25px;
-                border-radius: 4px;
+                font-size: 1.3rem;
+                padding: 15px 35px;
+                border-radius: 6px;
                 display: flex;
                 align-items: center;
-                gap: 10px;
+                gap: 12px;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                letter-spacing: 1px;
+                letter-spacing: 1.5px;
 
                 &:hover {
                     background: $book-gold;
                     color: #000;
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba($book-gold, 0.3);
-                }
-
-                &:active {
-                    transform: translateY(0);
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba($book-gold, 0.4);
                 }
             }
         }
@@ -755,7 +788,7 @@ $page-color: #0d0d2b;
                     font-family: 'Montserrat', sans-serif;
                     font-size: 0.9rem;
                     transition: background 0.3s ease;
-                    cursor: pointer; // This adds the hand cursor on hover
+                    cursor: pointer;
 
                     &:hover {
                         background: rgba(255, 255, 255, 0.2);
@@ -1030,6 +1063,15 @@ $page-color: #0d0d2b;
         cursor: pointer;
         transition: 0.3s;
         flex-shrink: 0;
+
+        @media (max-width: 1100px), (max-height: 720px) {
+            padding: 8px;
+            
+            svg {
+                width: 32px !important; 
+                height: 32px !important;
+            }
+        }
 
         &:hover {
             background: rgba(197, 160, 89, 0.2);
