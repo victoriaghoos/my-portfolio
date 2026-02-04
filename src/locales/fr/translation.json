@@ -9,9 +9,9 @@
   "about": {
     "title": "À propos de moi",
     "greeting": "Salut, moi c’est <1>Victoria</1> 👋",
-    "bio_p1": "Je suis <1>étudiante belge en software engineering</1>. À la base, je codais en Python par curiosité, puis c’est vite devenu plus sérieux. Résoudre des problèmes sur LeetCode « pour le fun » m’a finalement menée à décrocher mon graduat à Howest, que j’ai obtenu <3>avec grande distinction</3>.",
-    "bio_p2": "Aujourd’hui, je poursuis un bachelier en Informatique appliquée, avec une spécialisation en software engineering. Je jongle entre projets scolaires et projets perso, comme la création de ce site. En dehors du code, j’apprends le <1>japonais (JLPT N4)</1>, j’aime me balader dans la nature belge et faire de la photo.",
-    "bio_p3": "Mon objectif est de décrocher un <1>stage à Tokyo en 2027</1>, puis de m’installer à Saitama après mes études. J’aime mélanger rigueur technique et créativité, que ce soit en débuggant du code ou en cherchant la photo parfaite."
+    "bio_p1": "Je suis <1>étudiante belge en ingénierie logicielle</1>. À la base, je codais en Python par curiosité, puis c’est vite devenu plus sérieux. Résoudre des problèmes sur LeetCode « pour le fun » m’a finalement menée à obtenir mon graduat à Howest, que j’ai obtenu <3>avec grande distinction</3>.",
+    "bio_p2": "Aujourd’hui, je poursuis un bachelier en Informatique appliquée, avec une spécialisation en ingénierie logicielle. Je jongle entre projets scolaires et projets perso, comme la création de ce site. En dehors du code, j’apprends le <1>japonais (JLPT N4)</1>, j’aime me balader dans la nature belge faire de la photographie.",
+    "bio_p3": "Mon objectif est de décrocher un <1>stage à Tokyo en 2027</1>, puis de m’installer à Saitama après mes études. J’aime mêler rigueur technique et créativité, que ce soit en corrigeant du code ou en cherchant la photo parfaite."
   },
   "projects": "Projets",
   "classified": "CLASSIFIÉ",
@@ -55,8 +55,8 @@
       "built_with": "Développé avec React"
     },
     "p1": {
-      "title": "Profil professionnel",
-      "text": "Je suis étudiante en informatique et me spécialise dans le développement back-end avec .NET. J’ai une solide expérience pratique en C# et je complète ma formation par des connaissances approfondies en architecture logicielle. J’ai également travaillé sur des systèmes de recherche complexes avec OpenSearch."
+      "title": "Profil",
+      "text": "Je suis étudiante en informatique et me spécialise dans le développement back-end avec .NET. J’ai une solide expérience pratique en C# et je complète ma formation par des connaissances approfondies en architecture logicielle. J’ai également travaillé sur des systèmes de recherche complexes basés sur OpenSearch."
     },
     "p2": {
       "title": "Diplôme professionnel",
@@ -70,7 +70,7 @@
     "p3": {
       "title": "Bachelier",
       "program": "Informatique appliquée",
-      "specialization": "Orientation Software Engineering",
+      "specialization": "Orientation ingénierie logicielle",
       "track_info": "<1>Parcours accéléré :</1> Accès direct en 2e année sur base du diplôme professionnel.",
       "list_arch": "<1>Architecture :</1> DDD, Design Patterns & systèmes d’entreprise",
       "list_eng": "<1>Ingénierie :</1> Structures de données, algorithmes & qualité logicielle",
@@ -93,7 +93,7 @@
     },
     "p6": {
       "title": "Merci pour votre temps",
-      "text": "Si vous recherchez une développeuse motivée avec une <1>expertise .NET</1> et une <3>expérience sur des projets internationaux</3>, n’hésitez pas à me contacter.",
+      "text": "Si vous recherchez une développeuse motivée avec une <1>expertise .NET</1> et une <3>expérience dans des projets internationaux</3>, n’hésitez pas à me contacter.",
       "btn_pdf": "Version PDF",
       "scroll_hint": "Découvrez mes réseaux ci-dessous"
     }
