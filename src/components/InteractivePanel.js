@@ -64,19 +64,21 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
     }
 
     if (ringRef.current) {
-      ringRef.current.rotation.z = t * 0.3;
-      if (hovered) {
-        ringRef.current.scale.setScalar(1.1 + Math.sin(t * 5) * 0.05);
-      } else {
-        ringRef.current.scale.setScalar(1);
-      }
+        // Versnel de rotatie tot stilstand
+        ringRef.current.rotation.z = t * 0.3;
+        if (hovered) {
+          ringRef.current.scale.setScalar(1.1 + Math.sin(t * 7) * 0.05);
+        } else {
+          ringRef.current.scale.setScalar(1);
+        }
     }
-    if (ringRef.current && ringRef.current.material) {
-      ringRef.current.material.opacity = THREE.MathUtils.lerp(
-        ringRef.current.material.opacity,
-        hovered ? 0 : 0.3,
-        0.1
-      );
+      if (ringRef.current && ringRef.current.material) {
+        // Versnel de overgang naar stilstand door de lerp-factor te verhogen
+        ringRef.current.material.opacity = THREE.MathUtils.lerp(
+          ringRef.current.material.opacity,
+          hovered ? 0 : 0.3,
+          0.25 // was 0.1
+        );
     }
   });
 

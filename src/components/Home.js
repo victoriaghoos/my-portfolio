@@ -178,7 +178,8 @@ const Home = () => {
   });  
 
   const [initialRotationComplete, setInitialRotationComplete] = useState(false);
-  const rotationSpeedRef = useRef(0.2);
+  // Start met een hogere rotatiesnelheid
+  const rotationSpeedRef = useRef(0.5);
 
   const [mouse, setMouse] = useState(null);
   const [clicks, setClicks] = useState({ count: 0, pos: null });
@@ -211,7 +212,8 @@ const Home = () => {
     const rotationInterval = setInterval(() => {
       if (!initialRotationComplete) {
         setRotationY((prev) => prev + rotationSpeedRef.current);
-        rotationSpeedRef.current *= 0.98;
+        // Laat de rotatie veel sneller afnemen
+        rotationSpeedRef.current *= 0.90;
         if (rotationSpeedRef.current < 0.001) {
           setInitialRotationComplete(true);
           clearInterval(rotationInterval);
