@@ -414,7 +414,7 @@ const Home = () => {
                       <div className="icon-wrapper">
                         <img src={icon.png} alt={icon.label} />
                       </div>
-                      <span className="label">{icon.label}</span>
+                      <span className="label" style={{ userSelect: 'none' }}>{icon.label}</span>
                     </button>
                   ))}
                 </div>

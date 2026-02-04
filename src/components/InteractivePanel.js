@@ -197,6 +197,7 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
                 transform: hovered ? "translateY(-2px) scale(1.05)" : "translateY(0) scale(1)",
                 letterSpacing: "1px",
                 textTransform: "uppercase",
+                userSelect: "none",
               }}
             >
               {icon.label}
