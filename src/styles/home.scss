@@ -3,6 +3,7 @@ html, body {
   padding: 0;
   height: 100%;
   overflow:hidden;
+  background-color: #0b0e14;
 }
 
 .main-container {
@@ -12,6 +13,7 @@ html, body {
   overflow-x: hidden;
   scroll-snap-type: y mandatory; 
   scroll-behavior: smooth;  
+  background-color: #0b0e14;
 }
 
 .home-3d {
@@ -471,13 +473,13 @@ body {
 
 @media (max-width: 599px) {
   .home-3d {
-    height: 100vh;
-    min-height: 100vh;
+    height: 100dvh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: visible;
+    overflow: hidden !important;
   }
 
   .static-menu-overlay {
