@@ -1,6 +1,6 @@
 import React, { forwardRef, useRef, useMemo, useState, useEffect } from "react";
 import HTMLFlipBook from "react-pageflip";
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation, Trans } from "react-i18next";
 import {
   Code,
   GraduationCap,
@@ -11,7 +11,7 @@ import {
   Download,
   Target,
   User,
-  ArrowDown
+  ArrowDown,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import "../../styles/sections/ResumeSection.scss";
@@ -73,7 +73,7 @@ const Page = forwardRef((props, ref) => {
     <div
       className={`page ${props.className || ""}`}
       ref={ref}
-      data-density={props.density || "soft"} 
+      data-density={props.density || "soft"}
     >
       <div className="page-content">
         {props.children}
@@ -85,8 +85,8 @@ const Page = forwardRef((props, ref) => {
 
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 0,
-    height: typeof window !== 'undefined' ? window.innerHeight : 0,
+    width: typeof window !== "undefined" ? window.innerWidth : 0,
+    height: typeof window !== "undefined" ? window.innerHeight : 0,
   });
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const useWindowSize = () => {
 const ResumeSection = ({ id }) => {
   const bookRef = useRef(null);
   const { width: windowWidth } = useWindowSize();
-  const isMobile = windowWidth < 1050; 
+  const isMobile = windowWidth < 1050;
   const [currentPage, setCurrentPage] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
   const [nextPageDirection, setNextPageDirection] = useState(null);
@@ -123,17 +123,17 @@ const ResumeSection = ({ id }) => {
   const onFlipStart = (e) => {
     setIsFlipping(true);
     setFlipStartData(e.data);
-    
+
     if (e.data === 0) {
-      setNextPageDirection('next');
+      setNextPageDirection("next");
     } else if (e.data === totalPages - 2) {
-      setNextPageDirection('next');
+      setNextPageDirection("next");
     } else if (e.data === totalPages - 1) {
-      setNextPageDirection('prev');
+      setNextPageDirection("prev");
     } else if (e.data === 1 && currentPage === 0) {
-      setNextPageDirection('prev');
+      setNextPageDirection("prev");
     } else {
-      const direction = e.data > currentPage ? 'next' : 'prev';
+      const direction = e.data > currentPage ? "next" : "prev";
       setNextPageDirection(direction);
     }
   };
@@ -143,23 +143,23 @@ const ResumeSection = ({ id }) => {
   };
 
   const getBookmarkState = () => {
-    if (isMobile) return "is-mobile-hidden"; 
+    if (isMobile) return "is-mobile-hidden";
     if (isFlipping && nextPageDirection && flipStartData !== null) {
       let predictedPage;
-      
-      if (nextPageDirection === 'next') {
+
+      if (nextPageDirection === "next") {
         predictedPage = flipStartData + 1;
       } else {
         predictedPage = flipStartData - 1;
       }
-      
+
       predictedPage = Math.max(0, Math.min(totalPages - 1, predictedPage));
-      
+
       if (predictedPage === 0) return "is-front";
       if (predictedPage === totalPages - 1) return "is-back";
       return "is-open";
     }
-    
+
     if (currentPage === 0) return "is-front";
     if (currentPage === totalPages - 1) return "is-back";
     return "is-open";
@@ -168,24 +168,24 @@ const ResumeSection = ({ id }) => {
   const getInteractiveState = () => {
     if (isFlipping && nextPageDirection && flipStartData !== null) {
       let predictedPage;
-      
-      if (nextPageDirection === 'next') {
+
+      if (nextPageDirection === "next") {
         predictedPage = flipStartData + 1;
       } else {
         predictedPage = flipStartData - 1;
       }
-      
+
       predictedPage = Math.max(0, Math.min(totalPages - 1, predictedPage));
-      
+
       const isPredictedFrontCover = predictedPage === 0;
       const isPredictedBackCover = predictedPage === totalPages - 1;
-      
+
       return {
         isFrontCover: isPredictedFrontCover,
         isBackCover: isPredictedBackCover,
       };
     }
-    
+
     return {
       isFrontCover: currentPage === 0,
       isBackCover: currentPage === totalPages - 1,
@@ -195,19 +195,27 @@ const ResumeSection = ({ id }) => {
   const { isFrontCover, isBackCover } = getInteractiveState();
   const bookmarkState = getBookmarkState();
 
-  const handlePrevClick = () => {
+  const handlePrevClick = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (!isFrontCover) {
       setIsFlipping(true);
-      setNextPageDirection('prev');
+      setNextPageDirection("prev");
       setFlipStartData(currentPage);
       bookRef.current.pageFlip().flipPrev();
     }
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (!isBackCover) {
       setIsFlipping(true);
-      setNextPageDirection('next');
+      setNextPageDirection("next");
       setFlipStartData(currentPage);
       bookRef.current.pageFlip().flipNext();
     }
@@ -215,34 +223,36 @@ const ResumeSection = ({ id }) => {
 
   useEffect(() => {
     if (isMobile) return;
-    const bookElement = document.querySelector('.stellar-book');
+    const bookElement = document.querySelector(".stellar-book");
     if (!bookElement) return;
 
     const handlePageMouseDown = (e) => {
-      const pageElement = e.target.closest('.page');
+      const pageElement = e.target.closest(".page");
       if (pageElement) {
-        const pageIndex = Array.from(bookElement.querySelectorAll('.page')).indexOf(pageElement);
+        const pageIndex = Array.from(
+          bookElement.querySelectorAll(".page"),
+        ).indexOf(pageElement);
         if (pageIndex !== -1) {
           setIsFlipping(true);
           setFlipStartData(pageIndex);
-          
+
           if (pageIndex === 0) {
-            setNextPageDirection('next');
+            setNextPageDirection("next");
           } else if (pageIndex === totalPages - 2) {
-            setNextPageDirection('next');
+            setNextPageDirection("next");
           } else if (pageIndex === totalPages - 1) {
-            setNextPageDirection('prev');
+            setNextPageDirection("prev");
           } else if (pageIndex === 1 && currentPage === 0) {
-            setNextPageDirection('prev');
+            setNextPageDirection("prev");
           }
         }
       }
     };
 
-    bookElement.addEventListener('mousedown', handlePageMouseDown);
-    
+    bookElement.addEventListener("mousedown", handlePageMouseDown);
+
     return () => {
-      bookElement.removeEventListener('mousedown', handlePageMouseDown);
+      bookElement.removeEventListener("mousedown", handlePageMouseDown);
     };
   }, [currentPage, isMobile]);
 
@@ -255,21 +265,21 @@ const ResumeSection = ({ id }) => {
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
-      transition: { 
-        duration: 0.8, 
+      transition: {
+        duration: 0.8,
         ease: "easeOut",
-        when: "beforeChildren", 
-        staggerChildren: 0.2
-      } 
-    }
+        when: "beforeChildren",
+        staggerChildren: 0.2,
+      },
+    },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, scale: 0.9 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } }
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
   };
 
   return (
@@ -277,8 +287,8 @@ const ResumeSection = ({ id }) => {
       <StarBackground />
 
       {isMobile ? (
-        <motion.div 
-          key = "mobile-view"
+        <motion.div
+          key="mobile-view"
           className="mobile-resume-view"
           variants={containerVariants}
           initial="hidden"
@@ -289,278 +299,370 @@ const ResumeSection = ({ id }) => {
               <Code size={40} className="mobile-icon" />
             </div>
             <h1 className="mobile-title">Victoria</h1>
-            <p className="mobile-subtitle">{t('resume_content.cover.subtitle')}</p>
-            
-            <div className="mobile-divider"></div>
-            
-            <p className="mobile-desc">
-              {t('resume_content.p1.text')}
+            <p className="mobile-subtitle">
+              {t("resume_content.cover.subtitle")}
             </p>
+
+            <div className="mobile-divider"></div>
+
+            <p className="mobile-desc">{t("resume_content.p1.text")}</p>
 
             <button className="mobile-download-btn" onClick={onDownloadCV}>
               <Download size={20} />
-              <span>{t('resume_content.p6.btn_pdf')}</span>
+              <span>{t("resume_content.p6.btn_pdf")}</span>
             </button>
           </div>
         </motion.div>
       ) : (
-      <motion.div 
-        key = "desktop-view"
-        className={`book-wrapper ${isMobile ? 'mobile-mode' : ''}`}
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: false, amount: 0.3 }}
-      >
-        <motion.button
-          variants={itemVariants}
-          className={`nav-arrow left ${isFrontCover ? 'disabled' : ''}`}
-          onClick={handlePrevClick}
-          disabled={isFrontCover}
-          style={{
-            cursor: isFrontCover ? 'default' : 'pointer',
-            pointerEvents: isFrontCover ? 'none' : 'auto',
-            opacity: isFrontCover ? 0.3 : 1,
-          }}
+        <motion.div
+          key="desktop-view"
+          className={`book-wrapper ${isMobile ? "mobile-mode" : ""}`}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.3 }}
         >
-          <ChevronLeft size={isMobile ? 30 : 45} />
-        </motion.button>
-
-        <motion.div className="book-container" variants={itemVariants}>
-          {!isMobile && (
-          <div
-            className={`bookmark-tab ${bookmarkState}`}
-            onClick={!isFrontCover && !isBackCover ? onDownloadCV : undefined}
+          <motion.button
+            type="button"
+            variants={itemVariants}
+            className={`nav-arrow left ${isFrontCover ? "disabled" : ""}`}
+            onClick={(e) => handlePrevClick(e)}
+            disabled={isFrontCover}
             style={{
-              cursor: isFrontCover || isBackCover ? "default" : "pointer",
-              pointerEvents: isFrontCover || isBackCover ? "none" : "auto",
+              cursor: isFrontCover ? "default" : "pointer",
+              pointerEvents: isFrontCover ? "none" : "auto",
+              opacity: isFrontCover ? 0.3 : 1,
             }}
           >
+            <ChevronLeft size={isMobile ? 30 : 45} />
+          </motion.button>
 
-            <Download
-              size={18}
-              className="bookmark-icon"
-              style={{ opacity: isFrontCover || isBackCover ? 0 : 1 }}
-            />
-            <span
-              className="bookmark-text"
-              style={{ opacity: isFrontCover || isBackCover ? 0 : 1 }}
+          <motion.div className="book-container" variants={itemVariants}>
+            {!isMobile && (
+              <div
+                className={`bookmark-tab ${bookmarkState}`}
+                onClick={
+                  !isFrontCover && !isBackCover ? onDownloadCV : undefined
+                }
+                style={{
+                  cursor: isFrontCover || isBackCover ? "default" : "pointer",
+                  pointerEvents: isFrontCover || isBackCover ? "none" : "auto",
+                }}
+              >
+                <Download
+                  size={18}
+                  className="bookmark-icon"
+                  style={{ opacity: isFrontCover || isBackCover ? 0 : 1 }}
+                />
+                <span
+                  className="bookmark-text"
+                  style={{ opacity: isFrontCover || isBackCover ? 0 : 1 }}
+                >
+                  {t("resume")}
+                </span>
+              </div>
+            )}
+            {console.log("HTMLFlipBook usePortrait:", isMobile)}
+            <HTMLFlipBook
+              width={450}
+              height={600}
+              size="fixed"
+              minWidth={450}
+              maxWidth={450}
+              minHeight={600}
+              maxHeight={600}
+              showCover={true}
+              useMouseEvents={true}
+              className="stellar-book"
+              ref={bookRef}
+              onFlip={onFlip}
+              onFlipStart={onFlipStart}
+              flippingTime={900}
+              usePortrait={false}
+              startPage={0}
+              autoSize={true}
+              showPageCorners={true}
+              drawShadow={true}
+              maxShadowOpacity={0.5}
             >
-              {t('resume')}
-            </span>
-          </div>
-          )}
-          {console.log("HTMLFlipBook usePortrait:", isMobile)}
-          <HTMLFlipBook
-            width={450}
-            height={600}
-            size="fixed"
-            minWidth={450}
-            maxWidth={450}
-            minHeight={600}
-            maxHeight={600}
-            showCover={true}
-            useMouseEvents={true}
-            className="stellar-book"
-            ref={bookRef}
-            onFlip={onFlip}
-            onFlipStart={onFlipStart}
-            flippingTime={900}
-            usePortrait={false} 
-            startPage={0}
-            autoSize={true}
-            showPageCorners={true}
-            drawShadow={true}
-            maxShadowOpacity={0.5}
-          >
-            {/* Pagina 0: Cover */}
-            <Page number="" className="is-cover page-right" density="hard">
-              <div className="cover-content">
-                <div className="corner-ornament top-left"></div>
-                <div className="corner-ornament top-right"></div>
-                <div className="corner-ornament bottom-left"></div>
-                <div className="corner-ornament bottom-right"></div>
+              {/* Pagina 0: Cover */}
+              <Page number="" className="is-cover page-right" density="hard">
+                <div className="cover-content">
+                  <div className="corner-ornament top-left"></div>
+                  <div className="corner-ornament top-right"></div>
+                  <div className="corner-ornament bottom-left"></div>
+                  <div className="corner-ornament bottom-right"></div>
 
-                <div className="cover-main-visual">
-                  <div className="seal-container">
-                    <Code size={40} strokeWidth={1.5} className="seal-icon" />
+                  <div className="cover-main-visual">
+                    <div className="seal-container">
+                      <Code size={40} strokeWidth={1.5} className="seal-icon" />
+                    </div>
+                    <div className="gold-line-v"></div>
                   </div>
-                  <div className="gold-line-v"></div>
-                </div>
 
-                <div className="cover-text-group">
-                  <h1 className="book-title">Victoria</h1>
-                  <div className="title-separator">
-                    <span className="dot"></span>
-                    <span className="line"></span>
-                    <span className="dot"></span>
-                  </div>
-                  <h2 className="book-subtitle">{t('resume_content.cover.subtitle')}</h2>
-                  <div className="edition-badge">{t('resume_content.cover.edition')}</div>
-                </div>
-              </div>
-            </Page>
-
-            {/* Page 1: Professional Profile */}
-            <Page number="1" className="page-left">
-              <div className="page-inner-centered">
-                <h2 className="page-header"><User size={18} /> {t('resume_content.p1.title')}</h2>
-                <div className="section-content">
-                  <p className="summary-text">{t('resume_content.p1.text')}</p>
-                </div>
-              </div>
-            </Page>
-
-            {/* Page 2: Associate Degree */}
-            <Page number="2" className="page-right">
-              <div className="page-inner">
-                <h2 className="page-header"><GraduationCap size={18} /> {t('resume_content.p2.title')}</h2>
-                <div className="section-content">
-                  <span className="year-label">2023 - 2025</span>
-                  <h3>{t('resume_content.p2.program')}</h3>
-                  <p className="subtitle-text">{t('resume_content.p2.school')}</p>
-                  <p className="distinction-badge">{t('resume_content.p2.distinction')}</p>
-                  <ul className="achievement-list">
-                    <li>
-                      <Trans i18nKey="resume_content.p2.list_dev"><strong>Development:</strong></Trans>
-                    </li>
-                    <li>
-                      <Trans i18nKey="resume_content.p2.list_infra"><strong>Infrastructure:</strong></Trans>
-                    </li>
-                    <li>
-                      <Trans i18nKey="resume_content.p2.list_method"><strong>Methodology:</strong></Trans>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </Page>
-
-            {/* Page 3: Bachelor's Degree (Page 2) */}
-            <Page number="3" className="page-left">
-              <div className="page-inner">
-                <h2 className="page-header"><TrendingUp size={22} /> {t('resume_content.p3.title')}</h2>
-                <div className="section-content">
-                  <span className="year-label">2025 - 2027</span>
-                  <h3>{t('resume_content.p3.program')}</h3>
-                  <p className="subtitle-text">{t('resume_content.p3.specialization')}</p>
-                  <div className="highlight-box">
-                    <Trans i18nKey="resume_content.p3.track_info"><strong>Accelerated Track:</strong></Trans>
-                  </div>
-                  <ul>
-                    <li><Trans i18nKey="resume_content.p3.list_arch"><strong>Architecture:</strong></Trans></li>
-                    <li><Trans i18nKey="resume_content.p3.list_eng"><strong>Engineering:</strong></Trans></li>
-                    <li><Trans i18nKey="resume_content.p3.list_cloud"><strong>Cloud & .NET:</strong></Trans></li>
-                  </ul>
-                </div>
-              </div>
-            </Page>
-
-
-            {/* Page 4: Professional Experience (Page 3) */}
-            <Page number="4" className="page-right">
-              <div className="page-inner">
-                <h2 className="page-header"><Briefcase size={22} /> {t('resume_content.p4.title')}</h2>
-                <div className="section-content">
-                  <span className="year-label">{t('resume_content.p4.context')}</span>
-                  <h3>Vanden Broele</h3>
-                  <p className="subtitle-text">{t('resume_content.p4.role')}</p>
-                  <ul>
-                    <li><Trans i18nKey="resume_content.p4.bullet_1"><strong>OpenSearch</strong></Trans></li>
-                    <li><Trans i18nKey="resume_content.p4.bullet_2"><strong>Docker</strong></Trans></li>
-                  </ul>
-                  <div className="tech-tags-container">
-                    <span>.NET CORE</span> <span>C#</span> <span>OPENSEARCH</span> <span>DOCKER</span> <span>TYPESCRIPT</span>
+                  <div className="cover-text-group">
+                    <h1 className="book-title">Victoria</h1>
+                    <div className="title-separator">
+                      <span className="dot"></span>
+                      <span className="line"></span>
+                      <span className="dot"></span>
+                    </div>
+                    <h2 className="book-subtitle">
+                      {t("resume_content.cover.subtitle")}
+                    </h2>
+                    <div className="edition-badge">
+                      {t("resume_content.cover.edition")}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Page>
+              </Page>
 
-            {/* Page 5: Career Vision (Page 4) */}
-            <Page number="5" className="page-left">
-              <div className="page-inner">
-                <h2 className="page-header"><Target size={18} /> {t('resume_content.p5.title')}</h2>
-                <div className="section-content">
-                  <div className="goal-section">
-                    <h4 className="subtitle-gold">{t('resume_content.p5.target_title')}</h4>
-                    <p>{t('resume_content.p5.target_text')}</p>
+              {/* Page 1: Professional Profile */}
+              <Page number="1" className="page-left">
+                <div className="page-inner-centered">
+                  <h2 className="page-header">
+                    <User size={18} /> {t("resume_content.p1.title")}
+                  </h2>
+                  <div className="section-content">
+                    <p className="summary-text">
+                      {t("resume_content.p1.text")}
+                    </p>
                   </div>
-                  <div className="goal-section" style={{ marginTop: "20px" }}>
-                    <h4 className="subtitle-gold">{t('resume_content.p5.readiness_title')}</h4>
-                    <ul className="goal-list-compact">
-                      <li><Trans i18nKey="resume_content.p5.list_jp"><strong>Japanese:</strong></Trans></li>
-                      <li><Trans i18nKey="resume_content.p5.list_tech"><strong>Technical:</strong></Trans></li>
+                </div>
+              </Page>
+
+              {/* Page 2: Associate Degree */}
+              <Page number="2" className="page-right">
+                <div className="page-inner">
+                  <h2 className="page-header">
+                    <GraduationCap size={18} /> {t("resume_content.p2.title")}
+                  </h2>
+                  <div className="section-content">
+                    <span className="year-label">2023 - 2025</span>
+                    <h3>{t("resume_content.p2.program")}</h3>
+                    <p className="subtitle-text">
+                      {t("resume_content.p2.school")}
+                    </p>
+                    <p className="distinction-badge">
+                      {t("resume_content.p2.distinction")}
+                    </p>
+                    <ul className="achievement-list">
+                      <li>
+                        <Trans i18nKey="resume_content.p2.list_dev">
+                          <strong>Development:</strong>
+                        </Trans>
+                      </li>
+                      <li>
+                        <Trans i18nKey="resume_content.p2.list_infra">
+                          <strong>Infrastructure:</strong>
+                        </Trans>
+                      </li>
+                      <li>
+                        <Trans i18nKey="resume_content.p2.list_method">
+                          <strong>Methodology:</strong>
+                        </Trans>
+                      </li>
                     </ul>
                   </div>
                 </div>
-              </div>
-            </Page>
+              </Page>
 
-            {/* Page 6: Closing Page */}
-            <Page number="6" className="page-right">
-              <div className="page-inner-back">
-                <div className="closing-content">
-                  <Code size={40} className="faded-icon" />
-                  <h3>{t('resume_content.p6.title')}</h3>
-                  <div className="divider-small"></div>
-                  <p className="sub-text">
-                    <Trans i18nKey="resume_content.p6.text">
-                      If you're looking for a dedicated developer with <strong>.NET expertise</strong> and <strong>international project experience</strong>, I'd welcome a conversation.
-                    </Trans>
-                  </p>
-                  <button className="download-btn-styled" onClick={onDownloadCV}>
-                    <Download size={16} /> {t('resume_content.p6.btn_pdf')}
-                  </button>
-                  <p 
-                    className="scroll-hint" 
-                    onClick={scrollToSocials}
-                    style={{ 
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      marginTop: '15px' 
-                    }}
-                  >
-                    {t('resume_content.p6.scroll_hint')} 
-                    <ArrowDown size={18} />
-                  </p>
-                </div>
-              </div>
-            </Page>
-
-            {/* Pagina 7: Back Cover */}
-            <Page number="" className="is-cover is-back-cover page-left" density="hard">
-              <div className="cover-content">
-                <div className="corner-ornament top-left"></div>
-                <div className="corner-ornament top-right"></div>
-                <div className="corner-ornament bottom-left"></div>
-                <div className="corner-ornament bottom-right"></div>
-                <div className="back-cover-content">
-                  <div className="back-seal"><Code size={55} strokeWidth={1} className="back-logo-icon" /></div>
-                  <div className="back-text-group">
-                    <div className="title-separator small"><span className="line"></span><span className="dot"></span><span className="line"></span></div>
-                    <p className="copyright">© 2026 Victoria Portfolio</p>
-                    <div className="tech-badge">{t('resume_content.cover.built_with')}</div>
+              {/* Page 3: Bachelor's Degree (Page 2) */}
+              <Page number="3" className="page-left">
+                <div className="page-inner">
+                  <h2 className="page-header">
+                    <TrendingUp size={22} /> {t("resume_content.p3.title")}
+                  </h2>
+                  <div className="section-content">
+                    <span className="year-label">2025 - 2027</span>
+                    <h3>{t("resume_content.p3.program")}</h3>
+                    <p className="subtitle-text">
+                      {t("resume_content.p3.specialization")}
+                    </p>
+                    <div className="highlight-box">
+                      <Trans i18nKey="resume_content.p3.track_info">
+                        <strong>Accelerated Track:</strong>
+                      </Trans>
+                    </div>
+                    <ul>
+                      <li>
+                        <Trans i18nKey="resume_content.p3.list_arch">
+                          <strong>Architecture:</strong>
+                        </Trans>
+                      </li>
+                      <li>
+                        <Trans i18nKey="resume_content.p3.list_eng">
+                          <strong>Engineering:</strong>
+                        </Trans>
+                      </li>
+                      <li>
+                        <Trans i18nKey="resume_content.p3.list_cloud">
+                          <strong>Cloud & .NET:</strong>
+                        </Trans>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-              </div>
-            </Page>
-          </HTMLFlipBook>
-        </motion.div>
+              </Page>
 
-        <motion.button 
-          variants={itemVariants}
-          className={`nav-arrow right ${isBackCover ? 'disabled' : ''}`}
-          onClick={handleNextClick}
-          disabled={isBackCover}
-          style={{
-            cursor: isBackCover ? 'default' : 'pointer',
-            pointerEvents: isBackCover ? 'none' : 'auto',
-            opacity: isBackCover ? 0.3 : 1,
-          }}
-        >
-          <ChevronRight size={45} />
+              {/* Page 4: Professional Experience (Page 3) */}
+              <Page number="4" className="page-right">
+                <div className="page-inner">
+                  <h2 className="page-header">
+                    <Briefcase size={22} /> {t("resume_content.p4.title")}
+                  </h2>
+                  <div className="section-content">
+                    <span className="year-label">
+                      {t("resume_content.p4.context")}
+                    </span>
+                    <h3>Vanden Broele</h3>
+                    <p className="subtitle-text">
+                      {t("resume_content.p4.role")}
+                    </p>
+                    <ul>
+                      <li>
+                        <Trans i18nKey="resume_content.p4.bullet_1">
+                          <strong>OpenSearch</strong>
+                        </Trans>
+                      </li>
+                      <li>
+                        <Trans i18nKey="resume_content.p4.bullet_2">
+                          <strong>Docker</strong>
+                        </Trans>
+                      </li>
+                    </ul>
+                    <div className="tech-tags-container">
+                      <span>.NET CORE</span> <span>C#</span>{" "}
+                      <span>OPENSEARCH</span> <span>DOCKER</span>{" "}
+                      <span>TYPESCRIPT</span>
+                    </div>
+                  </div>
+                </div>
+              </Page>
+
+              {/* Page 5: Career Vision (Page 4) */}
+              <Page number="5" className="page-left">
+                <div className="page-inner">
+                  <h2 className="page-header">
+                    <Target size={18} /> {t("resume_content.p5.title")}
+                  </h2>
+                  <div className="section-content">
+                    <div className="goal-section">
+                      <h4 className="subtitle-gold">
+                        {t("resume_content.p5.target_title")}
+                      </h4>
+                      <p>{t("resume_content.p5.target_text")}</p>
+                    </div>
+                    <div className="goal-section" style={{ marginTop: "20px" }}>
+                      <h4 className="subtitle-gold">
+                        {t("resume_content.p5.readiness_title")}
+                      </h4>
+                      <ul className="goal-list-compact">
+                        <li>
+                          <Trans i18nKey="resume_content.p5.list_jp">
+                            <strong>Japanese:</strong>
+                          </Trans>
+                        </li>
+                        <li>
+                          <Trans i18nKey="resume_content.p5.list_tech">
+                            <strong>Technical:</strong>
+                          </Trans>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </Page>
+
+              {/* Page 6: Closing Page */}
+              <Page number="6" className="page-right">
+                <div className="page-inner-back">
+                  <div className="closing-content">
+                    <Code size={40} className="faded-icon" />
+                    <h3>{t("resume_content.p6.title")}</h3>
+                    <div className="divider-small"></div>
+                    <p className="sub-text">
+                      <Trans i18nKey="resume_content.p6.text">
+                        If you're looking for a dedicated developer with{" "}
+                        <strong>.NET expertise</strong> and{" "}
+                        <strong>international project experience</strong>, I'd
+                        welcome a conversation.
+                      </Trans>
+                    </p>
+                    <button
+                      className="download-btn-styled"
+                      onClick={onDownloadCV}
+                    >
+                      <Download size={16} /> {t("resume_content.p6.btn_pdf")}
+                    </button>
+                    <p
+                      className="scroll-hint"
+                      onClick={scrollToSocials}
+                      style={{
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "6px",
+                        marginTop: "15px",
+                      }}
+                    >
+                      {t("resume_content.p6.scroll_hint")}
+                      <ArrowDown size={18} />
+                    </p>
+                  </div>
+                </div>
+              </Page>
+
+              {/* Pagina 7: Back Cover */}
+              <Page
+                number=""
+                className="is-cover is-back-cover page-left"
+                density="hard"
+              >
+                <div className="cover-content">
+                  <div className="corner-ornament top-left"></div>
+                  <div className="corner-ornament top-right"></div>
+                  <div className="corner-ornament bottom-left"></div>
+                  <div className="corner-ornament bottom-right"></div>
+                  <div className="back-cover-content">
+                    <div className="back-seal">
+                      <Code
+                        size={55}
+                        strokeWidth={1}
+                        className="back-logo-icon"
+                      />
+                    </div>
+                    <div className="back-text-group">
+                      <div className="title-separator small">
+                        <span className="line"></span>
+                        <span className="dot"></span>
+                        <span className="line"></span>
+                      </div>
+                      <p className="copyright">© 2026 Victoria Portfolio</p>
+                      <div className="tech-badge">
+                        {t("resume_content.cover.built_with")}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Page>
+            </HTMLFlipBook>
+          </motion.div>
+
+          <motion.button
+            type="button"
+            variants={itemVariants}
+            className={`nav-arrow right ${isBackCover ? "disabled" : ""}`}
+            onClick={(e) => handleNextClick(e)}
+            disabled={isBackCover}
+            style={{
+              cursor: isBackCover ? "default" : "pointer",
+              pointerEvents: isBackCover ? "none" : "auto",
+              opacity: isBackCover ? 0.3 : 1,
+            }}
+          >
+            <ChevronRight size={45} />
           </motion.button>
         </motion.div>
       )}
