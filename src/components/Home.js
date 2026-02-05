@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, memo, Suspense } from "react"; 
 import { Canvas } from "@react-three/fiber";
 import { useTranslation } from "react-i18next";
-import { Environment } from "@react-three/drei";
+import { Environment, Preload } from "@react-three/drei"; 
 import { motion, useInView } from "framer-motion";
 import * as THREE from "three";
 import "../styles/home.scss";
@@ -53,8 +53,158 @@ const DragHint = ({ isVisible }) => {
   );
 };
 
+const SceneContent = memo(({ 
+  mouse, 
+  clicks, 
+  show3DNav, 
+  initialRotationComplete, 
+  hasDragged, 
+  icons, 
+  scalingConfig, 
+  active, 
+  setActive, 
+  panelPositions, 
+  handleIconClick, 
+  isInView, 
+  constellationScales 
+}) => {
+  return (
+    <div id="home-3d" className="home-3d-content">
+      <NightSkyBackground mouse={mouse} clicks={clicks} />
+
+      {show3DNav && initialRotationComplete && !hasDragged && (
+        <DragHint isVisible={!hasDragged} />
+      )}
+
+      <Canvas
+        camera={{ position: [0, 5, 20], fov: 45 }}
+        eventSource={document.getElementById("root")}
+        eventPrefix="client"
+        className="webgl-canvas"
+        dpr={[1, 1.5]} 
+      >
+        {/* FIX 1: Suspense & Preload om 'hiccups' bij laden te voorkomen */}
+        <Suspense fallback={null}>
+          <group>
+            <Environment preset="sunset" />
+            
+            {show3DNav && icons.map((icon, i) => (
+              <motion.group
+                key={i}
+                initial={{ opacity: 0, scale: scalingConfig.iconScale, y: 1 }}
+                animate={{ opacity: 1, scale: scalingConfig.iconScale, y: 0 }}
+                transition={{
+                  duration: 1.2,
+                  delay: 0.5 + i * 0.15,
+                  ease: [0.6, 0.01, 0.05, 0.95],
+                }}
+              >
+                <InteractivePanel
+                  icon={icon}
+                  active={active}
+                  setActive={setActive}
+                  index={i}
+                  position={panelPositions[i]}
+                  onIconClick={() => handleIconClick(icon.id)}
+                  isParentVisible={isInView}
+                  iconScale={scalingConfig.iconScale}
+                  iconPlaneSize={scalingConfig.iconPlaneSize}
+                  ringInner={scalingConfig.ringInner}
+                  ringOuter={scalingConfig.ringOuter}
+                  labelMargin={scalingConfig.labelMargin}
+                  enableHover={true}
+                />
+              </motion.group>
+            ))}
+          </group>
+
+          <motion.group
+            initial={{ opacity: 0, scale: scalingConfig.hologramScale * 0.85, y: -0.5 }}
+            animate={{ opacity: 1, scale: scalingConfig.hologramScale, y: scalingConfig.hologramY }}
+            transition={{
+              duration: 1.5,
+              delay: 1.2,
+              ease: [0.6, 0.01, 0.05, 0.95],
+            }}
+          >
+            <CentralHologram
+              scale={scalingConfig.hologramScale}
+              radius={scalingConfig.hologramRadius}
+              halo={scalingConfig.hologramHalo}
+            />
+          </motion.group>
+
+          {show3DNav && (
+            <>
+              <OutlineStars
+                active={active === "About"}
+                position={[-scalingConfig.radius + 1, 0, 0]}
+                pointsData={catPoints}
+                scale={constellationScales.about}
+              />
+              <OutlineStars
+                active={active === "Socials"}
+                position={[-scalingConfig.radius - 3, -scalingConfig.radius * 0.6, 0]}
+                pointsData={cameraPoints}
+                scale={constellationScales.socials}
+              />
+              <OutlineStars
+                active={active === "Resume"}
+                position={[-scalingConfig.radius - 2, scalingConfig.radius * 0.4, 0]}
+                pointsData={bookPoints}
+                scale={constellationScales.resume}
+              />
+              <OutlineStars
+                active={active === "Skills"}
+                position={[scalingConfig.radius + 2, scalingConfig.radius * 0.4, 0]}
+                pointsData={flowerPoints}
+                scale={constellationScales.skills}
+              />
+              <OutlineStars
+                active={active === "Projects"}
+                position={[scalingConfig.radius - 1, -scalingConfig.radius * 0.6, 0]}
+                pointsData={headsetPoints}
+                scale={constellationScales.projects}
+              />
+            </>
+          )}
+          
+          {/* Forceer laden van shaders */}
+          <Preload all />
+        </Suspense>
+      </Canvas>
+
+      {!show3DNav && (
+        <motion.div 
+          className="static-menu-overlay mobile-home-layout"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          <div className="menu-grid">
+            {icons.map((icon) => (
+              <button 
+                key={icon.id}
+                className="menu-item"
+                onClick={() => handleIconClick(icon.id)}
+                style={{ '--item-color': `#${icon.color.getHexString()}` }}
+              >
+                <div className="icon-wrapper">
+                  <img src={icon.png} alt={icon.label} />
+                </div>
+                <span className="label" style={{ userSelect: 'none' }}>{icon.label}</span>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </div>
+  );
+});
+
 const Home = () => {
   const { t } = useTranslation();
+  
   const icons = useMemo(() => [
     {
       id: "Socials", 
@@ -211,17 +361,24 @@ const Home = () => {
   useEffect(() => {
     if (!show3DNav) return; 
 
-    const rotationInterval = setInterval(() => {
-      if (!initialRotationComplete) {
-        setRotationY((prev) => prev + rotationSpeedRef.current);
-        rotationSpeedRef.current *= 0.90;
-        if (rotationSpeedRef.current < 0.001) {
-          setInitialRotationComplete(true);
-          clearInterval(rotationInterval);
+    let rotationInterval;
+    const startDelay = setTimeout(() => {
+      rotationInterval = setInterval(() => {
+        if (!initialRotationComplete) {
+          setRotationY((prev) => prev + rotationSpeedRef.current);
+          rotationSpeedRef.current *= 0.90;
+          if (rotationSpeedRef.current < 0.001) {
+            setInitialRotationComplete(true);
+            clearInterval(rotationInterval);
+          }
         }
-      }
-    }, 16);
-    return () => clearInterval(rotationInterval);
+      }, 16);
+    }, 800); 
+
+    return () => {
+      clearTimeout(startDelay);
+      if (rotationInterval) clearInterval(rotationInterval);
+    };
   }, [initialRotationComplete, show3DNav]);
 
   useEffect(() => {
@@ -309,129 +466,21 @@ const Home = () => {
               : "default",
           }}
         >
-          <div id="home-3d" className="home-3d-content">
-            <NightSkyBackground mouse={mouse} clicks={clicks} />
-
-            {show3DNav && initialRotationComplete && !hasDragged && (
-              <DragHint isVisible={!hasDragged} />
-            )}
-
-            <Canvas
-              camera={{ position: [0, 5, 20], fov: 45 }}
-              eventSource={document.getElementById("root")}
-              eventPrefix="client"
-              className="webgl-canvas"
-            >
-              <group>
-                <Environment preset="sunset" />
-                
-                {show3DNav && icons.map((icon, i) => (
-                  <motion.group
-                    key={i}
-                    initial={{ opacity: 0, scale: scalingConfig.iconScale, y: 1 }}
-                    animate={{ opacity: 1, scale: scalingConfig.iconScale, y: 0 }}
-                    transition={{
-                      duration: 1.2,
-                      delay: 0.5 + i * 0.15,
-                      ease: [0.6, 0.01, 0.05, 0.95],
-                    }}
-                  >
-                    <InteractivePanel
-                      icon={icon}
-                      active={active}
-                      setActive={setActive}
-                      index={i}
-                      position={panelPositions[i]}
-                      onIconClick={() => handleIconClick(icon.id)}
-                      isParentVisible={isInView}
-                      iconScale={scalingConfig.iconScale}
-                      iconPlaneSize={scalingConfig.iconPlaneSize}
-                      ringInner={scalingConfig.ringInner}
-                      ringOuter={scalingConfig.ringOuter}
-                      labelMargin={scalingConfig.labelMargin}
-                      enableHover={true}
-                    />
-                  </motion.group>
-                ))}
-              </group>
-
-              <motion.group
-                initial={{ opacity: 0, scale: scalingConfig.hologramScale * 0.85, y: -0.5 }}
-                animate={{ opacity: 1, scale: scalingConfig.hologramScale, y: scalingConfig.hologramY }}
-                transition={{
-                  duration: 1.5,
-                  delay: 1.2,
-                  ease: [0.6, 0.01, 0.05, 0.95],
-                }}
-              >
-                <CentralHologram
-                  scale={scalingConfig.hologramScale}
-                  radius={scalingConfig.hologramRadius}
-                  halo={scalingConfig.hologramHalo}
-                />
-              </motion.group>
-
-              {show3DNav && (
-                <>
-                  <OutlineStars
-                    active={active === "About"}
-                    position={[-scalingConfig.radius + 1, 0, 0]}
-                    pointsData={catPoints}
-                    scale={constellationScales.about}
-                  />
-                  <OutlineStars
-                    active={active === "Socials"}
-                    position={[-scalingConfig.radius - 3, -scalingConfig.radius * 0.6, 0]}
-                    pointsData={cameraPoints}
-                    scale={constellationScales.socials}
-                  />
-                  <OutlineStars
-                    active={active === "Resume"}
-                    position={[-scalingConfig.radius - 2, scalingConfig.radius * 0.4, 0]}
-                    pointsData={bookPoints}
-                    scale={constellationScales.resume}
-                  />
-                  <OutlineStars
-                    active={active === "Skills"}
-                    position={[scalingConfig.radius + 2, scalingConfig.radius * 0.4, 0]}
-                    pointsData={flowerPoints}
-                    scale={constellationScales.skills}
-                  />
-                  <OutlineStars
-                    active={active === "Projects"}
-                    position={[scalingConfig.radius - 1, -scalingConfig.radius * 0.6, 0]}
-                    pointsData={headsetPoints}
-                    scale={constellationScales.projects}
-                  />
-                </>
-              )}
-            </Canvas>
-
-            {!show3DNav && (
-              <motion.div 
-                className="static-menu-overlay mobile-home-layout"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-              >
-                <div className="menu-grid">
-                  {icons.map((icon) => (
-                    <button 
-                      key={icon.id}
-                      className="menu-item"
-                      onClick={() => handleIconClick(icon.id)}
-                      style={{ '--item-color': `#${icon.color.getHexString()}` }}
-                    >
-                      <div className="icon-wrapper">
-                        <img src={icon.png} alt={icon.label} />
-                      </div>
-                      <span className="label" style={{ userSelect: 'none' }}>{icon.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </div>
+          <SceneContent 
+            mouse={mouse}
+            clicks={clicks}
+            show3DNav={show3DNav}
+            initialRotationComplete={initialRotationComplete}
+            hasDragged={hasDragged}
+            icons={icons}
+            scalingConfig={scalingConfig}
+            active={active}
+            setActive={setActive}
+            panelPositions={panelPositions}
+            handleIconClick={handleIconClick}
+            isInView={isInView}
+            constellationScales={constellationScales}
+          />
         </section>
 
         <SectionsContainer />
