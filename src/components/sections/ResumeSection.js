@@ -362,7 +362,6 @@ const ResumeSection = ({ id }) => {
                 </span>
               </div>
             )}
-            {console.log("HTMLFlipBook usePortrait:", isMobile)}
             <HTMLFlipBook
               width={450}
               height={600}
