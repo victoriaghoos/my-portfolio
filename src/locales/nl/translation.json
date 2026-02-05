@@ -48,6 +48,7 @@
     "return_cosmos": "Terug naar de Cosmos"
   },
   "resume": "CV",
+  "drag_hint": "Sleep om het universum te draaien",
   "resume_content": {
     "cover": {
       "subtitle": "Software Engineering",

@@ -48,6 +48,7 @@
     "return_cosmos": "Return to Cosmos"
   },
   "resume": "Resume",
+  "drag_hint": "Drag to rotate the cosmos",
   "resume_content": {
     "cover": {
       "subtitle": "Software Engineering",

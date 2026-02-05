@@ -48,6 +48,7 @@
     "return_cosmos": "Retour au Cosmos"
   },
   "resume": "CV",
+  "drag_hint": "Faites glisser pour faire tourner le cosmos",
   "resume_content": {
     "cover": {
       "subtitle": "Software Engineering",

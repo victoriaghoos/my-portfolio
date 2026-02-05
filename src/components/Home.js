@@ -33,6 +33,7 @@ import headsetPoints from "../headsetPoints.json";
 
 const DragHint = ({ isVisible }) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isVisible) {
@@ -47,7 +48,7 @@ const DragHint = ({ isVisible }) => {
 
   return (
     <div className={`drag-hint ${!isVisible ? "fade-out" : ""}`}>
-      Drag to rotate the cosmos
+      {t('drag_hint')}
     </div>
   );
 };

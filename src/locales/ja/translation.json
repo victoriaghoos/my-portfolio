@@ -48,6 +48,7 @@
     "return_cosmos": "コスモスに戻る"
   },
   "resume": "履歴書",
+  "drag_hint": "ドラッグしてコスモスを回す",
   "resume_content": {
     "cover": {
       "subtitle": "ソフトウェアエンジニアリング",
