@@ -353,6 +353,9 @@ $page-color: #0d0d2b;
                 overflow-y: auto; 
                 min-height: 0; 
 
+                scrollbar-width: thin;
+                scrollbar-color: rgba($book-gold, 0.6) rgba(0, 0, 0, 0.2);
+
                 &::-webkit-scrollbar { width: 3px; }
                 &::-webkit-scrollbar-thumb { background: rgba($book-gold, 0.3); }
             }
