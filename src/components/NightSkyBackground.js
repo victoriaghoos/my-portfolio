@@ -1,6 +1,6 @@
 import { useRef, useEffect, useMemo } from "react";
 
-const NightSkyBackground = ({ mouse, clicks }) => {
+const NightSkyBackground = ({ clicks }) => {
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
 
@@ -95,9 +95,10 @@ const NightSkyBackground = ({ mouse, clicks }) => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Stars
-    const STAR_COUNT =
-      Math.floor((window.innerWidth * window.innerHeight) / 2000) + 500;
+    const STAR_COUNT = Math.min(
+      900,
+      Math.floor((window.innerWidth * window.innerHeight) / 6000) + 250
+    );
     const stars = new Array(STAR_COUNT).fill(0).map(() => {
       const magnitude = -Math.log(Math.random()) / 2;
       const brightness = Math.min(1, magnitude / 6);
@@ -127,7 +128,6 @@ const NightSkyBackground = ({ mouse, clicks }) => {
       s.baseY = s.y;
     });
 
-    // Shooting stars
     const shooting = [];
     const maxShooting = 3;
     const spawnShootingStar = () => {
@@ -168,6 +168,11 @@ const NightSkyBackground = ({ mouse, clicks }) => {
 
     let lastTime = performance.now();
     const draw = (time) => {
+      if (time - lastTime < 1000 / 30) {
+        rafRef.current = requestAnimationFrame(draw);
+        return;
+      }
+
       const t = time * 0.001;
       const dt = Math.min((time - lastTime) * 0.001, 0.05);
       lastTime = time;
@@ -185,15 +190,13 @@ const NightSkyBackground = ({ mouse, clicks }) => {
 
       ctx.globalCompositeOperation = "lighter";
 
-      // layered nebula: sample noise at coarse grid to avoid per-pixel heavy ops
       const layers = [
-        { scale: 0.0012, speed: 0.02, color: [120, 60, 220], intensity: 0.35 },
-        { scale: 0.0022, speed: 0.04, color: [220, 100, 180], intensity: 0.18 },
-        { scale: 0.0009, speed: 0.01, color: [60, 90, 220], intensity: 0.12 },
+        { scale: 0.0015, speed: 0.02, color: [120, 60, 220], intensity: 0.25 },
+        { scale: 0.0025, speed: 0.04, color: [220, 100, 180], intensity: 0.15 },
       ];
 
       // noise > threshold
-      const step = 40;
+      const step = 80;
       for (const layer of layers) {
         const { scale, speed, color, intensity } = layer;
         const z = nebulaOffset * speed;
@@ -205,7 +208,6 @@ const NightSkyBackground = ({ mouse, clicks }) => {
               const alpha = Math.pow((v - 0.48) / 0.52, 1.8) * intensity;
               ctx.beginPath();
               const radius = Math.max(1, step * (0.8 + v * 1.8));
-              // Ensure inner radius is at least 0.1 to avoid the error
               const innerRadius = Math.max(0.1, radius * 0.1);
               const grd = ctx.createRadialGradient(
                 x,
@@ -282,6 +284,7 @@ const NightSkyBackground = ({ mouse, clicks }) => {
         ctx.globalCompositeOperation = "lighter";
       }
 
+      ctx.fillStyle = "rgb(255,255,255)";
       stars.forEach((s) => {
         s.vx *= 0.92;
         s.vy *= 0.92;
@@ -310,16 +313,12 @@ const NightSkyBackground = ({ mouse, clicks }) => {
           0.8 + 0.2 * Math.sin(t * 2 * s.twinkleSpeed + s.twinkleOffset);
         const alpha = s.brightness * tw * 0.96;
 
+        ctx.globalAlpha = alpha;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size * 0.8, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size * 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200,220,255,${alpha * 0.15})`;
+        ctx.arc(s.x, s.y, s.size * 0.9, 0, Math.PI * 2);
         ctx.fill();
       });
+      ctx.globalAlpha = 1;
 
       for (let i = shooting.length - 1; i >= 0; i--) {
         const st = shooting[i];

@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const MusicPlayer = () => {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isHovered, setIsHovered] = useState(false); // Nieuwe state voor de hover
+  const [isHovered, setIsHovered] = useState(false); 
 
   useEffect(() => {
     const audio = new Audio(routineTrack);
@@ -15,14 +15,50 @@ const MusicPlayer = () => {
     audioRef.current = audio;
 
     const handleFirstInteraction = () => {
-      audio.play().then(() => setIsPlaying(true)).catch(() => {});
-      document.removeEventListener('click', handleFirstInteraction);
+      if (!audioRef.current) return;
+
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+          cleanupListeners();
+        })
+        .catch(() => {
+        });
     };
 
-    document.addEventListener('click', handleFirstInteraction);
+    const events = ['click', 'mousedown', 'touchstart', 'pointerdown', 'keydown'];
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        handleFirstInteraction();
+      }
+    };
+
+    const listeners = [];
+
+    const addListener = (type, handler) => {
+      document.addEventListener(type, handler, { passive: true });
+      listeners.push({ type, handler });
+    };
+
+    const cleanupListeners = () => {
+      listeners.forEach(({ type, handler }) => {
+        document.removeEventListener(type, handler);
+      });
+      listeners.length = 0;
+    };
+
+    events.forEach((type) => {
+      if (type === 'keydown') {
+        addListener('keydown', handleKeyDown);
+      } else {
+        addListener(type, handleFirstInteraction);
+      }
+    });
     return () => {
       audio.pause();
-      document.removeEventListener('click', handleFirstInteraction);
+      cleanupListeners();
     };
   }, []);
 

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo, memo, Suspense } from "react"; 
+import { useState, useRef, useEffect, useMemo, useCallback, memo, Suspense } from "react"; 
 import { Canvas } from "@react-three/fiber";
 import { useTranslation } from "react-i18next";
 import { Environment, Preload } from "@react-three/drei"; 
@@ -54,7 +54,6 @@ const DragHint = ({ isVisible }) => {
 };
 
 const SceneContent = memo(({ 
-  mouse, 
   clicks, 
   show3DNav, 
   initialRotationComplete, 
@@ -70,7 +69,7 @@ const SceneContent = memo(({
 }) => {
   return (
     <div id="home-3d" className="home-3d-content">
-      <NightSkyBackground mouse={mouse} clicks={clicks} />
+      <NightSkyBackground clicks={clicks} />
 
       {show3DNav && initialRotationComplete && !hasDragged && (
         <DragHint isVisible={!hasDragged} />
@@ -333,7 +332,6 @@ const Home = () => {
   const [initialRotationComplete, setInitialRotationComplete] = useState(false);
   const rotationSpeedRef = useRef(0.5);
 
-  const [mouse, setMouse] = useState(null);
   const [clicks, setClicks] = useState({ count: 0, pos: null });
   const [hasDragged, setHasDragged] = useState(false);
 
@@ -347,7 +345,7 @@ const Home = () => {
     }
   };
 
-  const handleIconClick = (iconId) => {
+  const handleIconClick = useCallback((iconId) => {
     const sectionMap = {
       About: "about-section",
       Skills: "skills-section",
@@ -356,7 +354,7 @@ const Home = () => {
       Socials: "socials-section",
     };
     scrollToSection(sectionMap[iconId]);
-  };
+  }, []);
 
   useEffect(() => {
     if (!show3DNav) return; 
@@ -413,18 +411,12 @@ const Home = () => {
       dragRef.current.dragging = false;
     };
 
-    const onPointerMove = (e) => {
-      setMouse({ x: e.clientX, y: e.clientY });
-    };
-
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseup", onMouseUp);
-    window.addEventListener("pointermove", onPointerMove);
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
-      window.removeEventListener("pointermove", onPointerMove);
     };
   }, [initialRotationComplete, hasDragged, show3DNav]);
 
@@ -436,13 +428,13 @@ const Home = () => {
     return [x, 0, z];
   }), [icons, numberOfIcons, rotationY, scalingConfig.radius]);
 
-  const constellationScales = {
+  const constellationScales = useMemo(() => ({
     about: isDesktop ? 1.3 : 0.9,
     socials: isDesktop ? 0.8 : 0.6,
     resume: isDesktop ? 0.8 : 0.6,
     skills: isDesktop ? 0.8 : 0.6,
     projects: isDesktop ? 0.8 : 0.6,
-  };
+  }), [isDesktop]);
 
   return (
     <>
@@ -467,7 +459,6 @@ const Home = () => {
           }}
         >
           <SceneContent 
-            mouse={mouse}
             clicks={clicks}
             show3DNav={show3DNav}
             initialRotationComplete={initialRotationComplete}
