@@ -96,8 +96,8 @@ const NightSkyBackground = ({ clicks }) => {
     window.addEventListener("resize", resize);
 
     const STAR_COUNT = Math.min(
-      900,
-      Math.floor((window.innerWidth * window.innerHeight) / 6000) + 250
+      700,
+      Math.floor((window.innerWidth * window.innerHeight) / 8000) + 200
     );
     const stars = new Array(STAR_COUNT).fill(0).map(() => {
       const magnitude = -Math.log(Math.random()) / 2;
@@ -191,12 +191,11 @@ const NightSkyBackground = ({ clicks }) => {
       ctx.globalCompositeOperation = "lighter";
 
       const layers = [
-        { scale: 0.0015, speed: 0.02, color: [120, 60, 220], intensity: 0.25 },
-        { scale: 0.0025, speed: 0.04, color: [220, 100, 180], intensity: 0.15 },
+        { scale: 0.0015, speed: 0.02, color: [120, 60, 220], intensity: 0.22 },
+        { scale: 0.0025, speed: 0.04, color: [220, 100, 180], intensity: 0.13 },
       ];
 
-      // noise > threshold
-      const step = 80;
+      const step = 96;
       for (const layer of layers) {
         const { scale, speed, color, intensity } = layer;
         const z = nebulaOffset * speed;

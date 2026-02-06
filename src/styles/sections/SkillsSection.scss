@@ -61,7 +61,6 @@ $star-white: #ffffff;
     }
   }
 
-  // 2. THE TREES
   .trees-layer {
     position: absolute;
     inset: 0;
@@ -116,7 +115,6 @@ $star-white: #ffffff;
     }
   }
 
-  // 3. PETALS
   .petals-layer {
     position: absolute;
     inset: 0;
@@ -157,8 +155,6 @@ $star-white: #ffffff;
     }
   }
 
-
-  // 4. CONTENT
   .header-container {
     text-align: center;
     margin-top: 0;
@@ -207,11 +203,11 @@ $star-white: #ffffff;
       margin: 10px auto 0;
       border-radius: 10px;
       box-shadow: 0 0 20px $sakura-glow;
+      transform-origin: center;
       animation: neon-pulse 3s infinite alternate ease-in-out;
     }
   }
 
-  // 5. GRID & CARDS 
   .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -316,11 +312,11 @@ $star-white: #ffffff;
   0% {
     box-shadow: 0 0 10px $sakura-glow, 0 0 5px white;
     opacity: 0.8;
-    width: 80px;
+    transform: scaleX(0.85);
   }
   100% {
     box-shadow: 0 0 25px $sakura-glow, 0 0 10px white, 0 0 5px $sakura-bright;
     opacity: 1;
-    width: 90px;
+    transform: scaleX(1.05);
   }
 }

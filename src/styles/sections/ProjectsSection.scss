@@ -154,6 +154,7 @@ $white: #ffffff;
             margin: 10px auto 0;
             border-radius: 10px;
             box-shadow: 0 0 20px $projects-pink;
+            transform-origin: center;
             animation: neon-pulse-projects 3s infinite alternate ease-in-out;
         }
     }
@@ -477,13 +478,13 @@ $white: #ffffff;
         0% {
             box-shadow: 0 0 10px $projects-pink, 0 0 5px $white;
             opacity: 0.8;
-            width: 110px;
+            transform: scaleX(0.9);
         }
 
         100% {
             box-shadow: 0 0 25px $projects-pink, 0 0 10px $white, 0 0 5px $projects-purple;
             opacity: 1;
-            width: 130px;
+            transform: scaleX(1.1);
         }
     }
 }

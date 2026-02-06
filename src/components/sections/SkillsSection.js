@@ -1,11 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
 import sakuraTree from "../../assets/images/sakura2.png";
 import petalImg from "../../assets/images/petal.png";
 
-// 1. EENVOUDIGE STER (Achtergrond, beweegt nauwelijks, focus op aantal)
 const Star = () => {
   const style = useMemo(() => ({
     top: `${Math.random() * 100}%`,
@@ -19,7 +18,6 @@ const Star = () => {
   return <div className="star-static" style={style} />;
 };
 
-// 2. REALISTISCHE VALLENDE PETAL
 const FallingPetal = () => {
   const settings = useMemo(() => ({
     left: Math.random() * 100,
@@ -60,8 +58,8 @@ const FallingPetal = () => {
 
 const SkillsSection = ({ id }) => {
   const { t } = useTranslation();
-  const stars = useMemo(() => Array.from({ length: 250 }), []);
-  const petals = useMemo(() => Array.from({ length: 20 }), []);
+  const stars = useMemo(() => Array.from({ length: 150 }), []);
+  const petals = useMemo(() => Array.from({ length: 12 }), []);
 
   const skillGroups = useMemo(() => [
     {
@@ -187,4 +185,4 @@ const SkillsSection = ({ id }) => {
   );
 };
 
-export default SkillsSection;
+export default memo(SkillsSection);

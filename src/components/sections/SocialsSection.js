@@ -28,7 +28,7 @@ const CloudPuff = ({ position, speed, opacity }) => {
 const SilkSkyScene = memo(() => {
   const cloudPositions = useMemo(() => {
     const pos = [];
-    const cloudCount = 40;
+    const cloudCount = 18;
     for (let i = 0; i < cloudCount; i++) {
       const xPos = (Math.random() - 0.5) * 90;
       const distanceFromCenter = Math.abs(xPos);
@@ -40,9 +40,9 @@ const SilkSkyScene = memo(() => {
         x: xPos,
         y: yPos,
         z: (Math.random() - 0.5) * 20,
-        scale: 1.3 + Math.random(),
-        speed: 0.1 + Math.random() * 0.1,
-        opacity: 0.6 + Math.random() * 0.4,
+        scale: 1.1 + Math.random() * 0.8,
+        speed: 0.06 + Math.random() * 0.08,
+        opacity: 0.55 + Math.random() * 0.35,
       });
     }
     return pos;

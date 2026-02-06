@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import {
@@ -109,7 +109,7 @@ const ProjectsSection = ({ id }) => {
   }, []);
 
   const stars = useMemo(() => {
-    return [...Array(300)].map((_, i) => {
+    return [...Array(160)].map((_, i) => {
       const size = i % 10 === 0 ? 3 : i % 5 === 0 ? 2 : 1;
       return {
         id: i,
@@ -292,4 +292,4 @@ const ProjectsSection = ({ id }) => {
   );
 };
 
-export default ProjectsSection;
+export default memo(ProjectsSection);
