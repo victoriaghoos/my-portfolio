@@ -187,8 +187,7 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
                 textAlign: "center",
                 padding: "6px 12px",
                 borderRadius: "4px",
-                background: "rgba(255, 255, 255, 0.9)",
-                backdropFilter: "blur(8px)",
+                background: "rgba(255, 255, 255, 0.85)",
                 border: `1px solid rgba(200, 220, 240, 0.6)`,
                 boxShadow: `
                     0 4px 12px rgba(0, 0, 0, 0.1),
