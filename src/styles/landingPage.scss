@@ -30,8 +30,6 @@ $mobile-breakpoint: 600px;
     height: 100%;
     object-fit: cover;
     z-index: 1;
-    opacity: 0; 
-    animation: entranceFade 2s ease-out forwards;
     transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -47,7 +45,7 @@ $mobile-breakpoint: 600px;
         rgba(0, 0, 0, 0.3) 100%);
     z-index: 2;
     opacity: 0;
-    animation: entranceFade 3s ease-out 0.5s forwards;
+    animation: entranceFade 1s ease-out 0.5s forwards;
   }
 
   .message-container {
