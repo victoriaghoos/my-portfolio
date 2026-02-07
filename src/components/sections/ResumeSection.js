@@ -19,7 +19,7 @@ import resumePDF from "../../assets/files/Resume2026.pdf";
 
 const StarBackground = () => {
   const stars = useMemo(() => {
-    return [...Array(250)].map((_, i) => {
+    return [...Array(200)].map((_, i) => {
       const type = Math.random();
       return {
         id: i,
