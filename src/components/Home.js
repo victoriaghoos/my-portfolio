@@ -54,7 +54,7 @@ const DragHint = ({ isVisible }) => {
 };
 
 const SceneContent = memo(({ 
-  clicks, 
+  nightSkyRef, 
   show3DNav, 
   initialRotationComplete, 
   hasDragged, 
@@ -69,7 +69,7 @@ const SceneContent = memo(({
 }) => {
   return (
     <div id="home-3d" className="home-3d-content">
-      <NightSkyBackground clicks={clicks} />
+      <NightSkyBackground ref={nightSkyRef} />
 
       {show3DNav && initialRotationComplete && !hasDragged && (
         <DragHint isVisible={!hasDragged} />
@@ -82,7 +82,6 @@ const SceneContent = memo(({
         className="webgl-canvas"
         dpr={[1, 1.5]} 
       >
-        {/* FIX 1: Suspense & Preload om 'hiccups' bij laden te voorkomen */}
         <Suspense fallback={null}>
           <group>
             <Environment preset="sunset" />
@@ -168,7 +167,6 @@ const SceneContent = memo(({
             </>
           )}
           
-          {/* Forceer laden van shaders */}
           <Preload all />
         </Suspense>
       </Canvas>
@@ -203,7 +201,9 @@ const SceneContent = memo(({
 
 const Home = () => {
   const { t } = useTranslation();
-  
+
+  const nightSkyRef = useRef(null);
+
   const icons = useMemo(() => [
     {
       id: "Socials", 
@@ -332,7 +332,6 @@ const Home = () => {
   const [initialRotationComplete, setInitialRotationComplete] = useState(false);
   const rotationSpeedRef = useRef(0.5);
 
-  const [clicks, setClicks] = useState({ count: 0, pos: null });
   const [hasDragged, setHasDragged] = useState(false);
 
   const scrollToSection = (sectionId) => {
@@ -402,10 +401,9 @@ const Home = () => {
       if (dragRef.current.dragging) {
         dragRef.current.hasInteracted = true;
         if (!hasDragged) {
-          setClicks((prev) => ({
-            count: prev.count + 1,
-            pos: { x: e.clientX, y: e.clientY },
-          }));
+          if (nightSkyRef.current) {
+            nightSkyRef.current.triggerShockwave(e.clientX, e.clientY);
+          }
         }
       }
       dragRef.current.dragging = false;
@@ -459,7 +457,7 @@ const Home = () => {
           }}
         >
           <SceneContent 
-            clicks={clicks}
+            nightSkyRef={nightSkyRef} 
             show3DNav={show3DNav}
             initialRotationComplete={initialRotationComplete}
             hasDragged={hasDragged}
