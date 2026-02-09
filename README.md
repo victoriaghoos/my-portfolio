@@ -29,7 +29,7 @@ Since I actively develop projects for both college and personal use, I sometimes
 
 ## 🔗 Live Demo
 
-Check out my portfolio live at: ...
+Check out my portfolio live at: https://victoriaghoos.com/home
 ## 🛠️ Setup & Installation
 
 To run this project locally:
