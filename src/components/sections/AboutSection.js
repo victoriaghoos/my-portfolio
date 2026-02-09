@@ -7,7 +7,8 @@ import foto1 from '../../assets/images/foto1.jpg';
 const AboutSection = ({ id }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
-  const { t } = useTranslation(); 
+  const canvasRef = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,6 +23,55 @@ const AboutSection = ({ id }) => {
     }
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+
+    const orbs = [
+      { x: window.innerWidth * 0.1, y: window.innerHeight * 0.1, r: 150, color: 'rgba(100, 219, 255, 0.8)', vx: Math.random() - 0.5, vy: Math.random() - 0.5 },
+      { x: window.innerWidth * 0.85, y: window.innerHeight * 0.6, r: 100, color: 'rgba(255, 119, 198, 0.6)', vx: Math.random() - 0.5, vy: Math.random() - 0.5 },
+      { x: window.innerWidth * 0.2, y: window.innerHeight * 0.8, r: 75, color: 'rgba(120, 119, 198, 0.5)', vx: Math.random() - 0.5, vy: Math.random() - 0.5 }
+    ];
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      orbs.forEach(orb => {
+        orb.x += orb.vx;
+        orb.y += orb.vy;
+
+        if (orb.x + orb.r > canvas.width || orb.x - orb.r < 0) orb.vx *= -1;
+        if (orb.y + orb.r > canvas.height || orb.y - orb.r < 0) orb.vy *= -1;
+
+        const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.r);
+        gradient.addColorStop(0, orb.color);
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animationFrameId = window.requestAnimationFrame(animate);
+    };
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      window.cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
   const textVariants = {
@@ -46,11 +96,7 @@ const AboutSection = ({ id }) => {
   return (
     <section id={id} ref={sectionRef} className="about-section">
       <div className="cosmic-background">
-        <div className="floating-orbs">
-          <div className="orb orb-1"></div>
-          <div className="orb orb-2"></div>
-          <div className="orb orb-3"></div>
-        </div>
+        <canvas ref={canvasRef} className="floating-orbs-canvas"></canvas>
         <div className="star-field"></div>
       </div>
 
