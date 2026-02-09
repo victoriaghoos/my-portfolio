@@ -16,6 +16,25 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
   const { camera } = useThree();
 
   useEffect(() => {
+    if (icon.video) {
+      const video = document.createElement("video");
+      video.src = icon.video;
+      video.loop = true;
+      video.muted = true;
+      video.playsInline = true;
+      video.crossOrigin = "anonymous";
+      video.preload = "auto";
+      videoRef.current = video;
+
+      const videoTexture = new THREE.VideoTexture(video);
+      videoTexture.minFilter = THREE.LinearFilter;
+      videoTexture.magFilter = THREE.LinearFilter;
+      videoTexture.format = THREE.RGBAFormat;
+      videoTextureRef.current = videoTexture;
+    }
+  }, [icon.video]);
+
+  useEffect(() => {
     return () => {
       if (videoRef.current) {
         videoRef.current.pause();
@@ -87,25 +106,7 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
 
     document.body.style.cursor = 'pointer';
 
-    if (!videoTextureRef.current && icon.video) {
-      const video = document.createElement("video");
-      video.src = icon.video;
-      video.loop = true;
-      video.muted = true;
-      video.playsInline = true;
-      video.crossOrigin = "anonymous";
-      video.autoplay = true;
-      video.style.display = "none";
-      video.play().catch(console.log);
-
-      const videoTexture = new THREE.VideoTexture(video);
-      videoTexture.minFilter = THREE.LinearFilter;
-      videoTexture.magFilter = THREE.LinearFilter;
-      videoTexture.format = THREE.RGBAFormat;
-
-      videoRef.current = video;
-      videoTextureRef.current = videoTexture;
-    } else if (videoRef.current) {
+    if (icon.video && videoRef.current) {
       videoRef.current.play().catch(console.log);
     }
   };
