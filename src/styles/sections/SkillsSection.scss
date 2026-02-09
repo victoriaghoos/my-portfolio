@@ -49,7 +49,8 @@ $star-white: #ffffff;
         radial-gradient(circle at 50% 40%, rgba($sakura-glow, 0.15) 0%, transparent 60%), 
         radial-gradient(circle at 0% 100%, rgba($cosmic-purple, 0.5) 0%, transparent 50%),
         radial-gradient(circle at 100% 0%, rgba($cosmic-purple, 0.5) 0%, transparent 50%);
-      filter: blur(60px); 
+      filter: blur(60px);
+      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
     }
     
     .star-static {
@@ -87,7 +88,8 @@ $star-white: #ffffff;
         height: 100%;
         object-fit: cover; 
         object-position: left bottom; 
-        filter: brightness(0.7) contrast(1.1) saturate(1.8) blur(2px) 
+        filter: brightness(0.7) contrast(1.1) saturate(1.8) blur(2px);
+        transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1)
                 drop-shadow(0 0 20px rgba($sakura-glow, 0.4));
         opacity: 1;
         mix-blend-mode: screen;
@@ -127,14 +129,16 @@ $star-white: #ffffff;
       width: clamp(8px, 1.2vw, 16px); 
       height: auto;
       object-fit: contain;
-      filter: blur(1.5px) brightness(0.9) saturate(1.8) 
+      filter: blur(1.5px) brightness(0.9) saturate(1.8);
+      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1)
               drop-shadow(0 0 8px rgba($sakura-glow, 0.6));
       -webkit-backface-visibility: visible;
       backface-visibility: visible; 
 
       @media (max-width: 600px) {
         opacity: 0.8;
-        filter: blur(1px) brightness(0.9); 
+        filter: blur(1px) brightness(0.9);
+        transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
       }
     }
   }
@@ -177,6 +181,7 @@ $star-white: #ffffff;
       background: radial-gradient(circle, rgba($sakura-glow, 0.15) 0%, transparent 70%);
       z-index: -1;
       filter: blur(20px);
+      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
     }
     
     .main-title {
