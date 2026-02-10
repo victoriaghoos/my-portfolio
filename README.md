@@ -29,7 +29,7 @@ Since I actively develop projects for both college and personal use, I sometimes
 
 ## 🔗 Live Demo
 
-Check out my portfolio live at: ...
+Check out my portfolio live at: https://victoriaghoos.com/
 ## 🛠️ Setup & Installation
 
 To run this project locally:
@@ -73,4 +73,4 @@ npm start
 
 ---
 
-> © 2026 Victoria Portfolio. All rights reserved.
+> © 2026 Victoria (Ghoos) Marinus. All rights reserved.
