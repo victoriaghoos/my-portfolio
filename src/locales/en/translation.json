@@ -11,7 +11,7 @@
     "greeting": "Hello, I'm <1>Victoria</1> 👋",
     "bio_p1": "I'm a <1>Belgian software engineering student</1> with a passion that grew from hobbyist Python coding into a professional career path. What started as solving LeetCode problems for fun led me to pursue an associate's degree at Howest, where I graduated <3>with high honors</3>.",
     "bio_p2": "Currently further expanding my skills with a Bachelor of Applied Computer Science specializing in software engineering, I'm balancing academic projects with personal ventures like building this website. When I'm not coding, you'll find me <1>learning Japanese N4</1>, hiking the Belgian countryside, or capturing moments through photography.",
-    "bio_p3": "I'm actively working toward my goal of a <1>Tokyo internship in 2027</1>, with plans to relocate permanently to Saitama after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture."
+    "bio_p3": "I'm actively working toward my goal of a <1>Tokyo internship in 2027</1>, with plans to relocate permanently to Chiba after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture."
   },
   "projects": "Projects",
   "classified": "CLASSIFIED",
@@ -87,7 +87,7 @@
     "p5": {
       "title": "Goals?",
       "target_title": "Primary Target: Japan (2027)",
-      "target_text": "Securing a Software Engineering internship in the Tokyo/Saitama region.",
+      "target_text": "Securing a Software Engineering internship in the Tokyo/Osaka region.",
       "readiness_title": "Skills in Progress",
       "list_jp": "<1>Japanese:</1> Currently JLPT N4 level (Active study).",
       "list_tech": "<1>Technical:</1> Expanding Full-stack expertise and building on personal projects."

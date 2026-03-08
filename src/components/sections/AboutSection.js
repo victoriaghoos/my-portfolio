@@ -155,7 +155,7 @@ const AboutSection = ({ id }) => {
 
                   <p>
                     <Trans i18nKey="about.bio_p3">
-                      I'm actively working toward my goal of a <span className="highlight">Tokyo internship in 2027</span>, with plans to relocate permanently to Saitama after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture.
+                      I'm actively working toward my goal of a <span className="highlight">Tokyo internship in 2027</span>, with plans to relocate permanently to Chiba after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture.
                     </Trans>
                   </p>
                 </div>
