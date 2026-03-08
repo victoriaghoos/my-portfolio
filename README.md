@@ -13,23 +13,22 @@ This portfolio is designed to provide an immersive experience for recruiters and
 
 ## 💡 About Me & Name Usage
 
-You'll see my name appear as both **Victoria Marinus** and **Victoria Ghoos** across different platforms. 
+- **Victoria Ghoos** is my current legal and preferred name, which I use on both academic/professional and personal projects.  
+- **Victoria Marinus** is my former legal name and may still appear on some older accounts or materials/repositories.  
 
-- **Victoria Marinus** is my legal name and is primarily used for academic and professional settings.  
-- **Victoria Ghoos** is my preferred name, which I use on my personal projects and accounts.  
-
-Since I actively develop projects for both college and personal use, I sometimes switch between these names, especially when using different GitHub accounts. Regardless of the name, it's still **me** behind all the work! 😊
+Regardless of which name you come across, it's always **me** behind the work! 😊
 
 ## 🛠️ Technologies Used
 
 - **Frontend:** React.js, TypeScript, SCSS
 - **Animations:** Framer Motion, GSAP
-- **Hosting:** Vercel / Netlify (depending on deployment)
+- **Hosting:** Netlify
 - **Version Control:** Git & GitHub
 
 ## 🔗 Live Demo
 
-Check out my portfolio live at: https://victoriaghoos.com/
+Check out my portfolio live at: [victoriaghoos.com](https://victoriaghoos.com/)
+
 ## 🛠️ Setup & Installation
 
 To run this project locally:
@@ -44,7 +43,7 @@ npm start
 ## 🌌 Main Features
 
 - **Animated Landing Page:** Video background, typewriter intro, skip button, and smooth transition to main content.
-- **About Section:** Personal bio, education, career goals, and interests (Japanese, hiking, photography, lofi music).
+- **About Section:** Personal bio, education, career goals, and interests.
 - **Skills Section:** Visual breakdown of programming languages, frameworks, backend, frontend, mobile/desktop, devops, and tooling.
 - **Projects Section:** Interactive cards for each project, tech stack tags, classified/internship highlights, and animated visualizer.
 - **Socials Section:** 3D cosmic background, animated clouds/stars, and direct links to LinkedIn, GitHub, and email.
@@ -67,10 +66,10 @@ npm start
 
 ## 📬 Contact & Socials
 
-- [LinkedIn](https://linkedin.com/in/jouwnaam)
+- [LinkedIn](https://www.linkedin.com/in/victoriaghoos/)
 - [GitHub](https://github.com/victoriaghoos)
-- [Email](mailto:victoriamarinus@gmail.com)
+- [Email](mailto:ghoosvictoria@gmail.com)
 
 ---
 
-> © 2026 Victoria (Ghoos) Marinus. All rights reserved.
+> © 2026 Victoria Ghoos. All rights reserved.

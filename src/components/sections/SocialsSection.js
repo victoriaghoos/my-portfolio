@@ -133,7 +133,7 @@ const SocialsSection = ({ id }) => {
             icon={Linkedin}
             title="LinkedIn"
             handle={t('socials.linkedin_handle')}
-            link="https://linkedin.com/in/jouwnaam"
+            link="https://www.linkedin.com/in/victoriaghoos/"
             delay={0.2}
             strokeWidth={1.5}
           />
@@ -149,7 +149,7 @@ const SocialsSection = ({ id }) => {
             icon={Mail}
             title="Email"
             handle={t('socials.email_handle')}
-            link="mailto:victoriamarinus@gmail.com"
+            link="mailto:ghoosvictoria@gmail.com"
             delay={0.6}
             strokeWidth={1.2} 
           />
