@@ -170,7 +170,7 @@ const SocialsSection = ({ id }) => {
             <ArrowUpCircle size={24} strokeWidth={1.5} />
             <span>{t('socials.return_cosmos')}</span>
           </motion.button>
-          <p className="copyright">© 2026 Victoria Portfolio.</p>
+          <p className="copyright">© 2026 Victoria Ghoos</p>
         </motion.div>
       </div>
     </section>
