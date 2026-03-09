@@ -4,7 +4,7 @@ Welcome to the repository for my interactive portfolio! This website showcases m
 
 ## About the Portfolio
 
-This portfolio is a React single‑page application exploring time‑based animation, particle systems, and real‑time 3D rendering in the browser. It combines React state and Framer Motion for eased, state‑driven transitions; pseudo‑random, memoized particle fields animated via parametric keyframes; custom canvas light orbs with simple velocity and boundary reflection; and WebGL scenes built with React Three Fiber and Drei for clouds, stars, lighting, and fog. Styling is handled with responsive SCSS layering, while i18next powers runtime language switching across English, Dutch, French, and Japanese.
+This portfolio is a React single-page application exploring time-based animation, particle systems, procedural rendering, and real-time 3D graphics in the browser. It combines React state and Framer Motion for eased, state-driven transitions; memoized pseudo-random particle fields animated through parametric keyframes; custom canvas effects including Perlin noise-driven nebula rendering, light orbs, and lightweight motion physics; and WebGL scenes built with React Three Fiber and Drei for clouds, stars, lighting, and fog. Styling is handled with responsive SCSS layering, while i18next powers runtime language switching across English, Dutch, French, and Japanese.
 
 ## 💡 About Me & Name Usage
 
