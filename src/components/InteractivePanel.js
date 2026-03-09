@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Html, useTexture, Float } from "@react-three/drei";
+import { Html, useTexture, Float, useCursor } from "@react-three/drei";
 import * as THREE from "three";
 
 const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, onIconClick, iconScale = 0.7, iconPlaneSize = 1.6, ringInner = 0.9, ringOuter = 1.0, labelMargin = 70 }) => {
   const ref = useRef();
   const pngTexture = useTexture(icon.png);
   const [hovered, setHovered] = useState(false);
-  const [labelVisible, setLabelVisible] = useState(true);
   const videoRef = useRef();
   const videoTextureRef = useRef();
   const ringRef = useRef();
+  const labelElementRef = useRef(null);
+  const labelVisibleRef = useRef(true);
   const panelPositionRef = useRef(new THREE.Vector3());
   const directionRef = useRef(new THREE.Vector3());
   const intersectionPointRef = useRef(new THREE.Vector3());
@@ -19,6 +20,8 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
     new THREE.Plane(new THREE.Vector3(0, 0, 1), 0),
   );
   const { camera } = useThree();
+
+  useCursor(hovered, "pointer", "auto");
 
   useEffect(() => {
     if (icon.video) {
@@ -79,13 +82,28 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
         intersectionPoint,
       );
 
+      let nextLabelVisible = true;
+
       if (intersects) {
         const distToPanel = camera.position.distanceTo(panelPosition);
         const distToIntersection =
           camera.position.distanceTo(intersectionPoint);
-        setLabelVisible(distToPanel < distToIntersection);
-      } else {
-        setLabelVisible(true);
+        nextLabelVisible = distToPanel < distToIntersection;
+      }
+
+      if (
+        labelElementRef.current &&
+        labelVisibleRef.current !== nextLabelVisible
+      ) {
+        labelVisibleRef.current = nextLabelVisible;
+        labelElementRef.current.style.visibility = nextLabelVisible
+          ? "visible"
+          : "hidden";
+        labelElementRef.current.style.opacity = nextLabelVisible
+          ? hovered
+            ? "1"
+            : "0.9"
+          : "0";
       }
     }
 
@@ -111,8 +129,6 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
     setHovered(true);
     setActive(icon.id);
 
-    document.body.style.cursor = 'pointer';
-
     if (icon.video && videoRef.current) {
       videoRef.current.play().catch(console.log);
     }
@@ -122,8 +138,6 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
     e.stopPropagation();
     setHovered(false);
     setActive(null);
-
-    document.body.style.cursor = 'auto';
 
     if (videoRef.current) {
       videoRef.current.pause();
@@ -169,47 +183,46 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
           </mesh>
         </group>
 
-        {labelVisible && (
-          <Html
-            center
+        <Html
+          center
+          style={{
+            width: "100%",
+            display: isParentVisible ? "flex" : "none",
+            justifyContent: "center",
+            marginTop: `${labelMargin}px`,
+            pointerEvents: "none",
+            transition: "none",
+          }}
+          transform
+        >
+          <div
+            ref={labelElementRef}
             style={{
-              width: "100%",
-              display: isParentVisible ? "flex" : "none",
-              justifyContent: "center",
-              marginTop: `${labelMargin}px`,
-              pointerEvents: "none",
+              color: "#2c3e50",
+              fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
+              fontSize: "0.65rem",
+              fontWeight: "600",
+              textAlign: "center",
+              padding: "6px 12px",
+              borderRadius: "4px",
+              background: "rgba(255, 255, 255, 0.85)",
+              border: `1px solid rgba(200, 220, 240, 0.6)`,
+              boxShadow: `
+                  0 4px 12px rgba(0, 0, 0, 0.1),
+                  0 0 15px ${icon.color.getStyle()}40
+                `,
               opacity: hovered ? 1 : 0.9,
+              visibility: labelVisibleRef.current ? "visible" : "hidden",
               transition: "none",
+              transform: hovered ? "translateY(-2px) scale(1.05)" : "translateY(0) scale(1)",
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+              userSelect: "none",
             }}
-            transform
           >
-            <div
-              style={{
-                color: "#2c3e50",
-                fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
-                fontSize: "0.65rem",
-                fontWeight: "600",
-                textAlign: "center",
-                padding: "6px 12px",
-                borderRadius: "4px",
-                background: "rgba(255, 255, 255, 0.85)",
-                border: `1px solid rgba(200, 220, 240, 0.6)`,
-                boxShadow: `
-                    0 4px 12px rgba(0, 0, 0, 0.1),
-                    0 0 15px ${icon.color.getStyle()}40
-                  `,
-                opacity: hovered ? 1 : 0.9,
-                transition: "none",
-                transform: hovered ? "translateY(-2px) scale(1.05)" : "translateY(0) scale(1)",
-                letterSpacing: "1px",
-                textTransform: "uppercase",
-                userSelect: "none",
-              }}
-            >
-              {icon.label}
-            </div>
-          </Html>
-        )}
+            {icon.label}
+          </div>
+        </Html>
       </Float>
     </group>
   );
