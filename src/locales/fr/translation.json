@@ -94,7 +94,7 @@
     },
     "p6": {
       "title": "Merci pour votre temps",
-      "text": "Si vous recherchez une développeuse motivée avec une <1>expertise .NET</1> et une <3>expérience dans des projets internationaux</3>, n’hésitez pas à me contacter.",
+      "text": "Si vous recherchez une développeuse motivée avec une <0>expertise .NET</0> et une <1>expérience dans des projets internationaux</1>, n’hésitez pas à me contacter.",
       "btn_pdf": "Version PDF",
       "scroll_hint": "Découvrez mes réseaux ci-dessous"
     }

@@ -581,12 +581,10 @@ const ResumeSection = ({ id }) => {
                     <h3>{t("resume_content.p6.title")}</h3>
                     <div className="divider-small"></div>
                     <p className="sub-text">
-                      <Trans i18nKey="resume_content.p6.text">
-                        If you're looking for a dedicated developer with{" "}
-                        <strong>.NET expertise</strong> and{" "}
-                        <strong>international project experience</strong>, I'd
-                        welcome a conversation.
-                      </Trans>
+                      <Trans
+                        i18nKey="resume_content.p6.text"
+                        components={[<strong key="net" />, <strong key="intl" />]}
+                      />
                     </p>
                     <button
                       className="download-btn-styled"
@@ -638,7 +636,7 @@ const ResumeSection = ({ id }) => {
                         <span className="dot"></span>
                         <span className="line"></span>
                       </div>
-                      <p className="copyright">© 2026 Victoria Portfolio</p>
+                      <p className="copyright">© 2026 Victoria Ghoos</p>
                       <div className="tech-badge">
                         {t("resume_content.cover.built_with")}
                       </div>

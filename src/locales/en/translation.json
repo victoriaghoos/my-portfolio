@@ -94,7 +94,7 @@
     },
     "p6": {
       "title": "Thank you for your time",
-      "text": "If you're looking for a dedicated developer with <1>.NET expertise</1> and <3>international project experience</3>, I’d be happy to connect.",
+      "text": "If you're looking for a dedicated developer with <0>.NET expertise</0> and <1>international project experience</1>, I'd be happy to connect.",
       "btn_pdf": "Get PDF Version",
       "scroll_hint": "Discover my socials below"
     }
