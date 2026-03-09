@@ -7,7 +7,6 @@ import "../styles/landingPage.scss";
 
 const SKIP_BUTTON_DELAY_MS = 1500;
 const AUTO_EXIT_DELAY_MS = 8500;
-const EXIT_TO_NAVIGATION_DELAY_MS = 500;
 
 const LandingPage = () => {
   const [transitionActive, setTransitionActive] = useState(false);
@@ -15,7 +14,6 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const skipButtonTimerRef = useRef(null);
   const autoExitTimerRef = useRef(null);
-  const navigationTimerRef = useRef(null);
   const hasNavigatedRef = useRef(false);
   const particles = useMemo(
     () => Array.from({ length: 15 }, (_, index) => ({
@@ -31,26 +29,24 @@ const LandingPage = () => {
   const clearTimers = useCallback(() => {
     clearTimeout(skipButtonTimerRef.current);
     clearTimeout(autoExitTimerRef.current);
-    clearTimeout(navigationTimerRef.current);
   }, []);
 
   const startExitAndNavigate = useCallback(() => {
-    if (hasNavigatedRef.current) {
+    if (hasNavigatedRef.current || transitionActive) {
       return;
     }
 
     clearTimeout(autoExitTimerRef.current);
-    clearTimeout(navigationTimerRef.current);
     setTransitionActive(true);
+  }, [transitionActive]);
 
-    navigationTimerRef.current = setTimeout(() => {
-      if (hasNavigatedRef.current) {
-        return;
-      }
+  const handleTransitionComplete = useCallback(() => {
+    if (hasNavigatedRef.current) {
+      return;
+    }
 
-      hasNavigatedRef.current = true;
-      navigate("/home", { replace: true, state: { transitioning: true } });
-    }, EXIT_TO_NAVIGATION_DELAY_MS);
+    hasNavigatedRef.current = true;
+    navigate("/home", { replace: true, state: { transitioning: true } });
   }, [navigate]);
 
   useEffect(() => {
@@ -91,11 +87,10 @@ const LandingPage = () => {
         ))}
       </div>
 
-      {showSkipButton && !transitionActive && (
+      {!transitionActive && (
         <button 
-          className="skip-intro-button" 
+          className={`skip-intro-button ${showSkipButton ? "is-visible" : "is-hidden"}`}
           onClick={startExitAndNavigate}
-          style={{ pointerEvents: showSkipButton ? 'auto' : 'none', opacity: showSkipButton ? 1 : 0 }}
           aria-label="Skip Intro" 
         >
           Skip Intro
@@ -118,7 +113,12 @@ const LandingPage = () => {
         </h1>
       </div>
 
-      {transitionActive && <div className="transition-overlay" />}
+      {transitionActive && (
+        <div
+          className="transition-overlay"
+          onAnimationEnd={handleTransitionComplete}
+        />
+      )}
     </div>
   );
 };

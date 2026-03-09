@@ -170,7 +170,7 @@ $mobile-breakpoint: 600px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);   
     opacity: 0;
     transform: translateY(-10px) scale(0.95);
-    animation: buttonEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) 2s forwards;
+    pointer-events: none;
 
     &::before {
       content: '';
@@ -188,6 +188,17 @@ $mobile-breakpoint: 600px;
       color: #ffffff;
       box-shadow: 0 8px 25px rgba(168, 192, 255, 0.15), 0 0 0 1px rgba(168, 192, 255, 0.2);
       &::before { opacity: 1; }
+    }
+
+    &.is-visible {
+      pointer-events: auto;
+      animation: buttonEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    &.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-10px) scale(0.95);
     }
   }
 
