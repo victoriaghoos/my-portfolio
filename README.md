@@ -1,27 +1,23 @@
-# ✨ Victoria’s Interactive Cosmos | Portfolio Edition
+# ✨ Victoria’s Interactive Cosmos | Portfolio
 
 Welcome to the repository for my interactive portfolio! This website showcases my skills, projects, and experience in an engaging and modern way.
 
 ## About the Portfolio
 
-This portfolio is designed to provide an immersive experience for recruiters and visitors. It includes:
-
-- A dynamic landing page with animations.
-- An interactive showcase of my projects.
-- A section about me, my skills, and career goals.
-- Contact and social links for easy reach.
+This portfolio is a React single‑page application exploring time‑based animation, particle systems, and real‑time 3D rendering in the browser. It combines React state and Framer Motion for eased, state‑driven transitions; pseudo‑random, memoized particle fields animated via parametric keyframes; custom canvas light orbs with simple velocity and boundary reflection; and WebGL scenes built with React Three Fiber and Drei for clouds, stars, lighting, and fog. Styling is handled with responsive SCSS layering, while i18next powers runtime language switching across English, Dutch, French, and Japanese.
 
 ## 💡 About Me & Name Usage
 
 - **Victoria Ghoos** is my current legal and preferred name, which I use on both academic/professional and personal projects.  
-- **Victoria Marinus** is my former legal name and may still appear on some older accounts or materials/repositories.  
+- **Victoria Marinus** is my former legal name and may still appear on some older accounts or materials/posts.  
 
 Regardless of which name you come across, it's always **me** behind the work! 😊
 
 ## 🛠️ Technologies Used
 
-- **Frontend:** React.js, TypeScript, SCSS
-- **Animations:** Framer Motion, GSAP
+- **Frontend:** React.js, JavaScript, SCSS
+- **Animations:** Framer Motion
+- **3D & Graphics:** Three.js, @react-three/fiber, @react-three/drei
 - **Hosting:** Netlify
 - **Version Control:** Git & GitHub
 
@@ -42,12 +38,13 @@ npm start
 
 ## 🌌 Main Features
 
-- **Animated Landing Page:** Video background, typewriter intro, skip button, and smooth transition to main content.
-- **About Section:** Personal bio, education, career goals, and interests.
-- **Skills Section:** Visual breakdown of programming languages, frameworks, backend, frontend, mobile/desktop, devops, and tooling.
-- **Projects Section:** Interactive cards for each project, tech stack tags, classified/internship highlights, and animated visualizer.
-- **Socials Section:** 3D cosmic background, animated clouds/stars, and direct links to LinkedIn, GitHub, and email.
-- **Internationalization:** Multi-language support (English, Dutch, French, Japanese).
+- **Animated Landing Page:** React video with typewriter intro, timed/skip-able transition, and smooth handoff into the main SPA.
+- **About Section:** Framer Motion–animated bio with hologram-style avatar and content for education, goals, and interests.
+- **Skills Section:** Sakura‑themed skills galaxy built with React, Framer Motion, and SCSS, grouping languages, frameworks, backend, frontend, mobile/desktop, DevOps, and tooling. 
+- **Projects Section:** Lofi music-player–inspired cards using React, Framer Motion, and Lucide icons, with tech‑stack tags, internship/classified highlights, and an animated audio visualizer.
+- **Resume Section:** Interactive React flipbook, letting visitors “page through” experience and education.
+- **Socials Section:** 3D cloud-and-stars scene rendered with React Three Fiber and Drei, with animated sky and direct links to LinkedIn, GitHub, and email.
+- **Internationalization:** i18next-powered multi-language UI (English, Dutch, French, Japanese).
 
 ## 🏆 Sample Projects
 
