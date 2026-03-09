@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
 import videoSrc from "../assets/videos/intro.webm"; 
@@ -17,6 +17,16 @@ const LandingPage = () => {
   const autoExitTimerRef = useRef(null);
   const navigationTimerRef = useRef(null);
   const hasNavigatedRef = useRef(false);
+  const particles = useMemo(
+    () => Array.from({ length: 15 }, (_, index) => ({
+      id: index,
+      delay: `${index * 0.2}s`,
+      size: `${Math.random() * 4 + 2}px`,
+      x: `${Math.random() * 100}%`,
+      y: `${Math.random() * 100}%`,
+    })),
+    [],
+  );
 
   const clearTimers = useCallback(() => {
     clearTimeout(skipButtonTimerRef.current);
@@ -71,12 +81,12 @@ const LandingPage = () => {
       <div className="gradient-overlay" />
 
       <div className="particles">
-        {Array.from({ length: 15 }).map((_, i) => (
-          <div key={i} className="particle" style={{
-            "--delay": `${i * 0.2}s`,
-            "--size": `${Math.random() * 4 + 2}px`,
-            "--x": `${Math.random() * 100}%`,
-            "--y": `${Math.random() * 100}%`,
+        {particles.map((particle) => (
+          <div key={particle.id} className="particle" style={{
+            "--delay": particle.delay,
+            "--size": particle.size,
+            "--x": particle.x,
+            "--y": particle.y,
           }} />
         ))}
       </div>
