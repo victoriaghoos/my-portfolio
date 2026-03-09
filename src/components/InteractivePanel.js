@@ -57,10 +57,15 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
+    const video = videoRef.current;
 
     if (
+      hovered &&
       videoTextureRef.current &&
-      videoRef.current?.readyState >= videoRef.current.HAVE_CURRENT_DATA
+      video &&
+      !video.paused &&
+      !video.ended &&
+      video.readyState >= video.HAVE_CURRENT_DATA
     ) {
       videoTextureRef.current.needsUpdate = true;
     }
