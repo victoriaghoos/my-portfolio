@@ -1,29 +1,62 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
 import videoSrc from "../assets/videos/intro.webm"; 
 import posterSrc from "../assets/images/intro.png"; 
 import "../styles/landingPage.scss";
 
+const SKIP_BUTTON_DELAY_MS = 1500;
+const AUTO_EXIT_DELAY_MS = 8500;
+const EXIT_TO_NAVIGATION_DELAY_MS = 500;
+
 const LandingPage = () => {
   const [transitionActive, setTransitionActive] = useState(false);
   const [showSkipButton, setShowSkipButton] = useState(false);
   const navigate = useNavigate();
-  const typewriterCompleted = useRef(false);
+  const skipButtonTimerRef = useRef(null);
+  const autoExitTimerRef = useRef(null);
+  const navigationTimerRef = useRef(null);
+  const hasNavigatedRef = useRef(false);
+
+  const clearTimers = useCallback(() => {
+    clearTimeout(skipButtonTimerRef.current);
+    clearTimeout(autoExitTimerRef.current);
+    clearTimeout(navigationTimerRef.current);
+  }, []);
+
+  const startExitAndNavigate = useCallback(() => {
+    if (hasNavigatedRef.current) {
+      return;
+    }
+
+    clearTimeout(autoExitTimerRef.current);
+    clearTimeout(navigationTimerRef.current);
+    setTransitionActive(true);
+
+    navigationTimerRef.current = setTimeout(() => {
+      if (hasNavigatedRef.current) {
+        return;
+      }
+
+      hasNavigatedRef.current = true;
+      navigate("/home", { replace: true, state: { transitioning: true } });
+    }, EXIT_TO_NAVIGATION_DELAY_MS);
+  }, [navigate]);
 
   useEffect(() => {
-    const skipButtonTimer = setTimeout(() => setShowSkipButton(true), 1500);
-    const transitionTimer = setTimeout(() => setTransitionActive(true), 8500);
-    const redirectTimer = setTimeout(() => {
-      navigate("/home", { replace: true, state: { transitioning: true } });
-    }, 9000);
+    skipButtonTimerRef.current = setTimeout(
+      () => setShowSkipButton(true),
+      SKIP_BUTTON_DELAY_MS,
+    );
+
+    autoExitTimerRef.current = setTimeout(() => {
+      startExitAndNavigate();
+    }, AUTO_EXIT_DELAY_MS);
 
     return () => {
-      clearTimeout(skipButtonTimer);
-      clearTimeout(transitionTimer);
-      clearTimeout(redirectTimer);
+      clearTimers();
     };
-  }, [navigate]);
+  }, [clearTimers, startExitAndNavigate]);
 
   return (
     <div className={`landing-page ${transitionActive ? "page-exit" : ""}`}>
@@ -51,7 +84,7 @@ const LandingPage = () => {
       {showSkipButton && !transitionActive && (
         <button 
           className="skip-intro-button" 
-          onClick={() => setTransitionActive(true)}
+          onClick={startExitAndNavigate}
           style={{ pointerEvents: showSkipButton ? 'auto' : 'none', opacity: showSkipButton ? 1 : 0 }}
           aria-label="Skip Intro" 
         >
@@ -70,7 +103,6 @@ const LandingPage = () => {
               delaySpeed={1500}
               cursor
               cursorStyle="|"
-              onLoopDone={() => (typewriterCompleted.current = true)}
             />
           </span>
         </h1>
