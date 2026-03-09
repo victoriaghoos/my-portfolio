@@ -99,7 +99,6 @@ const SceneContent = memo(({
               >
                 <InteractivePanel
                   icon={icon}
-                  active={active}
                   setActive={setActive}
                   index={i}
                   position={panelPositions[i]}
@@ -110,7 +109,6 @@ const SceneContent = memo(({
                   ringInner={scalingConfig.ringInner}
                   ringOuter={scalingConfig.ringOuter}
                   labelMargin={scalingConfig.labelMargin}
-                  enableHover={true}
                 />
               </motion.group>
             ))}

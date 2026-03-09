@@ -10,9 +10,14 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
   const [labelVisible, setLabelVisible] = useState(true);
   const videoRef = useRef();
   const videoTextureRef = useRef();
-  const meshRef = useRef();
   const ringRef = useRef();
-  const iconRef = useRef();
+  const panelPositionRef = useRef(new THREE.Vector3());
+  const directionRef = useRef(new THREE.Vector3());
+  const intersectionPointRef = useRef(new THREE.Vector3());
+  const raycasterRef = useRef(new THREE.Raycaster());
+  const hologramPlaneRef = useRef(
+    new THREE.Plane(new THREE.Vector3(0, 0, 1), 0),
+  );
   const { camera } = useThree();
 
   useEffect(() => {
@@ -61,15 +66,17 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
       ref.current.position.y = position[1] + Math.sin(t * 0.5 + index) * 0.1;
       ref.current.rotation.y = Math.sin(t * 0.3 + index) * 0.05;
 
-      const panelPosition = ref.current.getWorldPosition(new THREE.Vector3());
-      const direction = panelPosition.clone().sub(camera.position).normalize();
+      const panelPosition = ref.current.getWorldPosition(panelPositionRef.current);
+      const direction = directionRef.current
+        .copy(panelPosition)
+        .sub(camera.position)
+        .normalize();
 
-      const raycaster = new THREE.Raycaster(camera.position, direction);
-      const hologramPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-      const intersectionPoint = new THREE.Vector3();
-      const intersects = raycaster.ray.intersectPlane(
-        hologramPlane,
-        intersectionPoint
+      raycasterRef.current.set(camera.position, direction);
+      const intersectionPoint = intersectionPointRef.current;
+      const intersects = raycasterRef.current.ray.intersectPlane(
+        hologramPlaneRef.current,
+        intersectionPoint,
       );
 
       if (intersects) {
@@ -137,9 +144,8 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
           />
         </mesh>
 
-        <group ref={iconRef} scale={[iconScale, iconScale, 1]}>
+        <group scale={[iconScale, iconScale, 1]}>
           <mesh
-            ref={meshRef}
             onPointerOver={handlePointerOver}
             onPointerOut={handlePointerOut}
             onClick={(e) => {
