@@ -54,6 +54,7 @@ const DragHint = ({ isVisible }) => {
 };
 
 const SceneContent = memo(({ 
+  eventSource,
   nightSkyRef, 
   show3DNav, 
   initialRotationComplete, 
@@ -67,26 +68,29 @@ const SceneContent = memo(({
   isInView, 
   constellationScales 
 }) => {
+  const navEnabled = show3DNav && isInView;
+
   return (
     <div id="home-3d" className="home-3d-content">
       <NightSkyBackground ref={nightSkyRef} />
 
-      {show3DNav && initialRotationComplete && !hasDragged && (
+      {navEnabled && initialRotationComplete && !hasDragged && (
         <DragHint isVisible={!hasDragged} />
       )}
 
       <Canvas
         camera={{ position: [0, 5, 20], fov: 45 }}
-        eventSource={document.getElementById("root")}
+        eventSource={eventSource}
         eventPrefix="client"
         className="webgl-canvas"
         dpr={[1, 1.5]} 
+        style={{ pointerEvents: navEnabled ? "auto" : "none" }}
       >
         <Suspense fallback={null}>
           <group>
             <Environment preset="sunset" />
             
-            {show3DNav && icons.map((icon, i) => (
+            {navEnabled && icons.map((icon, i) => (
               <motion.group
                 key={i}
                 initial={{ opacity: 0, scale: scalingConfig.iconScale, y: 1 }}
@@ -130,7 +134,7 @@ const SceneContent = memo(({
             />
           </motion.group>
 
-          {show3DNav && (
+          {navEnabled && (
             <>
               <OutlineStars
                 active={active === "About"}
@@ -441,7 +445,7 @@ const Home = () => {
         <section
           ref={homeRef}
           className="home-3d"
-          onMouseDown={show3DNav ? (e) => {
+          onMouseDown={show3DNav && isInView ? (e) => {
             if (!initialRotationComplete) return;
             dragRef.current.dragging = true;
             dragRef.current.startX = e.clientX;
@@ -455,6 +459,7 @@ const Home = () => {
           }}
         >
           <SceneContent 
+            eventSource={homeRef.current}
             nightSkyRef={nightSkyRef} 
             show3DNav={show3DNav}
             initialRotationComplete={initialRotationComplete}
