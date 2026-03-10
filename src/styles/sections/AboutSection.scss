@@ -423,10 +423,6 @@ $white: #ffffff;
 
 .about-section {
   &:hover {
-    .floating-orbs .orb {
-      animation-duration: 15s;
-    }
-    
     .avatar-orbits .orbit-ring {
       animation-duration: 15s;
     }
@@ -571,7 +567,7 @@ $white: #ffffff;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .floating-orbs .orb,
+  .floating-orbs-canvas,
   .avatar-orbits .orbit-ring,
   .hologram-avatar .avatar-glow,
   .hologram-avatar .avatar-glitch {

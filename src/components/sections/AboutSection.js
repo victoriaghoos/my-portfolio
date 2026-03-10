@@ -27,8 +27,17 @@ const AboutSection = ({ id }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) {
+      return undefined;
+    }
+
     const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return undefined;
+    }
+
     let animationFrameId;
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const orbs = [
       { x: window.innerWidth * 0.1, y: window.innerHeight * 0.1, r: 150, color: 'rgba(100, 219, 255, 0.8)', vx: Math.random() - 0.5, vy: Math.random() - 0.5 },
@@ -36,40 +45,61 @@ const AboutSection = ({ id }) => {
       { x: window.innerWidth * 0.2, y: window.innerHeight * 0.8, r: 75, color: 'rgba(120, 119, 198, 0.5)', vx: Math.random() - 0.5, vy: Math.random() - 0.5 }
     ];
 
+    const drawOrbs = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      orbs.forEach(orb => {
+        const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.r);
+        gradient.addColorStop(0, orb.color);
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    };
+
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      drawOrbs();
     };
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       orbs.forEach(orb => {
         orb.x += orb.vx;
         orb.y += orb.vy;
 
         if (orb.x + orb.r > canvas.width || orb.x - orb.r < 0) orb.vx *= -1;
         if (orb.y + orb.r > canvas.height || orb.y - orb.r < 0) orb.vy *= -1;
-
-        const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.r);
-        gradient.addColorStop(0, orb.color);
-        gradient.addColorStop(1, 'rgba(0,0,0,0)');
-        
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
-        ctx.fill();
       });
+
+      drawOrbs();
 
       animationFrameId = window.requestAnimationFrame(animate);
     };
 
+    const syncMotionPreference = () => {
+      window.cancelAnimationFrame(animationFrameId);
+      animationFrameId = undefined;
+
+      if (reducedMotionQuery.matches) {
+        drawOrbs();
+        return;
+      }
+
+      animate();
+    };
+
     window.addEventListener('resize', resizeCanvas);
+    reducedMotionQuery.addEventListener('change', syncMotionPreference);
     resizeCanvas();
-    animate();
+    syncMotionPreference();
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      reducedMotionQuery.removeEventListener('change', syncMotionPreference);
       window.cancelAnimationFrame(animationFrameId);
     };
   }, []);
