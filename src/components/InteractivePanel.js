@@ -108,37 +108,55 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
     }
   };
 
-  useEffect(() => {
-    if (icon.video) {
-      const video = document.createElement("video");
-      video.src = icon.video;
-      video.loop = true;
-      video.muted = true;
-      video.playsInline = true;
-      video.crossOrigin = "anonymous";
-      video.preload = "auto";
-      videoRef.current = video;
-
-      const videoTexture = new THREE.VideoTexture(video);
-      videoTexture.minFilter = THREE.LinearFilter;
-      videoTexture.magFilter = THREE.LinearFilter;
-      videoTexture.format = THREE.RGBAFormat;
-      videoTextureRef.current = videoTexture;
+  const disposeVideoResources = (
+    video = videoRef.current,
+    videoTexture = videoTextureRef.current,
+  ) => {
+    if (video) {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
     }
-  }, [icon.video]);
+
+    if (videoTexture) {
+      videoTexture.dispose();
+    }
+
+    if (videoRef.current === video) {
+      videoRef.current = null;
+    }
+
+    if (videoTextureRef.current === videoTexture) {
+      videoTextureRef.current = null;
+    }
+  };
 
   useEffect(() => {
+    disposeVideoResources();
+
+    if (!icon.video) {
+      return undefined;
+    }
+
+    const video = document.createElement("video");
+    video.src = icon.video;
+    video.loop = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.crossOrigin = "anonymous";
+    video.preload = "auto";
+    videoRef.current = video;
+
+    const videoTexture = new THREE.VideoTexture(video);
+    videoTexture.minFilter = THREE.LinearFilter;
+    videoTexture.magFilter = THREE.LinearFilter;
+    videoTexture.format = THREE.RGBAFormat;
+    videoTextureRef.current = videoTexture;
+
     return () => {
-      if (videoRef.current) {
-        videoRef.current.pause();
-        videoRef.current = null;
-      }
-      if (videoTextureRef.current) {
-        videoTextureRef.current.dispose();
-        videoTextureRef.current = null;
-      }
+      disposeVideoResources(video, videoTexture);
     };
-  }, []);
+  }, [icon.video]);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
