@@ -4,27 +4,26 @@ import { useTranslation, Trans } from 'react-i18next';
 import '../../styles/sections/AboutSection.scss';
 import foto1 from '../../assets/images/foto1.jpg';
 
-const AboutSection = ({ id }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-  const canvasRef = useRef(null);
-  const { t } = useTranslation();
+const textVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: 'easeOut' }
+  }
+};
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.3 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+const staggerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
     }
+  }
+};
 
-    return () => observer.disconnect();
-  }, []);
-
+const useOrbCanvas = (canvasRef) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -48,7 +47,7 @@ const AboutSection = ({ id }) => {
     const drawOrbs = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      orbs.forEach(orb => {
+      orbs.forEach((orb) => {
         const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.r);
         gradient.addColorStop(0, orb.color);
         gradient.addColorStop(1, 'rgba(0,0,0,0)');
@@ -67,7 +66,7 @@ const AboutSection = ({ id }) => {
     };
 
     const animate = () => {
-      orbs.forEach(orb => {
+      orbs.forEach((orb) => {
         orb.x += orb.vx;
         orb.y += orb.vy;
 
@@ -102,33 +101,45 @@ const AboutSection = ({ id }) => {
       reducedMotionQuery.removeEventListener('change', syncMotionPreference);
       window.cancelAnimationFrame(animationFrameId);
     };
+  }, [canvasRef]);
+};
+
+const OrbBackground = () => {
+  const canvasRef = useRef(null);
+
+  useOrbCanvas(canvasRef);
+
+  return (
+    <div className="cosmic-background">
+      <canvas ref={canvasRef} className="floating-orbs-canvas"></canvas>
+      <div className="star-field"></div>
+    </div>
+  );
+};
+
+const AboutSection = ({ id }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
-
-  const textVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
-    }
-  };
-
-  const staggerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
 
   return (
     <section id={id} ref={sectionRef} className="about-section">
-      <div className="cosmic-background">
-        <canvas ref={canvasRef} className="floating-orbs-canvas"></canvas>
-        <div className="star-field"></div>
-      </div>
+      <OrbBackground />
 
       <div className="about-content">
         <motion.div 
