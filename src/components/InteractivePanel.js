@@ -7,10 +7,10 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
   const ref = useRef();
   const pngTexture = useTexture(icon.png);
   const [hovered, setHovered] = useState(false);
+  const [labelVisible, setLabelVisible] = useState(true);
   const videoRef = useRef();
   const videoTextureRef = useRef();
   const ringRef = useRef();
-  const labelElementRef = useRef(null);
   const labelVisibleRef = useRef(true);
   const panelPositionRef = useRef(new THREE.Vector3());
   const directionRef = useRef(new THREE.Vector3());
@@ -73,19 +73,9 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
       nextLabelVisible = distToPanel < distToIntersection;
     }
 
-    if (
-      labelElementRef.current &&
-      labelVisibleRef.current !== nextLabelVisible
-    ) {
+    if (labelVisibleRef.current !== nextLabelVisible) {
       labelVisibleRef.current = nextLabelVisible;
-      labelElementRef.current.style.visibility = nextLabelVisible
-        ? "visible"
-        : "hidden";
-      labelElementRef.current.style.opacity = nextLabelVisible
-        ? hovered
-          ? "1"
-          : "0.9"
-        : "0";
+      setLabelVisible(nextLabelVisible);
     }
   };
 
@@ -240,7 +230,6 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
           transform
         >
           <div
-            ref={labelElementRef}
             style={{
               color: "#2c3e50",
               fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
@@ -255,8 +244,8 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
                   0 4px 12px rgba(0, 0, 0, 0.1),
                   0 0 15px ${icon.color.getStyle()}40
                 `,
-              opacity: hovered ? 1 : 0.9,
-              visibility: labelVisibleRef.current ? "visible" : "hidden",
+              opacity: labelVisible ? (hovered ? 1 : 0.9) : 0,
+              visibility: labelVisible ? "visible" : "hidden",
               transition: "none",
               transform: hovered ? "translateY(-2px) scale(1.05)" : "translateY(0) scale(1)",
               letterSpacing: "1px",
