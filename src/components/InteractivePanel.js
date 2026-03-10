@@ -23,6 +23,91 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
 
   useCursor(hovered, "pointer", "auto");
 
+  const updateVideoTexture = (video) => {
+    if (
+      hovered &&
+      videoTextureRef.current &&
+      video &&
+      !video.paused &&
+      !video.ended &&
+      video.readyState >= video.HAVE_CURRENT_DATA
+    ) {
+      videoTextureRef.current.needsUpdate = true;
+    }
+  };
+
+  const updatePanelTransform = (elapsedTime) => {
+    if (!ref.current) {
+      return null;
+    }
+
+    ref.current.position.y = position[1] + Math.sin(elapsedTime * 0.5 + index) * 0.1;
+    ref.current.rotation.y = Math.sin(elapsedTime * 0.3 + index) * 0.05;
+
+    return ref.current.getWorldPosition(panelPositionRef.current);
+  };
+
+  const updateLabelVisibility = (panelPosition) => {
+    if (!panelPosition) {
+      return;
+    }
+
+    const direction = directionRef.current
+      .copy(panelPosition)
+      .sub(camera.position)
+      .normalize();
+
+    raycasterRef.current.set(camera.position, direction);
+    const intersectionPoint = intersectionPointRef.current;
+    const intersects = raycasterRef.current.ray.intersectPlane(
+      hologramPlaneRef.current,
+      intersectionPoint,
+    );
+
+    let nextLabelVisible = true;
+
+    if (intersects) {
+      const distToPanel = camera.position.distanceTo(panelPosition);
+      const distToIntersection =
+        camera.position.distanceTo(intersectionPoint);
+      nextLabelVisible = distToPanel < distToIntersection;
+    }
+
+    if (
+      labelElementRef.current &&
+      labelVisibleRef.current !== nextLabelVisible
+    ) {
+      labelVisibleRef.current = nextLabelVisible;
+      labelElementRef.current.style.visibility = nextLabelVisible
+        ? "visible"
+        : "hidden";
+      labelElementRef.current.style.opacity = nextLabelVisible
+        ? hovered
+          ? "1"
+          : "0.9"
+        : "0";
+    }
+  };
+
+  const updateRingAnimation = (elapsedTime) => {
+    if (ringRef.current) {
+      ringRef.current.rotation.z = elapsedTime * 0.3;
+      if (hovered) {
+        ringRef.current.scale.setScalar(1.1 + Math.sin(elapsedTime * 7) * 0.05);
+      } else {
+        ringRef.current.scale.setScalar(1);
+      }
+    }
+
+    if (ringRef.current && ringRef.current.material) {
+      ringRef.current.material.opacity = THREE.MathUtils.lerp(
+        ringRef.current.material.opacity,
+        hovered ? 0 : 0.3,
+        0.25,
+      );
+    }
+  };
+
   useEffect(() => {
     if (icon.video) {
       const video = document.createElement("video");
@@ -59,74 +144,10 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
     const t = clock.getElapsedTime();
     const video = videoRef.current;
 
-    if (
-      hovered &&
-      videoTextureRef.current &&
-      video &&
-      !video.paused &&
-      !video.ended &&
-      video.readyState >= video.HAVE_CURRENT_DATA
-    ) {
-      videoTextureRef.current.needsUpdate = true;
-    }
-
-    if (ref.current) {
-      ref.current.position.y = position[1] + Math.sin(t * 0.5 + index) * 0.1;
-      ref.current.rotation.y = Math.sin(t * 0.3 + index) * 0.05;
-
-      const panelPosition = ref.current.getWorldPosition(panelPositionRef.current);
-      const direction = directionRef.current
-        .copy(panelPosition)
-        .sub(camera.position)
-        .normalize();
-
-      raycasterRef.current.set(camera.position, direction);
-      const intersectionPoint = intersectionPointRef.current;
-      const intersects = raycasterRef.current.ray.intersectPlane(
-        hologramPlaneRef.current,
-        intersectionPoint,
-      );
-
-      let nextLabelVisible = true;
-
-      if (intersects) {
-        const distToPanel = camera.position.distanceTo(panelPosition);
-        const distToIntersection =
-          camera.position.distanceTo(intersectionPoint);
-        nextLabelVisible = distToPanel < distToIntersection;
-      }
-
-      if (
-        labelElementRef.current &&
-        labelVisibleRef.current !== nextLabelVisible
-      ) {
-        labelVisibleRef.current = nextLabelVisible;
-        labelElementRef.current.style.visibility = nextLabelVisible
-          ? "visible"
-          : "hidden";
-        labelElementRef.current.style.opacity = nextLabelVisible
-          ? hovered
-            ? "1"
-            : "0.9"
-          : "0";
-      }
-    }
-
-    if (ringRef.current) {
-        ringRef.current.rotation.z = t * 0.3;
-        if (hovered) {
-          ringRef.current.scale.setScalar(1.1 + Math.sin(t * 7) * 0.05);
-        } else {
-          ringRef.current.scale.setScalar(1);
-        }
-    }
-      if (ringRef.current && ringRef.current.material) {
-        ringRef.current.material.opacity = THREE.MathUtils.lerp(
-          ringRef.current.material.opacity,
-          hovered ? 0 : 0.3,
-          0.25 
-        );
-    }
+    updateVideoTexture(video);
+    const panelPosition = updatePanelTransform(t);
+    updateLabelVisibility(panelPosition);
+    updateRingAnimation(t);
   });
 
   const handlePointerOver = (e) => {
