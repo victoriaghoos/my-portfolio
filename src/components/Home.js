@@ -319,6 +319,13 @@ const Home = () => {
   }, [isDesktop, isTablet]);
 
   const isInView = useInView(homeRef, { amount: 1 });
+
+  useEffect(() => {
+    if (!isInView) {
+      setActive(null);
+    }
+  }, [isInView]);
+
   const numberOfIcons = icons.length;
 
   const [rotationY, setRotationY] = useState(0);
