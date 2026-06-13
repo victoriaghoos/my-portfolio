@@ -1,5 +1,5 @@
-import React, { useMemo, memo } from "react";
-import { motion } from "framer-motion";
+import React, { useMemo, memo, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
 import sakuraTree from "../../assets/images/sakura2.png";
@@ -58,6 +58,9 @@ const FallingPetal = () => {
 
 const SkillsSection = ({ id }) => {
   const { t } = useTranslation();
+  const petalsRef = useRef(null);
+  const isPetalsInView = useInView(petalsRef, { once: false, amount: 0.1 });
+  
   const stars = useMemo(() => Array.from({ length: 150 }), []);
   const petals = useMemo(() => Array.from({ length: 12 }), []);
 
@@ -142,8 +145,8 @@ const SkillsSection = ({ id }) => {
         </div>
       </div>
 
-      <div className="petals-layer">
-        {petals.map((_, i) => <FallingPetal key={`petal-${i}`} />)}
+      <div className="petals-layer" ref={petalsRef}>
+        {isPetalsInView && petals.map((_, i) => <FallingPetal key={`petal-${i}`} />)}
       </div>
 
       {/* 3. CONTENT */}
