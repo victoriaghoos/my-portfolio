@@ -329,6 +329,7 @@ const Home = () => {
     startY: 0, 
     startRot: 0,
     hasInteracted: false,
+    hasDraggedThisGesture: false,
   });  
 
   const [initialRotationComplete, setInitialRotationComplete] = useState(false);
@@ -397,12 +398,16 @@ const Home = () => {
       if (!hasDragged && Math.abs(deltaX) > 5) {
         setHasDragged(true);
       }
+
+      if (Math.abs(deltaX) > 5) {
+        dragRef.current.hasDraggedThisGesture = true;
+      }
     };
 
     const onMouseUp = (e) => {
       if (dragRef.current.dragging) {
         dragRef.current.hasInteracted = true;
-        if (!hasDragged) {
+        if (!dragRef.current.hasDraggedThisGesture) {
           if (nightSkyRef.current) {
             nightSkyRef.current.triggerShockwave(e.clientX, e.clientY);
           }
@@ -448,6 +453,7 @@ const Home = () => {
           onMouseDown={show3DNav && isInView ? (e) => {
             if (!initialRotationComplete) return;
             dragRef.current.dragging = true;
+            dragRef.current.hasDraggedThisGesture = false;
             dragRef.current.startX = e.clientX;
             dragRef.current.startY = e.clientY; 
             dragRef.current.startRot = rotationY;
