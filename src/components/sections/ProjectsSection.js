@@ -1,5 +1,5 @@
 import React, { useMemo, memo, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import {
   Music,
@@ -139,6 +139,8 @@ const ProjectsSection = ({ id }) => {
   }
   const visualizerBars = visualizerRef.current;
 
+  const reduceMotion = useReducedMotion();
+
   return (
     <section id={id} className="projects-section">
       <div className="stars-container">
@@ -162,17 +164,21 @@ const ProjectsSection = ({ id }) => {
         <motion.div
           key={d.id}
           className="sparkle-doodle"
-          initial={{ opacity: 0.18, scale: 0.7 }}
-          animate={{
-            opacity: [0.18, 0.6, 0.18],
-            scale: [0.9, 1.1, 0.9],
-          }}
-          transition={{
-            duration: d.duration,
-            repeat: Infinity,
-            delay: d.delay,
-            ease: "easeInOut",
-          }}
+            initial={reduceMotion ? { opacity: 0.18, scale: 1 } : { opacity: 0.18, scale: 0.7 }}
+            animate={
+              reduceMotion
+                ? { opacity: 0.18, scale: 1 }
+                : {
+                    opacity: [0.18, 0.6, 0.18],
+                    scale: [0.9, 1.1, 0.9],
+                  }
+            }
+            transition={{
+              duration: d.duration,
+              repeat: reduceMotion ? 0 : Infinity,
+              delay: d.delay,
+              ease: "easeInOut",
+            }}
           style={{
             position: "absolute",
             top: d.top,
@@ -230,8 +236,9 @@ const ProjectsSection = ({ id }) => {
                         src={project.image}
                         alt={project.title}
                         className="art-img"
+                        loading="lazy"
                       />
-                      <div className="screen-glare"></div>{" "}
+                      <div className="screen-glare"></div>
                     </>
                   )}
                 </div>
@@ -239,9 +246,9 @@ const ProjectsSection = ({ id }) => {
                   <h3 className="project-name">{project.title}</h3>
 
                   <div className="project-tech-stack">
-                    {project.subtitle.split(" • ").map((tech) => (
+                    {project.subtitle.split(" • ").map((tech, idx) => (
                       <span
-                        key={tech}
+                        key={`${project.id}-${idx}-${tech}`}
                         className="tech-tag"
                         style={{ color: project.color }}
                       >
@@ -270,15 +277,30 @@ const ProjectsSection = ({ id }) => {
                   </div>
 
                   <div className="player-controls">
-                    <SkipBack size={18} />
-                    <motion.div 
+                    <button
+                      type="button"
+                      aria-label="Previous"
+                      className="control-btn"
+                      style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', pointerEvents: 'auto' }}
+                    >
+                      <SkipBack size={18} />
+                    </button>
+                    <motion.button 
                         className="main-play-btn"
+                        type="button"
                         whileTap={{ scale: 0.9 }}
-                        style={{ backgroundColor: project.color }}
+                        style={{ backgroundColor: project.color, pointerEvents: 'auto' }}
                       >
                       <Play size={18} fill="#1a1a2e" color="#1a1a2e" />
-                    </motion.div>
-                    <SkipForward size={18} />
+                    </motion.button>
+                    <button
+                      type="button"
+                      aria-label="Next"
+                      className="control-btn"
+                      style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', pointerEvents: 'auto' }}
+                    >
+                      <SkipForward size={18} />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -292,10 +314,10 @@ const ProjectsSection = ({ id }) => {
           <motion.div
             key={bar.id}
             className="bar"
-            initial={{ height: 0 }}
-            whileInView={{ height: [5, 30, 15, 35, 5] }}
+            initial={reduceMotion ? { height: 20 } : { height: 0 }}
+            whileInView={reduceMotion ? { height: 20 } : { height: [5, 30, 15, 35, 5] }}
             transition={{
-              repeat: Infinity,
+              repeat: reduceMotion ? 0 : Infinity,
               duration: bar.duration,
               delay: bar.delay,
             }}
