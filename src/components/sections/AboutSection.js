@@ -101,13 +101,20 @@ const useOrbCanvas = (canvasRef, isVisible) => {
 
     syncRef.current = syncMotionPreference;
 
-    window.addEventListener('resize', resizeCanvas);
+    let resizeTimer;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resizeCanvas, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
     reducedMotionQuery.addEventListener('change', syncMotionPreference);
     resizeCanvas();
     syncMotionPreference();
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimer);
       reducedMotionQuery.removeEventListener('change', syncMotionPreference);
       window.cancelAnimationFrame(animationFrameId);
       syncRef.current = null;
