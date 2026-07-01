@@ -66,7 +66,6 @@ const FallingPetal = memo(() => {
   );
 });
 
-
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -170,7 +169,7 @@ const SkillsSection = ({ id }) => {
   ], [t]);
 
   return (
-    <section id={id} className="skills-section">
+    <section id={id} className="skills-section" aria-labelledby={`${id}-title`}>
       {/* 1. ACHTERGROND */}
       <div className="background-elements">
         <div className="nebula-bg" />
@@ -203,7 +202,7 @@ const SkillsSection = ({ id }) => {
         }}
       >
         <header className="header-container">
-          <motion.h2 className="main-title" variants={itemVariants}>
+          <motion.h2 id={`${id}-title`} className="main-title" variants={itemVariants}>
             {t('skills')}
           </motion.h2>
           <motion.div className="title-underline" variants={itemVariants} />
