@@ -1,4 +1,5 @@
 $about-glow-cyan: #8AE6FF;
+$about-glow-mid: #A78BFA;
 $about-glow-purple: #C084FC;
 $white: #ffffff;
 .about-section {
@@ -62,7 +63,6 @@ $white: #ffffff;
   opacity: 0.7;
   mix-blend-mode: screen;
   will-change: filter;
-  transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
 }
 
 .star-field {
@@ -118,7 +118,7 @@ $white: #ffffff;
     margin-bottom: 1rem;
     
     .title-glow {
-      background: linear-gradient(135deg, $about-glow-cyan 0%, #A78BFA 50%, $about-glow-purple 100%);
+      background: linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 50%, $about-glow-purple 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -130,7 +130,7 @@ $white: #ffffff;
   .title-underline {
     width: 100px;
     height: 3px;
-    background: linear-gradient(135deg, $about-glow-cyan 0%, #A78BFA 50%, $about-glow-purple 100%);   
+    background: linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 50%, $about-glow-purple 100%);
     margin: 10px auto 0;
     border-radius: 10px;
     transform-origin: center;
@@ -167,7 +167,7 @@ $white: #ffffff;
       left: 0;
       right: 0;
       bottom: 0;
-      background: conic-gradient(#8AE6FF, #A78BFA, #C084FC, #8AE6FF);
+      background: conic-gradient($about-glow-cyan, $about-glow-mid, $about-glow-purple, $about-glow-cyan);
       animation: rotateGlow 8s linear infinite;
       will-change: transform;
       z-index: 0;
@@ -208,7 +208,7 @@ $white: #ffffff;
       right: -2px;
       bottom: -2px;
       border-radius: 50%;
-      background: conic-gradient(from 0deg, #8AE6FF, #A78BFA, #C084FC, #8AE6FF);
+      background: conic-gradient(from 0deg, $about-glow-cyan, $about-glow-mid, $about-glow-purple, $about-glow-cyan);
       z-index: 1;
       opacity: 0.7;
       filter: blur(10px);
@@ -270,9 +270,9 @@ $white: #ffffff;
           transform: translateX(-50%);
           width: 4px;
           height: 4px;
-          background: #8AE6FF;
+          background: $about-glow-cyan;
           border-radius: 50%;
-          box-shadow: 0 0 10px #8AE6FF;
+          box-shadow: 0 0 10px $about-glow-cyan;
         }
       }
       
@@ -289,9 +289,9 @@ $white: #ffffff;
           transform: translateY(-50%);
           width: 3px;
           height: 3px;
-          background: #A78BFA;
+          background: $about-glow-mid;
           border-radius: 50%;
-          box-shadow: 0 0 8px #A78BFA;
+          box-shadow: 0 0 8px $about-glow-mid;
         }
       }
       
@@ -309,9 +309,9 @@ $white: #ffffff;
           transform: translateX(-50%);
           width: 2px;
           height: 2px;
-          background: #C084FC;
+          background: $about-glow-purple;
           border-radius: 50%;
-          box-shadow: 0 0 6px #C084FC;
+          box-shadow: 0 0 6px $about-glow-purple;
         }
       }
     }
@@ -326,7 +326,7 @@ $white: #ffffff;
       color: white;
       
       .name-glow {
-        background: linear-gradient(135deg, #8AE6FF, #C084FC);
+        background: linear-gradient(135deg, $about-glow-cyan, $about-glow-purple);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -343,9 +343,11 @@ $white: #ffffff;
         color: rgba(255, 255, 255, 0.9);
         
         .highlight {
-          transition: filter 0.3s ease, letter-spacing 0.3s ease;
+          display: inline-block;
+          padding: 0 3px;
+          transition: filter 0.3s ease, transform 0.3s ease;
           cursor: default;
-          background: linear-gradient(135deg, #8AE6FF 0%, #A78BFA 100%);
+          background: linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 100%);
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -353,7 +355,7 @@ $white: #ffffff;
           filter: drop-shadow(0 0 5px rgba(138, 230, 255, 0.25));
           &:hover {
             filter: drop-shadow(0 0 10px rgba(138, 230, 255, 0.6));
-            letter-spacing: 0.5px; 
+            transform: scaleX(1.02);
           }
         }
       }
