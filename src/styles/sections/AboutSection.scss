@@ -115,7 +115,7 @@ $white: #ffffff;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 30px rgba(138, 230, 255, 0.4);
+      filter: drop-shadow(0 0 12px rgba(138, 230, 255, 0.5));
       position: relative;
     }
   }
@@ -311,7 +311,7 @@ $white: #ffffff;
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 20px rgba(192, 132, 252, 0.3);
+        filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.4));
       }
     }
     
@@ -331,9 +331,9 @@ $white: #ffffff;
           background-clip: text;
           -webkit-text-fill-color: transparent;
           font-weight: 600;
-          text-shadow: 0 0 15px rgba(138, 230, 255, 0.2);
+          filter: drop-shadow(0 0 5px rgba(138, 230, 255, 0.25));
           &:hover {
-            text-shadow: 0 0 20px rgba(138, 230, 255, 0.5);
+            filter: drop-shadow(0 0 10px rgba(138, 230, 255, 0.6));
             letter-spacing: 0.5px; 
           }
         }
