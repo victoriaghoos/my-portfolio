@@ -89,7 +89,7 @@ $cosmic-purple: #2a003d;
       transform: rotate(-2deg);
     }
     .right {
-      right: 0%;
+      right: 0;
       width: 65%;
       top: -25%;
       transform: scaleX(-1) rotate(1.1deg) scale(1.02); 
@@ -199,7 +199,7 @@ $cosmic-purple: #2a003d;
     width: 100%;
     max-width: 1200px;
     padding: 0 20px;
-    margin-bottom: 40px;
+    margin-bottom: clamp(24px, 4vh, 40px);
     box-sizing: border-box;
 
     @media (max-width: 1024px) {
@@ -317,6 +317,7 @@ $cosmic-purple: #2a003d;
             font-size: 0.95em;
             opacity: 0.75;
             flex-shrink: 0;
+            transition: opacity 0.3s ease;
           }
 
           &:hover {
