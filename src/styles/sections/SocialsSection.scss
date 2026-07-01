@@ -44,6 +44,22 @@ $night-glow: #f0abfc;
         pointer-events: none;
     }
 
+    .socials-stars-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    .canvas-container canvas:last-child {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
     .content-overlay {
         position: relative;
         z-index: 10;
