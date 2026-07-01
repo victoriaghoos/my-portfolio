@@ -127,7 +127,7 @@ const useOrbCanvas = (canvasRef, isVisible) => {
       window.cancelAnimationFrame(animationFrameId);
       syncRef.current = null;
     };
-  }, []); 
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 const OrbBackground = ({ isVisible }) => {
