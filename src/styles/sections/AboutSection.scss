@@ -158,11 +158,20 @@ $white: #ffffff;
     height: 280px;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid transparent;
-    background: linear-gradient(135deg, #8AE6FF, #A78BFA, #C084FC);
-    background-size: 400% 400%;
-    animation: gradientShift 8s ease infinite;
     padding: 4px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: conic-gradient(#8AE6FF, #A78BFA, #C084FC, #8AE6FF);
+      animation: rotateGlow 8s linear infinite;
+      will-change: transform;
+      z-index: 0;
+    }
     
     .avatar-image {
       width: 100%;
@@ -361,15 +370,6 @@ $white: #ffffff;
   }
 }
 
-@keyframes gradientShift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
 @keyframes glitchEffect {
   0%, 100% {
     opacity: 0;
@@ -544,7 +544,7 @@ $white: #ffffff;
 @media (prefers-reduced-motion: reduce) {
   .floating-orbs-canvas,
   .avatar-orbits .orbit-ring,
-  .hologram-avatar,
+  .hologram-avatar::before,
   .hologram-avatar .avatar-glow,
   .hologram-avatar .avatar-glitch,
   .star-field,
