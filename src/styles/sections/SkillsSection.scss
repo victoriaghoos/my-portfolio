@@ -16,7 +16,7 @@ $cosmic-purple: #2a003d;
   align-items: center;
   justify-content: center; 
   box-sizing: border-box;
-  &, * { box-sizing: border-box; }
+  * { box-sizing: border-box; }
 
   @media (max-width: 1024px) {
     height: auto;        
@@ -114,7 +114,6 @@ $cosmic-purple: #2a003d;
       position: absolute;
       width: clamp(8px, 1.2vw, 16px); 
       height: auto;
-      object-fit: contain;
     }
   }
 
