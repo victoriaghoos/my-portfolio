@@ -78,8 +78,6 @@ $cosmic-purple: #2a003d;
         object-fit: cover; 
         object-position: left bottom; 
         filter: brightness(0.7) contrast(1.1) saturate(1.8) blur(2px) drop-shadow(0 0 20px rgba($sakura-glow, 0.4));
-        transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), filter 0.6s cubic-bezier(0.4,0,0.2,1);
-        opacity: 1;
         mix-blend-mode: screen;
       }
     }
@@ -117,7 +115,6 @@ $cosmic-purple: #2a003d;
       width: clamp(8px, 1.2vw, 16px); 
       height: auto;
       object-fit: contain;
-      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
 
       @media (max-width: 600px) {
         opacity: 0.8;
@@ -175,6 +172,7 @@ $cosmic-purple: #2a003d;
       background: linear-gradient(to bottom, #ffffff 0%, $sakura-bright 60%, $sakura-glow 100%);
       filter: drop-shadow(0 0 30px rgba($sakura-glow, 0.4));
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       
       @media (max-width: 600px) {
