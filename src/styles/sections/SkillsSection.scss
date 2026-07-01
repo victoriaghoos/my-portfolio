@@ -163,11 +163,11 @@ $star-white: #ffffff;
     text-align: center;
     margin-top: 0;
     position: relative;
-    margin-bottom: clamp(1.5rem, 4vh, 3rem); 
+    margin-bottom: clamp(2rem, 6vh, 4.5rem);
     flex-shrink: 0;
 
     @media (max-width: 768px) {
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
 
     &::before {
@@ -215,85 +215,134 @@ $star-white: #ffffff;
 
   .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: clamp(15px, 2.5vh, 25px); 
+    grid-template-columns: repeat(6, 1fr);
+    gap: clamp(12px, 2vh, 20px);
     width: 100%;
     max-width: 1200px;
     padding: 0 20px;
-    margin-bottom: 40px; 
+    margin-bottom: 40px;
     box-sizing: border-box;
 
     @media (max-width: 1024px) {
       grid-template-columns: repeat(2, 1fr);
       padding: 0 2rem;
+
+      .skill-category-card {
+        grid-column: span 1;
+      }
     }
 
     @media (max-width: 700px) {
       grid-template-columns: 1fr;
       padding: 0 1.5rem;
-      gap: 15px;
+      gap: 14px;
+
+      .skill-category-card {
+        grid-column: span 1;
+      }
     }
 
-    .skill-category-card {  
+    .skill-category-card {
       background: linear-gradient(160deg, rgba(30, 10, 50, 0.4) 0%, rgba(5, 2, 12, 0.8) 100%);
-      border: 1px solid rgba($sakura-glow, 0.15);
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      background-color: rgba(255,255,255,0.12);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      border-radius: 20px; 
-      padding: 25px; 
+      border: 1px solid color-mix(in srgb, var(--accent, #{$sakura-glow}) 22%, transparent);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      border-radius: 20px;
+      padding: 18px 20px;
+      grid-column: span 2;
       transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-      
+
       display: flex;
       flex-direction: column;
-      align-items: center; 
-      gap: 15px;
+      align-items: center;
+      gap: 12px;
 
       @media (max-width: 700px) {
-        padding: 20px;
+        padding: 18px;
       }
 
+      // ── Featured cards (Languages & Backend) ─────────────────────────────
+      &.featured {
+        grid-column: span 3;
+        padding: 26px 28px;
+        border-color: color-mix(in srgb, var(--accent, #{$sakura-glow}) 26%, transparent);
+        background: linear-gradient(
+          160deg,
+          color-mix(in srgb, var(--accent, #{$sakura-glow}) 6%, rgba(30, 10, 50, 0.55)) 0%,
+          rgba(5, 2, 12, 0.85) 100%
+        );
+        box-shadow:
+          0 10px 30px rgba(0,0,0,0.5),
+          0 0 22px color-mix(in srgb, var(--accent, #{$sakura-glow}) 10%, transparent);
+
+        h3 {
+          font-size: 1.15rem;
+        }
+      }
+
+      // ── Hover ──────────────────────────────────────────────────────────────
       &:hover {
         transform: translateY(-5px);
-        border-color: rgba($sakura-glow, 0.5);
-        background: linear-gradient(160deg, rgba($sakura-glow, 0.15) 0%, rgba(5, 2, 12, 0.95) 100%);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 25px rgba($sakura-glow, 0.2);
+        border-color: color-mix(in srgb, var(--accent, #{$sakura-glow}) 65%, transparent);
+        background: linear-gradient(
+          160deg,
+          color-mix(in srgb, var(--accent, #{$sakura-glow}) 16%, rgba(5, 2, 12, 0.75)) 0%,
+          rgba(5, 2, 12, 0.95) 100%
+        );
+        box-shadow:
+          0 15px 40px rgba(0,0,0,0.7),
+          0 0 32px color-mix(in srgb, var(--accent, #{$sakura-glow}) 28%, transparent);
       }
-      
+
+      // ── Title ──────────────────────────────────────────────────────────────
       h3 {
-        color: white; 
-        font-size: 1.1rem;
+        color: var(--accent, white);
+        font-size: clamp(0.75rem, 1.2vw, 0.9rem);
         margin: 0;
         font-weight: 700;
         letter-spacing: 1px;
         text-transform: uppercase;
-        text-shadow: 0 0 10px rgba($sakura-glow, 0.6);
+        text-shadow: 0 0 14px color-mix(in srgb, var(--accent, #{$sakura-glow}) 70%, transparent);
         text-align: center;
       }
 
+      // ── Pills ──────────────────────────────────────────────────────────────
       .skill-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 7px;
         justify-content: center;
         width: 100%;
 
         .tag {
-          color: rgba(255, 255, 255, 0.9);
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          color: rgba(255, 255, 255, 0.85);
           background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 6px 14px; 
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 5px 12px;
           border-radius: 8px;
-          font-size: 0.85rem; 
+          font-size: 0.82rem;
           font-weight: 500;
           transition: all 0.3s ease;
-          
+
+          .tag-icon {
+            font-size: 0.95em;
+            opacity: 0.75;
+            flex-shrink: 0;
+          }
+
           &:hover {
-            background: $sakura-glow;
-            border-color: $sakura-glow;
+            background: color-mix(in srgb, var(--accent, #{$sakura-glow}) 85%, transparent);
+            border-color: var(--accent, #{$sakura-glow});
             color: white;
-            box-shadow: 0 0 15px $sakura-glow;
+            box-shadow: 0 0 14px color-mix(in srgb, var(--accent, #{$sakura-glow}) 55%, transparent);
             transform: translateY(-2px);
+
+            .tag-icon {
+              opacity: 1;
+            }
           }
         }
       }

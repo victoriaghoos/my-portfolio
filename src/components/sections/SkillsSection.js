@@ -4,6 +4,15 @@ import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
 import sakuraTree from "../../assets/images/sakura2.png";
 import petalImg from "../../assets/images/petal.png";
+import {
+  SiPython, SiJavascript, SiTypescript, SiPhp,
+  SiDotnet, SiNodedotjs, SiOpensearch, SiBlazor, SiLaravel,
+  SiReact, SiThreedotjs, SiHtml5, SiCss3, SiTailwindcss, SiVuedotjs, SiSass,
+  SiDocker, SiLinux, SiKubernetes, SiTerraform,
+  SiGit, SiGithub, SiGitlab, SiPostman, SiSwagger,
+} from "react-icons/si";
+import { BsDatabase } from "react-icons/bs";
+import { TbApi, TbBrandAzure } from "react-icons/tb";
 
 const Star = () => {
   const style = useMemo(() => ({
@@ -68,46 +77,78 @@ const SkillsSection = ({ id }) => {
     {
       id: "languages",
       title: t('skills_categories.languages'),
+      featured: true,
+      accent: "#f0a8d0",
       skills: [
-        "C#", "Python", "JavaScript", "TypeScript", "Dart", "SQL",
-      ]
+        { name: "C#",          icon: null },
+        { name: "Python",      icon: SiPython },
+        { name: "JavaScript",  icon: SiJavascript },
+        { name: "TypeScript",  icon: SiTypescript },
+        { name: "SQL",         icon: BsDatabase },
+        { name: "PHP",         icon: SiPhp },
+      ],
     },
     {
       id: "backend",
       title: t('skills_categories.backend'),
+      featured: true,
+      accent: "#d295d6",
       skills: [
-        ".NET", "ASP.NET MVC", "REST APIs", "SignalR", "OpenSearch",
-      ]
+        { name: ".NET",        icon: SiDotnet },
+        { name: "ASP.NET MVC", icon: null },
+        { name: "Laravel",     icon: SiLaravel },
+        { name: "REST APIs",   icon: TbApi },
+        { name: "SignalR",     icon: null },
+        { name: "OpenSearch",  icon: SiOpensearch },
+        { name: "Node.js",     icon: SiNodedotjs },
+        { name: "EF Core",     icon: null },
+        { name: "JWT",         icon: null },
+      ],
     },
     {
       id: "frontend",
       title: t('skills_categories.frontend'),
+      accent: "#bb95e0",
       skills: [
-        "React", "Three.js", "HTML", "CSS", "Tailwind CSS", "Blazor",
-      ]
-    },
-    {
-      id: "mobile-desktop",
-      title: t('skills_categories.mobile_desktop'),
-      skills: [
-        ".NET MAUI", "Flutter", "WPF",
-      ]
+        { name: "React",        icon: SiReact },
+        { name: "Three.js",     icon: SiThreedotjs },
+        { name: "HTML",         icon: SiHtml5 },
+        { name: "CSS",          icon: SiCss3 },
+        { name: "Tailwind CSS", icon: SiTailwindcss },
+        { name: "Vue.js",       icon: SiVuedotjs },
+        { name: "SCSS",         icon: SiSass },
+        { name: "Blazor",       icon: SiBlazor },
+        { name: ".NET MAUI",    icon: null },
+        { name: "WPF",          icon: null },
+      ],
     },
     {
       id: "devops",
       title: t('skills_categories.devops'),
+      accent: "#a68ee6",
       skills: [
-        "Docker", "Linux", "Virtual Machines",
-      ]
+        { name: "Docker",           icon: SiDocker },
+        { name: "Kubernetes",       icon: SiKubernetes },
+        { name: "Linux",            icon: SiLinux },
+        { name: "Virtual Machines", icon: null },
+        { name: "CI/CD",            icon: null },
+        { name: "Terraform",        icon: SiTerraform },
+        { name: "Azure",            icon: TbBrandAzure },
+      ],
     },
     {
       id: "tooling",
       title: t('skills_categories.tooling'),
+      accent: "#9490ea",
       skills: [
-        "Git", "GitHub", "GitLab", "Postman",
-      ]
+        { name: "Git",     icon: SiGit },
+        { name: "GitHub",  icon: SiGithub },
+        { name: "GitLab",  icon: SiGitlab },
+        { name: "Postman", icon: SiPostman },
+        { name: "Swagger", icon: SiSwagger },
+      ],
     },
-  ], [t]); 
+  ], [t]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -171,13 +212,17 @@ const SkillsSection = ({ id }) => {
           {skillGroups.map((group) => (
             <motion.div
               key={group.id}
-              className="skill-category-card"
+              className={`skill-category-card${group.featured ? ' featured' : ''}`}
+              style={{ '--accent': group.accent }}
               variants={itemVariants}
             >
               <h3>{group.title}</h3>
               <div className="skill-tags">
-                {group.skills.map((skill) => (
-                  <span key={skill} className="tag">{skill}</span>
+                {group.skills.map(({ name, icon: Icon }) => (
+                  <span key={name} className="tag">
+                    {Icon && <Icon className="tag-icon" aria-hidden="true" />}
+                    {name}
+                  </span>
                 ))}
               </div>
             </motion.div>
