@@ -115,10 +115,6 @@ $cosmic-purple: #2a003d;
       width: clamp(8px, 1.2vw, 16px); 
       height: auto;
       object-fit: contain;
-
-      @media (max-width: 600px) {
-        opacity: 0.8;
-      }
     }
   }
 
@@ -140,7 +136,6 @@ $cosmic-purple: #2a003d;
 
   .header-container {
     text-align: center;
-    margin-top: 0;
     position: relative;
     margin-bottom: clamp(2rem, 6vh, 4.5rem);
     flex-shrink: 0;
@@ -165,7 +160,7 @@ $cosmic-purple: #2a003d;
     .main-title {
       font-size: clamp(2.5rem, 6vh, 3.5rem);
       font-weight: 900;
-      color: white;
+      color: white; // fallback for browsers without background-clip: text support
       text-transform: uppercase;
       letter-spacing: 2px;
       margin: 0;
