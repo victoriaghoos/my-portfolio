@@ -172,7 +172,7 @@ $white: #ffffff;
       object-position: center 17%;
       position: relative;
       z-index: 2;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease;
       
       &:hover {
         transform: scale(1.05);
@@ -334,7 +334,7 @@ $white: #ffffff;
         color: rgba(255, 255, 255, 0.9);
         
         .highlight {
-          transition: all 0.3s ease;
+          transition: filter 0.3s ease, letter-spacing 0.3s ease;
           cursor: default;
           background: linear-gradient(135deg, #8AE6FF 0%, #A78BFA 100%);
           -webkit-background-clip: text;
