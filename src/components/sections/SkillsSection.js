@@ -1,4 +1,4 @@
-import { useMemo, memo, useRef } from "react";
+import { useMemo, memo, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
@@ -14,17 +14,94 @@ import {
 import { BsDatabase } from "react-icons/bs";
 import { TbApi, TbBrandAzure } from "react-icons/tb";
 
-const Star = memo(() => {
-  const style = useMemo(() => ({
-    top: `${Math.random() * 100}%`,
-    left: `${Math.random() * 100}%`,
-    width: `${Math.random() * 2}px`,
-    height: `${Math.random() * 2}px`,
-    opacity: Math.random() * 0.7 + 0.3,
-    animationDelay: `${Math.random() * 5}s`,
-  }), []);
+const SkillsStarsCanvas = memo(() => {
+  const canvasRef = useRef(null);
+  const stars = useMemo(
+    () =>
+      [...Array(250)].map(() => ({
+        x: Math.random(),
+        y: Math.random(),
+        radius: Math.random() * 0.9 + 0.4,
+        opacity: Math.random() * 0.7 + 0.3,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.002 + 0.001,
+      })),
+    []
+  );
 
-  return <div className="star-static" style={style} />;
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let frameId;
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const dpr = window.devicePixelRatio || 1;
+
+    const resizeCanvas = () => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawStars(0);
+    };
+
+    const drawStars = (time) => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#ffffff';
+      stars.forEach((star) => {
+        const twinkle = motionQuery.matches
+          ? 1
+          : 0.75 + Math.sin(time * star.speed + star.phase) * 0.15;
+        ctx.globalAlpha = Math.min(1, Math.max(0, star.opacity * twinkle));
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    };
+
+    const render = (timestamp) => {
+      drawStars(timestamp);
+      if (!motionQuery.matches) {
+        frameId = requestAnimationFrame(render);
+      }
+    };
+
+    const handleMotionChange = () => {
+      if (frameId) cancelAnimationFrame(frameId);
+      if (motionQuery.matches) {
+        drawStars(0);
+      } else {
+        frameId = requestAnimationFrame(render);
+      }
+    };
+
+    let resizeTimer;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resizeCanvas, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+    motionQuery.addEventListener('change', handleMotionChange);
+
+    resizeCanvas();
+    handleMotionChange();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      motionQuery.removeEventListener('change', handleMotionChange);
+      if (frameId) cancelAnimationFrame(frameId);
+      clearTimeout(resizeTimer);
+    };
+  }, [stars]);
+
+  return <canvas ref={canvasRef} className="skills-stars-canvas" aria-hidden="true" />;
 });
 
 const FallingPetal = memo(() => {
@@ -88,7 +165,6 @@ const SkillsSection = ({ id }) => {
   const petalsRef = useRef(null);
   const isPetalsInView = useInView(petalsRef, { once: false, amount: 0.1 });
   
-  const stars = Array.from({ length: 150 });
   const petals = Array.from({ length: 12 });
 
   const skillGroups = useMemo(() => [
@@ -173,7 +249,7 @@ const SkillsSection = ({ id }) => {
       {/* 1. ACHTERGROND */}
       <div className="background-elements">
         <div className="nebula-bg" />
-        {stars.map((_, i) => <Star key={`star-${i}`} />)}
+        <SkillsStarsCanvas />
       </div>
 
       {/* 2. BOMEN & PETALS */}
