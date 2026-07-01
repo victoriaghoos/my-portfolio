@@ -28,7 +28,7 @@ const Star = () => {
 };
 
 const MemoStar = memo(Star);
-const FallingPetal = () => {
+const FallingPetal = memo(() => {
   const settings = useMemo(() => ({
     left: Math.random() * 100,
     duration: 10 + Math.random() * 15,
@@ -65,7 +65,7 @@ const FallingPetal = () => {
       }}
     />
   );
-};
+});
 
 
 const containerVariants = {
