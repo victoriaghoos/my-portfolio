@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useRef } from "react";
+import React, { useMemo, memo, useRef, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import {
@@ -102,7 +102,6 @@ const ProjectsSection = ({ id }) => {
         left: `${zone.l[0] + Math.random() * (zone.l[1] - zone.l[0])}%`,
         size: Math.random() * 7 + 10,
         color: clr,
-        textShadow: `0 0 12px white, 0 0 6px ${clr}`,
         delay: Math.random() * 5,
         duration: 10 + Math.random() * 5,
       };
@@ -110,24 +109,70 @@ const ProjectsSection = ({ id }) => {
   }
   const doodleField = doodleRef.current;
 
-  const starsRef = useRef();
-  if (!starsRef.current) {
-    starsRef.current = [...Array(160)].map((_, i) => {
-      const size = i % 10 === 0 ? 3 : i % 5 === 0 ? 2 : 1;
-      return {
-        id: i,
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        size: `${size}px`,
-        duration: Math.random() * 3 + 2 + "s",
-        delay: Math.random() * 5 + "s",
-        opacity:
-          size === 1 ? Math.random() * 0.3 + 0.1 : Math.random() * 0.5 + 0.3,
-        blur: i % 15 === 0 ? "1px" : "0px",
-      };
-    });
-  }
-  const stars = starsRef.current;
+  const starsCanvasRef = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const starConfig = useMemo(
+    () =>
+      [...Array(250)].map(() => ({
+        x: Math.random(),
+        y: Math.random(),
+        size: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.4 + 0.2,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.002 + 0.0015,
+      })),
+    []
+  );
+
+  useEffect(() => {
+    const canvas = starsCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let frameId;
+    const dpr = window.devicePixelRatio || 1;
+
+    const resizeCanvas = () => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const drawStars = (time) => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#ffffff";
+      ctx.shadowColor = "rgba(255,255,255,0.15)";
+      ctx.shadowBlur = 0;
+      starConfig.forEach((star) => {
+        const glow = reduceMotion
+          ? 1
+          : 0.6 + Math.sin(time * star.speed + star.phase) * 0.25;
+        ctx.globalAlpha = Math.min(1, Math.max(0, star.alpha * glow));
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    };
+
+    const render = (timestamp) => {
+      drawStars(timestamp);
+      if (!reduceMotion) {
+        frameId = requestAnimationFrame(render);
+      }
+    };
+
+    resizeCanvas();
+    render(0);
+    window.addEventListener("resize", resizeCanvas);
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      if (frameId) cancelAnimationFrame(frameId);
+    };
+  }, [reduceMotion, starConfig]);
 
   const visualizerRef = useRef();
   if (!visualizerRef.current) {
@@ -139,25 +184,10 @@ const ProjectsSection = ({ id }) => {
   }
   const visualizerBars = visualizerRef.current;
 
-  const reduceMotion = useReducedMotion();
-
   return (
     <section id={id} className="projects-section">
       <div className="stars-container">
-        {stars.map((star) => (
-          <div
-            key={star.id}
-            className="star"
-            style={{
-              top: star.top,
-              left: star.left,
-              width: star.size,
-              height: star.size,
-              "--duration": star.duration,
-              animationDelay: star.delay,
-            }}
-          />
-        ))}
+        <canvas ref={starsCanvasRef} className="stars-canvas" aria-hidden="true" />
       </div>
 
       {doodleField.map((d) => (
