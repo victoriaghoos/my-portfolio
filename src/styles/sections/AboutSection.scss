@@ -202,6 +202,7 @@ $white: #ffffff;
       z-index: 1;
       opacity: 0.7;
       filter: blur(10px);
+      will-change: transform;
       animation: rotateGlow 6s linear infinite;
     }
     &::after {
@@ -242,6 +243,7 @@ $white: #ffffff;
       transform: translate(-50%, -50%);
       border: 1px solid rgba(138, 230, 255, 0.3);
       border-radius: 50%;
+      will-change: transform;
       animation: orbitRotate var(--orbit-speed, 20s) linear infinite;
       
       &.ring-1 {
