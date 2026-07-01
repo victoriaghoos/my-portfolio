@@ -22,7 +22,6 @@ $cosmic-purple: #2a003d;
     height: auto;        
     min-height: 100vh; 
     min-height: 100dvh;    
-    overflow: hidden;  
     justify-content: flex-start; 
     padding: 10vh 2rem; 
   }
@@ -42,7 +41,6 @@ $cosmic-purple: #2a003d;
         radial-gradient(circle at 0% 100%, rgba($cosmic-purple, 0.5) 0%, transparent 50%),
         radial-gradient(circle at 100% 0%, rgba($cosmic-purple, 0.5) 0%, transparent 50%);
       filter: blur(60px);
-      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
     }
     
     .star-static {
@@ -60,7 +58,6 @@ $cosmic-purple: #2a003d;
     z-index: 1;
     pointer-events: none;
     overflow: hidden;
-    transition: opacity 0.3s ease;
 
     .tree-wrapper {
       position: absolute;
@@ -166,7 +163,6 @@ $cosmic-purple: #2a003d;
       background: radial-gradient(circle, rgba($sakura-glow, 0.15) 0%, transparent 70%);
       z-index: -1;
       filter: blur(20px);
-      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
     }
     
     .main-title {
