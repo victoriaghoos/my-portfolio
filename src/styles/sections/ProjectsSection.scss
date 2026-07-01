@@ -2,6 +2,81 @@ $projects-pink: #fbcfe8;
 $projects-purple: #a78bfa;
 $white: #ffffff;
 
+@keyframes floatingRow {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+@keyframes floatDoodle {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: translateY(-30px) rotate(15deg) scale(1.1);
+    }
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        opacity: 0.2;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes floatingCard {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(calc(var(--base-rotation) - 0.5deg));
+    }
+
+    50% {
+        transform: translateY(-4px) rotate(calc(var(--base-rotation) + 0.5deg));
+    }
+}
+
+@keyframes twinkle-projects {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+        filter: blur(0.5px);
+    }
+}
+
+@keyframes nebulaPulse {
+    0% {
+        transform: scale(1) translate(0, 0);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(1.2) translate(2%, 2%);
+        opacity: 0.9;
+    }
+}
+
 .projects-section {
     scroll-snap-align: start;
 
@@ -323,6 +398,15 @@ $white: #ffffff;
                 margin-bottom: 6px;
             }
 
+            .progress-fill {
+                width: 100%;
+                height: 100%;
+                background-color: var(--accent-color, #fbcfe8);
+                box-shadow: 0 0 10px var(--accent-color, #fbcfe8);
+                border-radius: inherit;
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            }
+
             .time-info {
                 display: flex;
                 justify-content: space-between;
@@ -337,11 +421,16 @@ $white: #ffffff;
             justify-content: space-around;
             align-items: center;
             margin-top: 10px;
-            pointer-events: none;
+
+            .control-btn {
+                background: transparent;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+            }
 
             svg {
                 opacity: 0.4;
-                cursor: default;
             }
 
             .main-play-btn {
@@ -351,7 +440,11 @@ $white: #ffffff;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                cursor: default;
+                cursor: pointer;
+                background-color: var(--accent-color, #fbcfe8);
+                border: none;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+                transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
             }
         }
     }
@@ -410,6 +503,19 @@ $white: #ffffff;
         100% { height: 5px; }
     }
 
+    @keyframes neon-pulse-projects {
+        0% {
+            box-shadow: 0 0 10px $projects-pink, 0 0 5px $white;
+            opacity: 0.8;
+            transform: scaleX(0.9);
+        }
+        100% {
+            box-shadow: 0 0 25px $projects-pink, 0 0 10px $white, 0 0 5px $projects-purple;
+            opacity: 1;
+            transform: scaleX(1.1);
+        }
+    }
+
     /* Hide decorative doodles on small screens to reduce CPU */
     @media (max-width: 768px) {
         .sparkle-doodle { display: none; }
@@ -440,97 +546,6 @@ $white: #ffffff;
         svg {
             filter: blur(0.5px) drop-shadow(0 0 5px currentColor);
             transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
-        }
-    }
-}
-
-.projects-section {
-    @keyframes floatingRow {
-
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-6px);
-        }
-    }
-
-    @keyframes floatDoodle {
-
-        0%,
-        100% {
-            transform: translateY(0) rotate(0deg) scale(1);
-        }
-
-        50% {
-            transform: translateY(-30px) rotate(15deg) scale(1.1);
-        }
-    }
-
-    @keyframes pulseGlow {
-
-        0%,
-        100% {
-            opacity: 0.2;
-        }
-
-        50% {
-            opacity: 0.5;
-        }
-    }
-
-    @keyframes floatingCard {
-
-        0%,
-        100% {
-            transform: translateY(0) rotate(calc(var(--base-rotation) - 0.5deg));
-        }
-
-        50% {
-            transform: translateY(-4px) rotate(calc(var(--base-rotation) + 0.5deg));
-        }
-    }
-
-    @keyframes twinkle-projects {
-
-        0%,
-        100% {
-            opacity: 0.3;
-            transform: scale(1);
-        }
-
-        50% {
-            opacity: 1;
-            transform: scale(1.2);
-            filter: blur(0.5px);
-        }
-    }
-
-    @keyframes nebulaPulse {
-        0% {
-            transform: scale(1) translate(0, 0);
-            opacity: 0.6;
-        }
-
-        100% {
-            transform: scale(1.2) translate(2%, 2%);
-            opacity: 0.9;
-        }
-    }
-
-    @keyframes neon-pulse-projects {
-        0% {
-            box-shadow: 0 0 10px $projects-pink, 0 0 5px $white;
-            opacity: 0.8;
-            transform: scaleX(0.9);
-        }
-
-        100% {
-            box-shadow: 0 0 25px $projects-pink, 0 0 10px $white, 0 0 5px $projects-purple;
-            opacity: 1;
-            transform: scaleX(1.1);
         }
     }
 }
