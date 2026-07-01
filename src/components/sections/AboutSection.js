@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation, Trans } from 'react-i18next';
 import '../../styles/sections/AboutSection.scss';
@@ -130,15 +130,108 @@ const useOrbCanvas = (canvasRef, isVisible) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
+const useStarfieldCanvas = (canvasRef, isVisible) => {
+  const isVisibleRef = useRef(isVisible);
+
+  useEffect(() => {
+    isVisibleRef.current = isVisible;
+  }, [isVisible]);
+
+  const stars = useMemo(
+    () =>
+      [...Array(250)].map(() => ({
+        x: Math.random(),
+        y: Math.random(),
+        radius: Math.random() * 1.6 + 0.4,
+        alpha: Math.random() * 0.4 + 0.2,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.002 + 0.001,
+      })),
+    []
+  );
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId;
+    const reducedMotionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+    const dpr = window.devicePixelRatio || 1;
+
+    const resizeCanvas = () => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawStars(0);
+    };
+
+    const drawStars = (time) => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+      stars.forEach((star) => {
+        const twinkle =
+          reducedMotionQuery.matches || !isVisibleRef.current
+            ? 1
+            : 0.55 + Math.sin(time * star.speed + star.phase) * 0.25;
+        ctx.globalAlpha = Math.min(1, Math.max(0, star.alpha * twinkle));
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    };
+
+    const animate = (timestamp) => {
+      drawStars(timestamp);
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    const syncStarfield = () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (reducedMotionQuery.matches || !isVisibleRef.current) {
+        drawStars(0);
+      } else {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+
+    let resizeTimer;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resizeCanvas, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+    reducedMotionQuery.addEventListener('change', syncStarfield);
+
+    resizeCanvas();
+    syncStarfield();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimer);
+      reducedMotionQuery.removeEventListener('change', syncStarfield);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }, [stars]);
+};
+
 const OrbBackground = React.memo(function OrbBackground({ isVisible }) {
   const canvasRef = useRef(null);
+  const starFieldRef = useRef(null);
 
   useOrbCanvas(canvasRef, isVisible);
+  useStarfieldCanvas(starFieldRef, isVisible);
 
   return (
     <div className="cosmic-background">
       <canvas ref={canvasRef} className="floating-orbs-canvas" />
-      <div className="star-field"></div>
+      <canvas ref={starFieldRef} className="star-field" aria-hidden="true" />
     </div>
   );
 });
