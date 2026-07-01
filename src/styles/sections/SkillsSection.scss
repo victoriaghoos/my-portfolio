@@ -330,12 +330,10 @@ $cosmic-purple: #2a003d;
       }
     }
   }
-}
 
-@media (max-height: 700px) and (max-width: 1024px) {
-  .skills-section {
+  @media (max-height: 700px) and (max-width: 1024px) {
     justify-content: flex-start;
-    padding-top: 80px; 
+    padding-top: 80px;
   }
 }
 
