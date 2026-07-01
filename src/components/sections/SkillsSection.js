@@ -90,8 +90,8 @@ const SkillsSection = ({ id }) => {
   const petalsRef = useRef(null);
   const isPetalsInView = useInView(petalsRef, { once: false, amount: 0.1 });
   
-  const stars = useMemo(() => Array.from({ length: 150 }), []);
-  const petals = useMemo(() => Array.from({ length: 12 }), []);
+  const stars = Array.from({ length: 150 });
+  const petals = Array.from({ length: 12 });
 
   const skillGroups = useMemo(() => [
     {
