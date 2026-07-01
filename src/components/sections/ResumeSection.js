@@ -54,9 +54,10 @@ const ResumeStarsCanvas = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId;
+    let animationFrameId = null;
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const dpr = window.devicePixelRatio || 1;
+    const isVisibleRef = { current: true };
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resizeCanvas = () => {
       const width = canvas.clientWidth;
@@ -108,14 +109,17 @@ const ResumeStarsCanvas = () => {
 
     const animate = (timestamp) => {
       drawStars(timestamp);
-      if (!reducedMotionQuery.matches) {
+      if (!reducedMotionQuery.matches && isVisibleRef.current) {
         animationFrameId = requestAnimationFrame(animate);
       }
     };
 
     const syncStars = () => {
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      if (reducedMotionQuery.matches) {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      if (reducedMotionQuery.matches || !isVisibleRef.current) {
         drawStars(0);
       } else {
         animationFrameId = requestAnimationFrame(animate);
@@ -128,8 +132,22 @@ const ResumeStarsCanvas = () => {
       resizeTimer = window.setTimeout(resizeCanvas, 100);
     };
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          syncStars();
+        } else if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      },
+      { threshold: 0.1 }
+    );
+
     window.addEventListener('resize', handleResize);
     reducedMotionQuery.addEventListener('change', syncStars);
+    observer.observe(canvas);
 
     resizeCanvas();
     syncStars();
@@ -139,6 +157,7 @@ const ResumeStarsCanvas = () => {
       clearTimeout(resizeTimer);
       reducedMotionQuery.removeEventListener('change', syncStars);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
     };
   }, [stars]);
 
