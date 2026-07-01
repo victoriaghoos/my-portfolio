@@ -68,8 +68,16 @@ const useOrbCanvas = (canvasRef, isVisible) => {
     };
 
     const resizeCanvas = () => {
+      const prevW = canvas.width || window.innerWidth;
+      const prevH = canvas.height || window.innerHeight;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      const scaleX = canvas.width / prevW;
+      const scaleY = canvas.height / prevH;
+      orbs.forEach((orb) => {
+        orb.x *= scaleX;
+        orb.y *= scaleY;
+      });
       drawOrbs();
     };
 
