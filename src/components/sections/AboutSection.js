@@ -139,7 +139,7 @@ const useStarfieldCanvas = (canvasRef, isVisible) => {
 
   const stars = useMemo(
     () =>
-      [...Array(250)].map(() => ({
+      [...Array(200)].map(() => ({
         x: Math.random(),
         y: Math.random(),
         radius: Math.random() * 1.6 + 0.4,
@@ -218,7 +218,7 @@ const useStarfieldCanvas = (canvasRef, isVisible) => {
       reducedMotionQuery.removeEventListener('change', syncStarfield);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
-  }, [stars]);
+  }, [canvasRef, stars]);
 };
 
 const OrbBackground = React.memo(function OrbBackground({ isVisible }) {
