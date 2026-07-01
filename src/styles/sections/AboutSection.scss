@@ -38,7 +38,7 @@ $white: #ffffff;
 
   &:hover {
     .avatar-orbits .orbit-ring {
-      animation-duration: 15s;
+      --orbit-speed: 15s;
     }
   }
 }
@@ -242,12 +242,12 @@ $white: #ffffff;
       transform: translate(-50%, -50%);
       border: 1px solid rgba(138, 230, 255, 0.3);
       border-radius: 50%;
-      animation: orbitRotate 20s linear infinite;
+      animation: orbitRotate var(--orbit-speed, 20s) linear infinite;
       
       &.ring-1 {
         width: 320px;
         height: 320px;
-        animation-duration: 25s;
+        --orbit-speed: 25s;
         animation-direction: reverse;
         
         &::before {
@@ -267,7 +267,7 @@ $white: #ffffff;
       &.ring-2 {
         width: 360px;
         height: 360px;
-        animation-duration: 30s;
+        --orbit-speed: 30s;
         
         &::before {
           content: '';
@@ -286,7 +286,7 @@ $white: #ffffff;
       &.ring-3 {
         width: 400px;
         height: 400px;
-        animation-duration: 35s;
+        --orbit-speed: 35s;
         animation-direction: reverse;
         
         &::before {
