@@ -44,7 +44,7 @@ const useOrbCanvas = (canvasRef, isVisible) => {
     }
 
     let animationFrameId;
-    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const reducedMotionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 
     const orbs = [
       { x: window.innerWidth * 0.1, y: window.innerHeight * 0.1, r: 150, color: 'rgba(100, 219, 255, 0.8)', vx: Math.random() - 0.5, vy: Math.random() - 0.5 },
@@ -92,11 +92,11 @@ const useOrbCanvas = (canvasRef, isVisible) => {
 
       drawOrbs();
 
-      animationFrameId = window.requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     const syncMotionPreference = () => {
-      window.cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animationFrameId);
       animationFrameId = undefined;
 
       if (reducedMotionQuery.matches || !isVisibleRef.current) {
@@ -124,7 +124,7 @@ const useOrbCanvas = (canvasRef, isVisible) => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimer);
       reducedMotionQuery.removeEventListener('change', syncMotionPreference);
-      window.cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animationFrameId);
       syncRef.current = null;
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
