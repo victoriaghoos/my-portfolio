@@ -544,8 +544,12 @@ $white: #ffffff;
 @media (prefers-reduced-motion: reduce) {
   .floating-orbs-canvas,
   .avatar-orbits .orbit-ring,
+  .hologram-avatar,
   .hologram-avatar .avatar-glow,
-  .hologram-avatar .avatar-glitch {
+  .hologram-avatar .avatar-glitch,
+  .star-field,
+  .star-field::before,
+  .title-underline {
     animation: none;
   }
 }
