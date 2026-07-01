@@ -311,15 +311,13 @@ const ProjectsSection = ({ id }) => {
 
       <div className="audio-visualizer">
         {visualizerBars.map((bar) => (
-          <motion.div
+          <div
             key={bar.id}
             className="bar"
-            initial={reduceMotion ? { height: 20 } : { height: 0 }}
-            whileInView={reduceMotion ? { height: 20 } : { height: [5, 30, 15, 35, 5] }}
-            transition={{
-              repeat: reduceMotion ? 0 : Infinity,
-              duration: bar.duration,
-              delay: bar.delay,
+            style={{
+              ["--duration"]: `${bar.duration}s`,
+              animationDelay: `${bar.delay}s`,
+              height: reduceMotion ? 20 : undefined,
             }}
           />
         ))}
