@@ -35,12 +35,12 @@ const useOrbCanvas = (canvasRef, isVisible) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
-      return undefined;
+      return;
     }
 
     const ctx = canvas.getContext('2d');
     if (!ctx) {
-      return undefined;
+      return;
     }
 
     let animationFrameId;
@@ -130,7 +130,7 @@ const useOrbCanvas = (canvasRef, isVisible) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-const OrbBackground = ({ isVisible }) => {
+const OrbBackground = React.memo(({ isVisible }) => {
   const canvasRef = useRef(null);
 
   useOrbCanvas(canvasRef, isVisible);
@@ -141,7 +141,7 @@ const OrbBackground = ({ isVisible }) => {
       <div className="star-field"></div>
     </div>
   );
-};
+});
 
 const AboutSection = ({ id }) => {
   const [isVisible, setIsVisible] = useState(false);
