@@ -194,7 +194,6 @@ $cosmic-purple: #2a003d;
     max-width: 1200px;
     padding: 0 20px;
     margin-bottom: clamp(24px, 4vh, 40px);
-    box-sizing: border-box;
 
     @media (max-width: 1024px) {
       grid-template-columns: repeat(2, 1fr);
