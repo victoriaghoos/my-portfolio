@@ -130,14 +130,14 @@ const useOrbCanvas = (canvasRef, isVisible) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-const OrbBackground = React.memo(({ isVisible }) => {
+const OrbBackground = React.memo(function OrbBackground({ isVisible }) {
   const canvasRef = useRef(null);
 
   useOrbCanvas(canvasRef, isVisible);
 
   return (
     <div className="cosmic-background">
-      <canvas ref={canvasRef} className="floating-orbs-canvas"></canvas>
+      <canvas ref={canvasRef} className="floating-orbs-canvas" />
       <div className="star-field"></div>
     </div>
   );
@@ -188,7 +188,7 @@ const AboutSection = ({ id }) => {
                 <div className="avatar-glow"></div>
                 <img 
                   src={foto1} 
-                  alt="Profile" 
+                  alt="Me" 
                   className="avatar-image"
                 />
               </div>
