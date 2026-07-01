@@ -35,6 +35,12 @@ $white: #ffffff;
       radial-gradient(circle at 40% 40%, rgba(100, 219, 255, 0.05) 0%, transparent 50%);
     z-index: 1;
   }
+
+  &:hover {
+    .avatar-orbits .orbit-ring {
+      animation-duration: 15s;
+    }
+  }
 }
 
 .cosmic-background {
@@ -397,17 +403,6 @@ $white: #ffffff;
   }
 }
 
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.5;
-    box-shadow: 0 0 5px #8AE6FF;
-  }
-  50% {
-    opacity: 1;
-    box-shadow: 0 0 15px #8AE6FF, 0 0 20px #8AE6FF;
-  }
-}
-
 @keyframes neon-pulse-about {
   0% {
     box-shadow: 0 0 10px $about-glow-cyan, 0 0 5px $white;
@@ -418,14 +413,6 @@ $white: #ffffff;
     box-shadow: 0 0 25px $about-glow-cyan, 0 0 10px $white, 0 0 5px $about-glow-purple;
     opacity: 1;
     width: 90px;
-  }
-}
-
-.about-section {
-  &:hover {
-    .avatar-orbits .orbit-ring {
-      animation-duration: 15s;
-    }
   }
 }
 
