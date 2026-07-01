@@ -1,14 +1,7 @@
 $space-black: #05020a;
-$nebula-magenta: #3a0070;
-$nebula-blue: #000c2a;    
 $sakura-glow: #ff00cc;
 $sakura-bright: #ffb7c5;
-$sakura-soft: #ff85a1;
-$glass-pink: rgba(255, 0, 204, 0.04);
-$nebula-purple: #2a003d;
-$cosmic-pink: #ff00cc;
 $cosmic-purple: #2a003d;
-$star-white: #ffffff;
 
 .skills-section {
   scroll-snap-align: start;
@@ -31,7 +24,6 @@ $star-white: #ffffff;
     min-height: 100dvh;    
     overflow: hidden;  
     justify-content: flex-start; 
-    padding-top: 100px;    
     padding: 10vh 2rem; 
   }
 
@@ -88,9 +80,8 @@ $star-white: #ffffff;
         height: 100%;
         object-fit: cover; 
         object-position: left bottom; 
-        filter: brightness(0.7) contrast(1.1) saturate(1.8) blur(2px);
-        transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1)
-                drop-shadow(0 0 20px rgba($sakura-glow, 0.4));
+        filter: brightness(0.7) contrast(1.1) saturate(1.8) blur(2px) drop-shadow(0 0 20px rgba($sakura-glow, 0.4));
+        transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), filter 0.6s cubic-bezier(0.4,0,0.2,1);
         opacity: 1;
         mix-blend-mode: screen;
       }
@@ -129,16 +120,10 @@ $star-white: #ffffff;
       width: clamp(8px, 1.2vw, 16px); 
       height: auto;
       object-fit: contain;
-      filter: blur(1.5px) brightness(0.9) saturate(1.8);
-      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1)
-              drop-shadow(0 0 8px rgba($sakura-glow, 0.6));
-      -webkit-backface-visibility: visible;
-      backface-visibility: visible; 
+      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
 
       @media (max-width: 600px) {
         opacity: 0.8;
-        filter: blur(1px) brightness(0.9);
-        transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
       }
     }
   }
@@ -250,7 +235,10 @@ $star-white: #ffffff;
       border-radius: 20px;
       padding: 18px 20px;
       grid-column: span 2;
-      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  border-color 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  background 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 
       display: flex;
       flex-direction: column;
@@ -325,7 +313,11 @@ $star-white: #ffffff;
           border-radius: 8px;
           font-size: 0.82rem;
           font-weight: 500;
-          transition: all 0.3s ease;
+          transition: background 0.3s ease,
+                      border-color 0.3s ease,
+                      color 0.3s ease,
+                      box-shadow 0.3s ease,
+                      transform 0.3s ease;
 
           .tag-icon {
             font-size: 0.95em;
