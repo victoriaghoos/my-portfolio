@@ -23,7 +23,15 @@ const staggerVariants = {
   }
 };
 
-const useOrbCanvas = (canvasRef) => {
+const useOrbCanvas = (canvasRef, isVisible) => {
+  const syncRef = useRef(null);
+  const isVisibleRef = useRef(isVisible);
+
+  useEffect(() => {
+    isVisibleRef.current = isVisible;
+    if (syncRef.current) syncRef.current();
+  }, [isVisible]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -83,13 +91,15 @@ const useOrbCanvas = (canvasRef) => {
       window.cancelAnimationFrame(animationFrameId);
       animationFrameId = undefined;
 
-      if (reducedMotionQuery.matches) {
+      if (reducedMotionQuery.matches || !isVisibleRef.current) {
         drawOrbs();
         return;
       }
 
       animate();
     };
+
+    syncRef.current = syncMotionPreference;
 
     window.addEventListener('resize', resizeCanvas);
     reducedMotionQuery.addEventListener('change', syncMotionPreference);
@@ -100,14 +110,15 @@ const useOrbCanvas = (canvasRef) => {
       window.removeEventListener('resize', resizeCanvas);
       reducedMotionQuery.removeEventListener('change', syncMotionPreference);
       window.cancelAnimationFrame(animationFrameId);
+      syncRef.current = null;
     };
-  }, [canvasRef]);
+  }, []); 
 };
 
-const OrbBackground = () => {
+const OrbBackground = ({ isVisible }) => {
   const canvasRef = useRef(null);
 
-  useOrbCanvas(canvasRef);
+  useOrbCanvas(canvasRef, isVisible);
 
   return (
     <div className="cosmic-background">
@@ -139,7 +150,7 @@ const AboutSection = ({ id }) => {
 
   return (
     <section id={id} ref={sectionRef} className="about-section">
-      <OrbBackground />
+      <OrbBackground isVisible={isVisible} />
 
       <div className="about-content">
         <motion.div 
