@@ -125,6 +125,14 @@ const ProjectsSection = ({ id }) => {
     });
   }, []);
 
+  const visualizerBars = useMemo(() =>
+    [...Array(20)].map((_, i) => ({
+      id: i,
+      duration: 1 + Math.random(),
+      delay: i * 0.05,
+    }))
+  , []);
+
   return (
     <section id={id} className="projects-section">
       <div className="stars-container">
@@ -274,16 +282,16 @@ const ProjectsSection = ({ id }) => {
       </div>
 
       <div className="audio-visualizer">
-        {[...Array(20)].map((_, i) => (
+        {visualizerBars.map((bar) => (
           <motion.div
-            key={i}
+            key={bar.id}
             className="bar"
             initial={{ height: 0 }}
             whileInView={{ height: [5, 30, 15, 35, 5] }}
             transition={{
               repeat: Infinity,
-              duration: 1 + Math.random(),
-              delay: i * 0.05 
+              duration: bar.duration,
+              delay: bar.delay,
             }}
           />
         ))}
