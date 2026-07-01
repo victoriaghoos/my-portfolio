@@ -32,8 +32,10 @@ const FallingPetal = () => {
     left: Math.random() * 100,
     duration: 10 + Math.random() * 15,
     delay: Math.random() * 20,
-    scale: 0.3 + Math.random() * 0.7, 
-    drift: (Math.random() - 0.5) * 100, 
+    scale: 0.3 + Math.random() * 0.7,
+    drift: (Math.random() - 0.5) * 100,
+    brightness: 0.7 + Math.random() * 0.5,
+    rotate: 360 + Math.random() * 180,
   }), []);
 
   return (
@@ -43,14 +45,14 @@ const FallingPetal = () => {
       style={{ 
         left: `${settings.left}%`, 
         scale: settings.scale,
-        filter: `brightness(${0.7 + Math.random() * 0.5})`
+        filter: `brightness(${settings.brightness})`
       }}
       initial={{ y: -50, opacity: 0, rotate: 0, rotateX: 0, rotateY: 0 }}
       animate={{
         y: "110vh", 
         opacity: [0, 1, 1, 0], 
         x: [0, settings.drift, -settings.drift / 2, settings.drift, 0], 
-        rotate: [0, 360 + Math.random() * 180], 
+        rotate: [0, settings.rotate], 
         rotateX: [0, 180, 360], 
         rotateY: [0, 180, 360],
       }}
@@ -64,6 +66,23 @@ const FallingPetal = () => {
   );
 };
 
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.3 },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.8, ease: "easeOut" },
+  },
+};
 
 const SkillsSection = ({ id }) => {
   const { t } = useTranslation();
@@ -149,23 +168,6 @@ const SkillsSection = ({ id }) => {
       ],
     },
   ], [t]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.3 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
 
   return (
     <section id={id} className="skills-section">
