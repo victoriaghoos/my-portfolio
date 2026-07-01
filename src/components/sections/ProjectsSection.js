@@ -16,6 +16,35 @@ import "../../styles/sections/ProjectsSection.scss";
 import baseballImg from "../../assets/images/BaseballLive.png";
 import flutterImg from "../../assets/images/VrijeTeid.png";
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    y: 40,
+    scale: 0.9,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 12,
+    },
+  },
+};
+
 const ProjectsSection = ({ id }) => {
   const { t } = useTranslation();
   const projects = useMemo(() => [
@@ -50,35 +79,6 @@ const ProjectsSection = ({ id }) => {
       context: t('project_items.p3.context'), 
     },
   ], [t]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2, 
-        delayChildren: 0.3,   
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: 40, 
-      scale: 0.9 
-    },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      scale: 1,
-      transition: { 
-        type: "spring", 
-        stiffness: 100, 
-        damping: 12 
-      }
-    },
-  };
   const doodleRef = useRef();
   if (!doodleRef.current) {
     const icons = [Music, Star, Moon, Zap, Orbit, Component];
@@ -164,29 +164,26 @@ const ProjectsSection = ({ id }) => {
         <motion.div
           key={d.id}
           className="sparkle-doodle"
-            initial={reduceMotion ? { opacity: 0.18, scale: 1 } : { opacity: 0.18, scale: 0.7 }}
-            animate={
-              reduceMotion
-                ? { opacity: 0.18, scale: 1 }
-                : {
-                    opacity: [0.18, 0.6, 0.18],
-                    scale: [0.9, 1.1, 0.9],
-                  }
-            }
-            transition={{
-              duration: d.duration,
-              repeat: reduceMotion ? 0 : Infinity,
-              delay: d.delay,
-              ease: "easeInOut",
-            }}
+          initial={reduceMotion ? { opacity: 0.18, scale: 1 } : { opacity: 0.18, scale: 0.7 }}
+          animate={
+            reduceMotion
+              ? { opacity: 0.18, scale: 1 }
+              : {
+                  opacity: [0.18, 0.6, 0.18],
+                  scale: [0.9, 1.1, 0.9],
+                }
+          }
+          transition={{
+            duration: d.duration,
+            repeat: reduceMotion ? 0 : Infinity,
+            delay: d.delay,
+            ease: "easeInOut",
+          }}
           style={{
-            position: "absolute",
             top: d.top,
             left: d.left,
             color: d.color,
             filter: `drop-shadow(0 0 8px ${d.color})`,
-            zIndex: 1,
-            pointerEvents: "none",
           }}
         >
           <d.Icon size={d.size} strokeWidth={2.1} />
@@ -219,7 +216,7 @@ const ProjectsSection = ({ id }) => {
               key={project.id} 
               className="music-card"
               variants={cardVariants}
-              whileHover={{ 
+              whileHover={reduceMotion ? undefined : { 
                 y: -12, 
                 transition: { duration: 0.3 } 
               }}
@@ -262,11 +259,10 @@ const ProjectsSection = ({ id }) => {
                 <div className="playback-unit">
                   <div className="playback-bar">
                     <div className="progress-bg">
-                      <motion.div
+                      <div
                         className="progress-fill"
                         style={{
-                          backgroundColor: project.color,
-                          boxShadow: `0 0 10px ${project.color}`,
+                          "--accent-color": project.color,
                         }}
                       />
                     </div>
@@ -281,23 +277,21 @@ const ProjectsSection = ({ id }) => {
                       type="button"
                       aria-label="Previous"
                       className="control-btn"
-                      style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', pointerEvents: 'auto' }}
                     >
                       <SkipBack size={18} />
                     </button>
                     <motion.button 
-                        className="main-play-btn"
-                        type="button"
-                        whileTap={{ scale: 0.9 }}
-                        style={{ backgroundColor: project.color, pointerEvents: 'auto' }}
-                      >
+                      className="main-play-btn"
+                      type="button"
+                      whileTap={{ scale: 0.9 }}
+                      style={{ "--accent-color": project.color }}
+                    >
                       <Play size={18} fill="#1a1a2e" color="#1a1a2e" />
                     </motion.button>
                     <button
                       type="button"
                       aria-label="Next"
                       className="control-btn"
-                      style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', pointerEvents: 'auto' }}
                     >
                       <SkipForward size={18} />
                     </button>
@@ -315,9 +309,8 @@ const ProjectsSection = ({ id }) => {
             key={bar.id}
             className="bar"
             style={{
-              ["--duration"]: `${bar.duration}s`,
+              "--duration": `${bar.duration}s`,
               animationDelay: `${bar.delay}s`,
-              height: reduceMotion ? 20 : undefined,
             }}
           />
         ))}
