@@ -113,7 +113,7 @@ const ProjectsSection = ({ id }) => {
   const reduceMotion = useReducedMotion();
   const starConfig = useMemo(
     () =>
-      [...Array(250)].map(() => ({
+      [...Array(200)].map(() => ({
         x: Math.random(),
         y: Math.random(),
         size: Math.random() * 1.5 + 0.5,
@@ -164,12 +164,19 @@ const ProjectsSection = ({ id }) => {
       }
     };
 
+    let resizeTimer;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resizeCanvas, 100);
+    };
+
     resizeCanvas();
     render(0);
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimer);
       if (frameId) cancelAnimationFrame(frameId);
     };
   }, [reduceMotion, starConfig]);
