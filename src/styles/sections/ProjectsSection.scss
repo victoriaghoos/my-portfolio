@@ -396,8 +396,39 @@ $white: #ffffff;
             transition: background 0.5s ease;
             border-radius: 10px 10px 0 0;
             opacity: 0.5;
+            /* CSS-driven visualizer animation. --duration set inline from JS. */
+            animation: visualizerPulse var(--duration, 1.2s) infinite ease-in-out;
         }
     }
+
+    /* Visualizer keyframes */
+    @keyframes visualizerPulse {
+        0% { height: 5px; }
+        25% { height: 30px; }
+        50% { height: 15px; }
+        75% { height: 35px; }
+        100% { height: 5px; }
+    }
+
+    /* Hide decorative doodles on small screens to reduce CPU */
+    @media (max-width: 768px) {
+        .sparkle-doodle { display: none; }
+        .stars-container .star { opacity: 0.6; }
+    }
+
+    /* Respect reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+        .projects-section * {
+            animation: none !important;
+            transition: none !important;
+        }
+        .audio-visualizer .bar { height: 20px !important; }
+    }
+
+    /* Ensure player controls are interactive */
+    .player-controls { pointer-events: auto; }
+    .player-controls .control-btn,
+    .player-controls .main-play-btn { pointer-events: auto; }
 
     .sparkle-doodle {
         position: absolute;
