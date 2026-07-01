@@ -128,11 +128,12 @@ $white: #ffffff;
   }
   
   .title-underline {
-    width: 120px;
+    width: 100px;
     height: 3px;
     background: linear-gradient(135deg, $about-glow-cyan 0%, #A78BFA 50%, $about-glow-purple 100%);   
     margin: 10px auto 0;
     border-radius: 10px;
+    transform-origin: center;
     box-shadow: 0 0 20px $about-glow-cyan;
     animation: neon-pulse-about 3s infinite alternate ease-in-out;
   }
@@ -410,12 +411,12 @@ $white: #ffffff;
   0% {
     box-shadow: 0 0 10px $about-glow-cyan, 0 0 5px $white;
     opacity: 0.8;
-    width: 80px;
+    transform: scaleX(0.88);
   }
   100% {
     box-shadow: 0 0 25px $about-glow-cyan, 0 0 10px $white, 0 0 5px $about-glow-purple;
     opacity: 1;
-    width: 90px;
+    transform: scaleX(1);
   }
 }
 
