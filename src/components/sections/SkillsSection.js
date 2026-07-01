@@ -174,7 +174,6 @@ const SkillsSection = ({ id }) => {
       {/* 1. ACHTERGROND */}
       <div className="background-elements">
         <div className="nebula-bg" />
-        <div className="cosmic-dust" />
         {stars.map((_, i) => <Star key={`star-${i}`} />)}
       </div>
 
