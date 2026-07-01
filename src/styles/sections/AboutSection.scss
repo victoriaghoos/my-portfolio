@@ -71,29 +71,10 @@ $white: #ffffff;
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    radial-gradient(2px 2px at 20% 30%, white 50%, transparent 100%),
-    radial-gradient(2px 2px at 40% 70%, white 50%, transparent 100%),
-    radial-gradient(1px 1px at 60% 20%, white 50%, transparent 100%),
-    radial-gradient(1px 1px at 80% 80%, white 50%, transparent 100%),
-    radial-gradient(2px 2px at 10% 90%, white 50%, transparent 100%);
-  background-size: 200px 200px;
-  animation: twinkle-about 4s infinite ease-in-out;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-      radial-gradient(1px 1px at 30% 40%, rgba(255, 255, 255, 0.8) 50%, transparent 100%),
-      radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.8) 50%, transparent 100%),
-      radial-gradient(2px 2px at 90% 10%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
-    background-size: 300px 300px;
-    animation: twinkle-about 3s infinite ease-in-out reverse;
-  }
+  display: block;
+  pointer-events: none;
+  opacity: 0.7;
+  mix-blend-mode: screen;
 }
 
 .about-content {

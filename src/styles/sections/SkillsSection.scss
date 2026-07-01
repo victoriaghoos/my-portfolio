@@ -42,13 +42,14 @@ $cosmic-purple: #2a003d;
         radial-gradient(circle at 100% 0%, rgba($cosmic-purple, 0.5) 0%, transparent 50%);
       filter: blur(60px);
     }
-    
-    .star-static {
+
+    .skills-stars-canvas {
       position: absolute;
-      background: white;
-      border-radius: 50%;
-      mix-blend-mode: overlay; 
-      animation: twinkle 5s infinite ease-in-out;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      mix-blend-mode: overlay;
     }
   }
 
