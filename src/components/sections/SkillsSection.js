@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useRef } from "react";
+import { useMemo, memo, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
@@ -14,7 +14,7 @@ import {
 import { BsDatabase } from "react-icons/bs";
 import { TbApi, TbBrandAzure } from "react-icons/tb";
 
-const Star = () => {
+const Star = memo(() => {
   const style = useMemo(() => ({
     top: `${Math.random() * 100}%`,
     left: `${Math.random() * 100}%`,
@@ -25,9 +25,8 @@ const Star = () => {
   }), []);
 
   return <div className="star-static" style={style} />;
-};
+});
 
-const MemoStar = memo(Star);
 const FallingPetal = memo(() => {
   const settings = useMemo(() => ({
     left: Math.random() * 100,
@@ -175,7 +174,7 @@ const SkillsSection = ({ id }) => {
       {/* 1. ACHTERGROND */}
       <div className="background-elements">
         <div className="nebula-bg" />
-        {stars.map((_, i) => <MemoStar key={`star-${i}`} />)}
+        {stars.map((_, i) => <Star key={`star-${i}`} />)}
       </div>
 
       {/* 2. BOMEN & PETALS */}
