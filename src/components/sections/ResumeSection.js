@@ -17,28 +17,135 @@ import { motion } from "framer-motion";
 import "../../styles/sections/ResumeSection.scss";
 import resumePDF from "../../assets/files/Resume2026.pdf";
 
-const StarBackground = () => {
-  const stars = useMemo(() => {
-    return [...Array(200)].map((_, i) => {
-      const type = Math.random();
-      return {
-        id: i,
-        class: type > 0.96 ? "hero" : type > 0.7 ? "mid" : "distant",
-        size:
-          type > 0.96
-            ? Math.random() * 3 + 2
-            : type > 0.7
-              ? Math.random() * 2 + 1
-              : Math.random() * 1 + 0.5,
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        delay: Math.random() * 5,
-        duration: 2 + Math.random() * 4,
-        opacity: 0.2 + Math.random() * 0.8,
-      };
-    });
-  }, []);
+const ResumeStarsCanvas = () => {
+  const canvasRef = useRef(null);
+  const stars = useMemo(
+    () =>
+      [...Array(500)].map((_, i) => {
+        const type = Math.random();
+        const starType = type > 0.99 ? 'hero' : type > 0.75 ? 'mid' : 'distant';
+        return {
+          id: i,
+          type: starType,
+          x: Math.random(),
+          y: Math.random(),
+          radius:
+            starType === 'hero'
+              ? Math.random() * 1.1 + 1.4
+              : starType === 'mid'
+              ? Math.random() * 0.3 + 0.45
+              : Math.random() * 0.22 + 0.28,
+          alpha:
+            starType === 'hero'
+              ? Math.random() * 0.4 + 0.6
+              : starType === 'mid'
+              ? Math.random() * 0.18 + 0.45
+              : Math.random() * 0.12 + 0.25,
+          phase: Math.random() * Math.PI * 2,
+          speed: Math.random() * 0.002 + 0.001,
+        };
+      }),
+    []
+  );
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId;
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const dpr = window.devicePixelRatio || 1;
+
+    const resizeCanvas = () => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawStars(0);
+    };
+
+    const drawStars = (time) => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+
+      stars.forEach((star) => {
+        const twinkle = reducedMotionQuery.matches
+          ? 1
+          : 0.75 + Math.sin(time * star.speed + star.phase) * 0.14;
+        const alpha = Math.min(1, Math.max(0, star.alpha * twinkle));
+
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (star.type === 'hero') {
+          ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+          ctx.lineWidth = 1;
+          const x = star.x * width;
+          const y = star.y * height;
+          const ray = 9;
+
+          ctx.beginPath();
+          ctx.moveTo(x - ray, y);
+          ctx.lineTo(x + ray, y);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(x, y - ray);
+          ctx.lineTo(x, y + ray);
+          ctx.stroke();
+        }
+      });
+
+      ctx.globalAlpha = 1;
+    };
+
+    const animate = (timestamp) => {
+      drawStars(timestamp);
+      if (!reducedMotionQuery.matches) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+
+    const syncStars = () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (reducedMotionQuery.matches) {
+        drawStars(0);
+      } else {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+
+    let resizeTimer;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resizeCanvas, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+    reducedMotionQuery.addEventListener('change', syncStars);
+
+    resizeCanvas();
+    syncStars();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimer);
+      reducedMotionQuery.removeEventListener('change', syncStars);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }, [stars]);
+
+  return <canvas ref={canvasRef} className="resume-stars-canvas" aria-hidden="true" />;
+};
+
+const StarBackground = () => {
   return (
     <div className="cosmic-background">
       <div className="cosmic-noise"></div>
@@ -49,21 +156,7 @@ const StarBackground = () => {
       <div className="electric-glow spot-main"></div>
       <div className="electric-glow spot-core core-1"></div>
       <div className="electric-glow spot-core core-2"></div>
-      {stars.map((star) => (
-        <div
-          key={star.id}
-          className={`star ${star.class}`}
-          style={{
-            width: `${star.size}px`,
-            height: `${star.size}px`,
-            top: star.top,
-            left: star.left,
-            animationDelay: `${star.delay}s`,
-            animationDuration: `${star.duration}s`,
-            opacity: star.opacity,
-          }}
-        />
-      ))}
+      <ResumeStarsCanvas />
     </div>
   );
 };
