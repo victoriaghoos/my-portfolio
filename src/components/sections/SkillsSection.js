@@ -27,6 +27,7 @@ const Star = () => {
   return <div className="star-static" style={style} />;
 };
 
+const MemoStar = memo(Star);
 const FallingPetal = () => {
   const settings = useMemo(() => ({
     left: Math.random() * 100,
@@ -174,16 +175,16 @@ const SkillsSection = ({ id }) => {
       {/* 1. ACHTERGROND */}
       <div className="background-elements">
         <div className="nebula-bg" />
-        {stars.map((_, i) => <Star key={`star-${i}`} />)}
+        {stars.map((_, i) => <MemoStar key={`star-${i}`} />)}
       </div>
 
       {/* 2. BOMEN & PETALS */}
       <div className="trees-layer">
         <div className="tree-wrapper left">
-          <img src={sakuraTree} alt="Sakura" className="tree-img" />
+          <img src={sakuraTree} alt="" className="tree-img" />
         </div>
         <div className="tree-wrapper right">
-          <img src={sakuraTree} alt="Sakura" className="tree-img" />
+          <img src={sakuraTree} alt="" className="tree-img" />
         </div>
       </div>
 
