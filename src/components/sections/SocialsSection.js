@@ -28,6 +28,7 @@ const CloudPuff = ({ position, speed, opacity }) => {
 const SocialsStarsCanvas = memo(() => {
   const canvasRef = useRef(null);
   const reduceMotion = useReducedMotion();
+  const isVisibleRef = useRef(true);
   const stars = useMemo(
     () =>
       [...Array(500)].map(() => ({
@@ -47,12 +48,12 @@ const SocialsStarsCanvas = memo(() => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId;
-    const dpr = window.devicePixelRatio || 1;
+    let animationFrameId = null;
 
     const resizeCanvas = () => {
       const width = canvas.clientWidth;
       const height = canvas.clientHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -78,7 +79,7 @@ const SocialsStarsCanvas = memo(() => {
 
     const animate = (timestamp) => {
       drawStars(timestamp);
-      if (!reduceMotion) {
+      if (!reduceMotion && isVisibleRef.current) {
         animationFrameId = requestAnimationFrame(animate);
       }
     };
@@ -89,14 +90,32 @@ const SocialsStarsCanvas = memo(() => {
       resizeTimer = window.setTimeout(resizeCanvas, 100);
     };
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          drawStars(performance.now());
+          if (!reduceMotion && animationFrameId === null) {
+            animationFrameId = requestAnimationFrame(animate);
+          }
+        } else if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      },
+      { threshold: 0.1 }
+    );
+
     window.addEventListener('resize', handleResize);
+    observer.observe(canvas);
     resizeCanvas();
     animate(0);
 
     return () => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimer);
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
     };
   }, [stars, reduceMotion]);
 
@@ -173,16 +192,12 @@ const SocialCard = ({ icon: Icon, title, handle, link, delay, strokeWidth = 1.5 
 };
 
 const SocialsSection = ({ id }) => {
-  const flyToCosmos = () => {
-  const home = document.getElementById("home-3d");
-  if (home) {
-    window.scrollTo({ top: window.scrollY, behavior: 'auto' });
-    
-    setTimeout(() => {
+  const handleFlyToCosmos = () => {
+    const home = document.getElementById("home-3d");
+    if (home) {
       home.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 10);
-  }
-};
+    }
+  };
 
   const { t } = useTranslation();
   return (
@@ -190,7 +205,12 @@ const SocialsSection = ({ id }) => {
       <div className="transition-gradient-top"></div>
       <div className="canvas-container">
         <SocialsStarsCanvas />
-        <Canvas camera={{ position: [0, 0, 14], fov: 45 }} resize={{ scroll: false }} dpr={[1, 2]}>
+        <Canvas
+          camera={{ position: [0, 0, 14], fov: 45 }}
+          resize={{ scroll: false }}
+          dpr={[1, 2]}
+          performance={{ min: 0.5, max: 1 }}
+        >
           <SilkSkyScene />
         </Canvas>
       </div>
@@ -240,7 +260,7 @@ const SocialsSection = ({ id }) => {
           transition={{ delay: 1 }}
         >
           <motion.button 
-            onTap={flyToCosmos} 
+            onTap={handleFlyToCosmos} 
             className="return-orb"
             whileHover={{ y: -5 }}
             whileTap={{ scale: 0.95 }}
