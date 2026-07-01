@@ -1,4 +1,4 @@
-import React, { useMemo, memo } from "react";
+import React, { useMemo, memo, useRef } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import {
@@ -79,11 +79,12 @@ const ProjectsSection = ({ id }) => {
       }
     },
   };
-  const doodleField = useMemo(() => {
+  const doodleRef = useRef();
+  if (!doodleRef.current) {
     const icons = [Music, Star, Moon, Zap, Orbit, Component];
     const colors = ["#a5f3fc", "#e9d5ff", "#ffbd7a"];
 
-    return [...Array(12)].map((_, i) => {
+    doodleRef.current = [...Array(12)].map((_, i) => {
       const zones = [
         { t: [5, 15], l: [5, 15] },
         { t: [5, 15], l: [85, 95] },
@@ -106,10 +107,12 @@ const ProjectsSection = ({ id }) => {
         duration: 10 + Math.random() * 5,
       };
     });
-  }, []);
+  }
+  const doodleField = doodleRef.current;
 
-  const stars = useMemo(() => {
-    return [...Array(160)].map((_, i) => {
+  const starsRef = useRef();
+  if (!starsRef.current) {
+    starsRef.current = [...Array(160)].map((_, i) => {
       const size = i % 10 === 0 ? 3 : i % 5 === 0 ? 2 : 1;
       return {
         id: i,
@@ -123,15 +126,18 @@ const ProjectsSection = ({ id }) => {
         blur: i % 15 === 0 ? "1px" : "0px",
       };
     });
-  }, []);
+  }
+  const stars = starsRef.current;
 
-  const visualizerBars = useMemo(() =>
-    [...Array(20)].map((_, i) => ({
+  const visualizerRef = useRef();
+  if (!visualizerRef.current) {
+    visualizerRef.current = [...Array(20)].map((_, i) => ({
       id: i,
       duration: 1 + Math.random(),
       delay: i * 0.05,
-    }))
-  , []);
+    }));
+  }
+  const visualizerBars = visualizerRef.current;
 
   return (
     <section id={id} className="projects-section">
