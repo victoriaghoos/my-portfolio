@@ -2,6 +2,14 @@ $about-glow-cyan: #8AE6FF;
 $about-glow-mid: #A78BFA;
 $about-glow-purple: #C084FC;
 $white: #ffffff;
+
+@mixin text-gradient($gradient) {
+  background: $gradient;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 $orbit-ring-sizes: (1: 320px, 2: 360px, 3: 400px);
 $orbit-ring-sizes-1024: (1: 220px, 2: 260px, 3: 300px);
 $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
@@ -102,10 +110,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
     margin-bottom: 1rem;
     
     .title-glow {
-      background: linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 50%, $about-glow-purple 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+      @include text-gradient(linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 50%, $about-glow-purple 100%));
       filter: drop-shadow(0 0 12px rgba(138, 230, 255, 0.5));
       position: relative;
     }
@@ -311,10 +316,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
       color: white;
       
       .name-glow {
-        background: linear-gradient(135deg, $about-glow-cyan, $about-glow-purple);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+        @include text-gradient(linear-gradient(135deg, $about-glow-cyan, $about-glow-purple));
         filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.4));
       }
     }
@@ -332,10 +334,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
           padding: 0 3px;
           transition: filter 0.3s ease, transform 0.3s ease;
           cursor: default;
-          background: linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
+          @include text-gradient(linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 100%));
           font-weight: 600;
           filter: drop-shadow(0 0 5px rgba(138, 230, 255, 0.25));
           &:hover {
