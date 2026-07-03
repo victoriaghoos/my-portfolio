@@ -2,6 +2,9 @@ $about-glow-cyan: #8AE6FF;
 $about-glow-mid: #A78BFA;
 $about-glow-purple: #C084FC;
 $white: #ffffff;
+$orbit-ring-sizes: (1: 320px, 2: 360px, 3: 400px);
+$orbit-ring-sizes-1024: (1: 220px, 2: 260px, 3: 300px);
+$orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
 .about-section {
   $sakura-glow: #ff00cc;
   $space-black: #05020a;
@@ -236,13 +239,18 @@ $white: #ffffff;
       border-radius: 50%;
       will-change: transform;
       animation: orbitRotate var(--orbit-speed, 20s) linear infinite;
-      
+
+      @each $ring, $size in $orbit-ring-sizes {
+        &.ring-#{$ring} {
+          width: $size;
+          height: $size;
+        }
+      }
+
       &.ring-1 {
-        width: 320px;
-        height: 320px;
         --orbit-speed: 25s;
         animation-direction: reverse;
-        
+
         &::before {
           content: '';
           position: absolute;
@@ -256,12 +264,10 @@ $white: #ffffff;
           box-shadow: 0 0 10px $about-glow-cyan;
         }
       }
-      
+
       &.ring-2 {
-        width: 360px;
-        height: 360px;
         --orbit-speed: 30s;
-        
+
         &::before {
           content: '';
           position: absolute;
@@ -275,13 +281,11 @@ $white: #ffffff;
           box-shadow: 0 0 8px $about-glow-mid;
         }
       }
-      
+
       &.ring-3 {
-        width: 400px;
-        height: 400px;
         --orbit-speed: 35s;
         animation-direction: reverse;
-        
+
         &::before {
           content: '';
           position: absolute;
@@ -459,9 +463,12 @@ $white: #ffffff;
       max-height: 100%;
       
       .orbit-ring {
-        &.ring-1 { width: 220px; height: 220px; }
-        &.ring-2 { width: 260px; height: 260px; }
-        &.ring-3 { width: 300px; height: 300px; }
+        @each $ring, $size in $orbit-ring-sizes-1024 {
+          &.ring-#{$ring} {
+            width: $size;
+            height: $size;
+          }
+        }
       }
     }
   }
@@ -508,9 +515,12 @@ $white: #ffffff;
     }
 
     .avatar-orbits .orbit-ring {
-      &.ring-1 { width: 180px; height: 180px; }
-      &.ring-2 { width: 210px; height: 210px; }
-      &.ring-3 { width: 240px; height: 240px; }
+      @each $ring, $size in $orbit-ring-sizes-600 {
+        &.ring-#{$ring} {
+          width: $size;
+          height: $size;
+        }
+      }
     }
   }
 }
@@ -522,7 +532,6 @@ $white: #ffffff;
   .hologram-avatar .avatar-glow,
   .hologram-avatar .avatar-glitch,
   .star-field,
-  .star-field::before,
   .title-underline {
     animation: none;
   }
