@@ -1,6 +1,7 @@
 $about-glow-cyan: #8AE6FF;
 $about-glow-mid: #A78BFA;
 $about-glow-purple: #C084FC;
+$about-gradient-primary: linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 50%, $about-glow-purple 100%);
 $white: #ffffff;
 
 @mixin text-gradient($gradient) {
@@ -110,7 +111,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
     margin-bottom: 1rem;
     
     .title-glow {
-      @include text-gradient(linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 50%, $about-glow-purple 100%));
+      @include text-gradient($about-gradient-primary);
       filter: drop-shadow(0 0 12px rgba(138, 230, 255, 0.5));
       position: relative;
     }
@@ -119,7 +120,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
   .title-underline {
     width: 100px;
     height: 3px;
-    background: linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 50%, $about-glow-purple 100%);
+    background: $about-gradient-primary;
     margin: 10px auto 0;
     border-radius: 10px;
     transform-origin: center;

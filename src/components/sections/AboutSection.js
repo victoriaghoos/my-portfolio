@@ -111,12 +111,18 @@ const useCanvasAnimationLoop = (canvasRef, isVisible, { onResize, onDraw }) => {
   }, [canvasRef, onResize, onDraw]);
 };
 
+const ORB_COLORS = {
+  cyan: 'rgba(138, 230, 255, 0.8)',
+  mid: 'rgba(167, 139, 250, 0.6)',
+  purple: 'rgba(192, 132, 252, 0.5)',
+};
+
 const useOrbCanvas = (canvasRef, isVisible) => {
   const orbs = useMemo(
     () => [
-      { x: 0.1, y: 0.1, r: 150, color: 'rgba(100, 219, 255, 0.8)', vx: Math.random() - 0.5, vy: Math.random() - 0.5 },
-      { x: 0.85, y: 0.6, r: 100, color: 'rgba(255, 119, 198, 0.6)', vx: Math.random() - 0.5, vy: Math.random() - 0.5 },
-      { x: 0.2, y: 0.8, r: 75, color: 'rgba(120, 119, 198, 0.5)', vx: Math.random() - 0.5, vy: Math.random() - 0.5 }
+      { x: 0.1, y: 0.1, r: 150, color: ORB_COLORS.cyan, vx: Math.random() - 0.5, vy: Math.random() - 0.5 },
+      { x: 0.85, y: 0.6, r: 100, color: ORB_COLORS.mid, vx: Math.random() - 0.5, vy: Math.random() - 0.5 },
+      { x: 0.2, y: 0.8, r: 75, color: ORB_COLORS.purple, vx: Math.random() - 0.5, vy: Math.random() - 0.5 }
     ],
     []
   );
