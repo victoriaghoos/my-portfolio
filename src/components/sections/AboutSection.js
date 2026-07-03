@@ -132,9 +132,13 @@ const useOrbCanvas = (canvasRef, isVisible) => {
 
 const useStarfieldCanvas = (canvasRef, isVisible) => {
   const isVisibleRef = useRef(isVisible);
+  const syncStarfieldRef = useRef(null);
 
   useEffect(() => {
     isVisibleRef.current = isVisible;
+    if (syncStarfieldRef.current) {
+      syncStarfieldRef.current();
+    }
   }, [isVisible]);
 
   const stars = useMemo(
@@ -199,6 +203,8 @@ const useStarfieldCanvas = (canvasRef, isVisible) => {
         animationFrameId = requestAnimationFrame(animate);
       }
     };
+
+    syncStarfieldRef.current = syncStarfield;
 
     let resizeTimer;
     const handleResize = () => {
