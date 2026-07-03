@@ -71,7 +71,7 @@ const LandingPage = () => {
         autoPlay loop muted playsInline
         className="background-video"
       >
-        <source src={videoSrc} type="video/mp4" />
+        <source src={videoSrc} type="video/webm" />
       </video>
 
       <div className="gradient-overlay" />
