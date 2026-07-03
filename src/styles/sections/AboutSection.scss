@@ -344,15 +344,6 @@ $white: #ffffff;
   }
 }
 
-@keyframes twinkle-about {
-  0%, 100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
 @keyframes glitchEffect {
   0%, 100% {
     opacity: 0;
