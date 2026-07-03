@@ -7,6 +7,7 @@ import "../styles/landingPage.scss";
 
 const SKIP_BUTTON_DELAY_MS = 1500;
 const AUTO_EXIT_DELAY_MS = 8500;
+const TYPEWRITER_WORDS = ["Hi", "My name is Victoria", "Welcome to my world"];
 
 const LandingPage = () => {
   const [transitionActive, setTransitionActive] = useState(false);
@@ -15,6 +16,8 @@ const LandingPage = () => {
   const skipButtonTimerRef = useRef(null);
   const autoExitTimerRef = useRef(null);
   const hasNavigatedRef = useRef(false);
+  // Keep a synchronous guard separate from render state so the exit callback can stay stable and avoid rescheduling the effect while still reflecting whether the transition has already begun.
+  const transitionActiveRef = useRef(false);
   const particles = useMemo(
     () => Array.from({ length: 15 }, (_, index) => ({
       id: index,
@@ -31,14 +34,19 @@ const LandingPage = () => {
     clearTimeout(autoExitTimerRef.current);
   }, []);
 
+  const handleVideoError = useCallback(() => {
+    console.error("LandingPage background video failed to load; poster fallback will remain visible.");
+  }, []);
+
   const startExitAndNavigate = useCallback(() => {
-    if (hasNavigatedRef.current || transitionActive) {
+    if (hasNavigatedRef.current || transitionActiveRef.current) {
       return;
     }
 
+    transitionActiveRef.current = true;
     clearTimeout(autoExitTimerRef.current);
     setTransitionActive(true);
-  }, [transitionActive]);
+  }, []);
 
   const handleTransitionComplete = useCallback(() => {
     if (hasNavigatedRef.current) {
@@ -55,9 +63,7 @@ const LandingPage = () => {
       SKIP_BUTTON_DELAY_MS,
     );
 
-    autoExitTimerRef.current = setTimeout(() => {
-      startExitAndNavigate();
-    }, AUTO_EXIT_DELAY_MS);
+    autoExitTimerRef.current = setTimeout(startExitAndNavigate, AUTO_EXIT_DELAY_MS);
 
     return () => {
       clearTimers();
@@ -70,13 +76,15 @@ const LandingPage = () => {
         poster={posterSrc}
         autoPlay loop muted playsInline
         className="background-video"
+        aria-hidden="true"
+        onError={handleVideoError}
       >
         <source src={videoSrc} type="video/webm" />
       </video>
 
       <div className="gradient-overlay" />
 
-      <div className="particles">
+      <div className="particles" aria-hidden="true">
         {particles.map((particle) => (
           <div key={particle.id} className="particle" style={{
             "--delay": particle.delay,
@@ -101,7 +109,7 @@ const LandingPage = () => {
         <h1>
           <span className="typewriter-text">
             <Typewriter
-              words={["Hi", "My name is Victoria", "Welcome to my world"]}
+              words={TYPEWRITER_WORDS}
               loop={1}
               typeSpeed={80}
               deleteSpeed={30}
