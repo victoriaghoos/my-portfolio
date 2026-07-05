@@ -123,6 +123,7 @@ const SocialsStarsCanvas = memo(() => {
 });
 
 const SilkSkyScene = memo(() => {
+  const reduceMotion = useReducedMotion();
   const cloudPositions = useMemo(() => {
     const pos = [];
     const cloudCount = 18;
@@ -150,12 +151,28 @@ const SilkSkyScene = memo(() => {
       <ambientLight intensity={1.1} color="#d8b4fe" />
       <pointLight position={[0, -10, -20]} intensity={2.0} color="#fb923c" distance={60} />
       <directionalLight position={[0, 5, 5]} intensity={1.0} color="#f472b6" />
-      <Sparkles count={80} scale={[40, 10, 10]} size={3} speed={0.4} opacity={0.6} color="#fff" position={[0, -2, 0]} />
+      <Sparkles
+        count={80}
+        scale={[40, 10, 10]}
+        size={3}
+        speed={reduceMotion ? 0 : 0.4}
+        opacity={0.6}
+        color="#fff"
+        position={[0, -2, 0]}
+      />
       <group position={[0, -10, -10]}>
-        <Float speed={0.5} rotationIntensity={0.1} floatIntensity={0.2}>
+        <Float
+          speed={reduceMotion ? 0 : 0.5}
+          rotationIntensity={0.1}
+          floatIntensity={0.2}
+        >
           {cloudPositions.map((cloud, i) => (
             <group key={i} scale={cloud.scale}>
-              <CloudPuff position={[cloud.x, cloud.y, cloud.z]} speed={cloud.speed} opacity={cloud.opacity} />
+              <CloudPuff
+                position={[cloud.x, cloud.y, cloud.z]}
+                speed={reduceMotion ? 0 : cloud.speed}
+                opacity={cloud.opacity}
+              />
             </group>
           ))}
         </Float>
