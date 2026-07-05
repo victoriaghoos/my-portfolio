@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useRef, useEffect, useState } from "react";
+import React, { useMemo, memo, useRef, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import {
@@ -47,9 +47,9 @@ const cardVariants = {
 
 const ProjectsSection = ({ id }) => {
   const { t } = useTranslation();
-  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
   const isVisibleRef = useRef(false);
+  const syncRef = useRef(null);
   const projects = useMemo(() => [
     {
       id: 1,
@@ -86,7 +86,9 @@ const ProjectsSection = ({ id }) => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         isVisibleRef.current = entry.isIntersecting;
-        setIsVisible(entry.isIntersecting);
+        if (syncRef.current) {
+          syncRef.current();
+        }
       },
       { threshold: 0.3 }
     );
@@ -214,7 +216,7 @@ const ProjectsSection = ({ id }) => {
       syncLoop();
     };
 
-    isVisibleRef.current = isVisible;
+    syncRef.current = syncLoop;
     resizeCanvas();
     syncLoop();
     window.addEventListener("resize", handleResize);
@@ -225,8 +227,9 @@ const ProjectsSection = ({ id }) => {
       reducedMotionQuery.removeEventListener("change", handleMotionChange);
       clearTimeout(resizeTimer);
       if (frameId) cancelAnimationFrame(frameId);
+      syncRef.current = null;
     };
-  }, [reduceMotion, starConfig, isVisible]);
+  }, [reduceMotion, starConfig]);
 
   const visualizerRef = useRef();
   if (!visualizerRef.current) {
