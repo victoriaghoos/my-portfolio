@@ -1,5 +1,5 @@
 import { useMemo, memo, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
 import sakuraTree from "../../assets/images/sakura2.png";
@@ -56,7 +56,7 @@ const SkillsStarsCanvas = memo(() => {
   );
 });
 
-const FallingPetal = memo(() => {
+const FallingPetal = memo(({ reduceMotion }) => {
   const settings = useMemo(() => ({
     left: Math.random() * 100,
     duration: 10 + Math.random() * 15,
@@ -77,20 +77,28 @@ const FallingPetal = memo(() => {
         filter: `brightness(${settings.brightness})`
       }}
       initial={{ y: -50, opacity: 0, rotate: 0, rotateX: 0, rotateY: 0 }}
-      animate={{
-        y: "110vh", 
-        opacity: [0, 1, 1, 0], 
-        x: [0, settings.drift, -settings.drift / 2, settings.drift, 0], 
-        rotate: [0, settings.rotate], 
-        rotateX: [0, 180, 360], 
-        rotateY: [0, 180, 360],
-      }}
-      transition={{
-        duration: settings.duration,
-        repeat: Infinity,
-        delay: settings.delay,
-        ease: "linear",
-      }}
+      animate={
+        reduceMotion
+          ? undefined
+          : {
+              y: "110vh",
+              opacity: [0, 1, 1, 0],
+              x: [0, settings.drift, -settings.drift / 2, settings.drift, 0],
+              rotate: [0, settings.rotate],
+              rotateX: [0, 180, 360],
+              rotateY: [0, 180, 360],
+            }
+      }
+      transition={
+        reduceMotion
+          ? undefined
+          : {
+              duration: settings.duration,
+              repeat: Infinity,
+              delay: settings.delay,
+              ease: "linear",
+            }
+      }
     />
   );
 });
@@ -114,6 +122,7 @@ const itemVariants = {
 
 const SkillsSection = ({ id }) => {
   const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
   const petalsRef = useRef(null);
   const isPetalsInView = useInView(petalsRef, { once: false, amount: 0.1 });
   
@@ -215,7 +224,7 @@ const SkillsSection = ({ id }) => {
       </div>
 
       <div className="petals-layer" ref={petalsRef}>
-        {isPetalsInView && petals.map((_, i) => <FallingPetal key={`petal-${i}`} />)}
+        {isPetalsInView && !reduceMotion && petals.map((_, i) => <FallingPetal key={`petal-${i}`} />)}
       </div>
 
       {/* 3. CONTENT */}
