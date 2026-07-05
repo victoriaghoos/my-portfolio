@@ -91,12 +91,16 @@ $white: #ffffff;
         bottom: 0;
         left: 0;
         background:
-            url("https://grainy-gradients.vercel.app/noise.svg"),
             repeating-linear-gradient(0deg,
-                rgba(0, 0, 0, 0.03) 0px,
-                rgba(0, 0, 0, 0.03) 1px,
+                rgba(255, 255, 255, 0.035) 0px,
+                rgba(255, 255, 255, 0.035) 1px,
                 transparent 1px,
-                transparent 2px);
+                transparent 2px),
+            repeating-linear-gradient(90deg,
+                rgba(255, 255, 255, 0.02) 0px,
+                rgba(255, 255, 255, 0.02) 1px,
+                transparent 1px,
+                transparent 3px);
         background-size: 200px, 100% 3px;
         opacity: 0.15;
         pointer-events: none;
@@ -409,6 +413,11 @@ $white: #ffffff;
                 border: none;
                 padding: 0;
                 cursor: pointer;
+
+                &:disabled {
+                    cursor: not-allowed;
+                    opacity: 0.35;
+                }
             }
 
             svg {
@@ -496,11 +505,6 @@ $white: #ffffff;
             opacity: 1;
             transform: scaleX(1.1);
         }
-    }
-
-    /* Hide decorative doodles on small screens to reduce CPU */
-    @media (max-width: 768px) {
-        .sparkle-doodle { display: none; }
     }
 
     /* Respect reduced motion preference */
