@@ -50,21 +50,6 @@ $white: #ffffff;
     }
 }
 
-@keyframes twinkle-projects {
-
-    0%,
-    100% {
-        opacity: 0.3;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 1;
-        transform: scale(1.2);
-        filter: blur(0.5px);
-    }
-}
-
 @keyframes nebulaPulse {
     0% {
         transform: scale(1) translate(0, 0);
@@ -516,7 +501,6 @@ $white: #ffffff;
     /* Hide decorative doodles on small screens to reduce CPU */
     @media (max-width: 768px) {
         .sparkle-doodle { display: none; }
-        .stars-container .star { opacity: 0.6; }
     }
 
     /* Respect reduced motion preference */
