@@ -6,6 +6,13 @@ const useCanvasAnimationLoop = (
 ) => {
   const isVisibleRef = useRef(true);
   const syncRef = useRef(null);
+  const onDrawRef = useRef(onDraw);
+  const onResizeRef = useRef(onResize);
+
+  useEffect(() => {
+    onDrawRef.current = onDraw;
+    onResizeRef.current = onResize;
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,14 +36,12 @@ const useCanvasAnimationLoop = (
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (onResize) {
-        onResize({ canvas, ctx, width, height, dpr });
-      }
+      onResizeRef.current?.({ canvas, ctx, width, height, dpr });
     };
 
     const drawFrame = (timestamp, isStatic = false) => {
       const { width, height } = getSize();
-      onDraw({ canvas, ctx, width, height, timestamp, isStatic });
+      onDrawRef.current?.({ canvas, ctx, width, height, timestamp, isStatic });
     };
 
     const animate = (timestamp) => {
@@ -98,7 +103,7 @@ const useCanvasAnimationLoop = (
       observer.disconnect();
       syncRef.current = null;
     };
-  }, [canvasRef, onDraw, onResize, rootRef, threshold]);
+  }, [canvasRef, rootRef, threshold]);
 };
 
 export default useCanvasAnimationLoop;
