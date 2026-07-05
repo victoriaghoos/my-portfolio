@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useRef, useEffect } from "react";
+import React, { useMemo, memo, useRef, useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import {
@@ -47,6 +47,9 @@ const cardVariants = {
 
 const ProjectsSection = ({ id }) => {
   const { t } = useTranslation();
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+  const isVisibleRef = useRef(false);
   const projects = useMemo(() => [
     {
       id: 1,
@@ -79,6 +82,22 @@ const ProjectsSection = ({ id }) => {
       context: t('project_items.p3.context'), 
     },
   ], [t]);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const doodleRef = useRef();
   if (!doodleRef.current) {
     const icons = [Music, Star, Moon, Zap, Orbit, Component];
@@ -127,9 +146,13 @@ const ProjectsSection = ({ id }) => {
   useEffect(() => {
     const canvas = starsCanvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
     let frameId;
     const dpr = window.devicePixelRatio || 1;
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const resizeCanvas = () => {
       const width = canvas.clientWidth;
@@ -139,7 +162,7 @@ const ProjectsSection = ({ id }) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const drawStars = (time) => {
+    const drawStars = (time, isStatic = false) => {
       const width = canvas.clientWidth;
       const height = canvas.clientHeight;
       ctx.clearRect(0, 0, width, height);
@@ -147,7 +170,7 @@ const ProjectsSection = ({ id }) => {
       ctx.shadowColor = "rgba(255,255,255,0.15)";
       ctx.shadowBlur = 0;
       starConfig.forEach((star) => {
-        const glow = reduceMotion
+        const glow = isStatic || reduceMotion || reducedMotionQuery.matches || !isVisibleRef.current
           ? 1
           : 0.6 + Math.sin(time * star.speed + star.phase) * 0.25;
         ctx.globalAlpha = Math.min(1, Math.max(0, star.alpha * glow));
@@ -159,7 +182,20 @@ const ProjectsSection = ({ id }) => {
 
     const render = (timestamp) => {
       drawStars(timestamp);
-      if (!reduceMotion) {
+      if (!reduceMotion && !reducedMotionQuery.matches && isVisibleRef.current) {
+        frameId = requestAnimationFrame(render);
+      }
+    };
+
+    const syncLoop = () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+        frameId = undefined;
+      }
+
+      if (reducedMotionQuery.matches || reduceMotion || !isVisibleRef.current) {
+        drawStars(0, true);
+      } else {
         frameId = requestAnimationFrame(render);
       }
     };
@@ -167,19 +203,29 @@ const ProjectsSection = ({ id }) => {
     let resizeTimer;
     const handleResize = () => {
       clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(resizeCanvas, 100);
+      resizeTimer = window.setTimeout(() => {
+        resizeCanvas();
+        syncLoop();
+      }, 100);
     };
 
+    const handleMotionChange = () => {
+      syncLoop();
+    };
+
+    isVisibleRef.current = isVisible;
     resizeCanvas();
-    render(0);
+    syncLoop();
     window.addEventListener("resize", handleResize);
+    reducedMotionQuery.addEventListener("change", handleMotionChange);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      reducedMotionQuery.removeEventListener("change", handleMotionChange);
       clearTimeout(resizeTimer);
       if (frameId) cancelAnimationFrame(frameId);
     };
-  }, [reduceMotion, starConfig]);
+  }, [reduceMotion, starConfig, isVisible]);
 
   const visualizerRef = useRef();
   if (!visualizerRef.current) {
@@ -192,7 +238,7 @@ const ProjectsSection = ({ id }) => {
   const visualizerBars = visualizerRef.current;
 
   return (
-    <section id={id} className="projects-section">
+    <section id={id} ref={sectionRef} className="projects-section">
       <div className="stars-container">
         <canvas ref={starsCanvasRef} className="stars-canvas" aria-hidden="true" />
       </div>
