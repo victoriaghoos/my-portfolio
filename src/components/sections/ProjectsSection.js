@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useRef, useEffect } from "react";
+import React, { useMemo, memo, useRef, useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import {
@@ -50,6 +50,9 @@ const ProjectsSection = ({ id }) => {
   const sectionRef = useRef(null);
   const isVisibleRef = useRef(false);
   const syncRef = useRef(null);
+  const [showDoodles, setShowDoodles] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth > 768 : true
+  );
   const projects = useMemo(() => [
     {
       id: 1,
@@ -98,6 +101,18 @@ const ProjectsSection = ({ id }) => {
     }
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const mediaQuery = window.matchMedia("(min-width: 769px)");
+    const updateDoodleVisibility = () => setShowDoodles(mediaQuery.matches);
+
+    updateDoodleVisibility();
+    mediaQuery.addEventListener?.("change", updateDoodleVisibility);
+
+    return () => mediaQuery.removeEventListener?.("change", updateDoodleVisibility);
   }, []);
 
   const doodleRef = useRef();
@@ -247,7 +262,7 @@ const ProjectsSection = ({ id }) => {
         <canvas ref={starsCanvasRef} className="stars-canvas" aria-hidden="true" />
       </div>
 
-      {doodleField.map((d) => (
+      {showDoodles && doodleField.map((d) => (
         <motion.div
           key={d.id}
           className="sparkle-doodle"
@@ -362,8 +377,9 @@ const ProjectsSection = ({ id }) => {
                   <div className="player-controls">
                     <button
                       type="button"
-                      aria-label="Previous"
+                      aria-label="Previous project (unavailable)"
                       className="control-btn"
+                      disabled
                     >
                       <SkipBack size={18} />
                     </button>
@@ -377,8 +393,9 @@ const ProjectsSection = ({ id }) => {
                     </motion.button>
                     <button
                       type="button"
-                      aria-label="Next"
+                      aria-label="Next project (unavailable)"
                       className="control-btn"
+                      disabled
                     >
                       <SkipForward size={18} />
                     </button>
