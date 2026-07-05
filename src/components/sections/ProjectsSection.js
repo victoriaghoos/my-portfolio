@@ -1,6 +1,7 @@
-import React, { useMemo, memo, useRef, useEffect, useState } from "react";
+import React, { useMemo, memo, useRef, useEffect, useState, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
+import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop.js';
 import {
   Music,
   Star,
@@ -45,11 +46,57 @@ const cardVariants = {
   },
 };
 
+const ProjectsStarsCanvas = memo(() => {
+  const canvasRef = useRef(null);
+  const starConfig = useMemo(
+    () =>
+      [...Array(200)].map(() => ({
+        x: Math.random(),
+        y: Math.random(),
+        size: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.4 + 0.2,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.002 + 0.0015,
+      })),
+    []
+  );
+  const reduceMotion = useReducedMotion();
+
+  const drawStars = useCallback(
+    ({ ctx, width, height, timestamp, isStatic }) => {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#ffffff";
+      ctx.shadowColor = "rgba(255,255,255,0.15)";
+      ctx.shadowBlur = 0;
+
+      starConfig.forEach((star) => {
+        const glow = isStatic || reduceMotion
+          ? 1
+          : 0.6 + Math.sin(timestamp * star.speed + star.phase) * 0.25;
+
+        ctx.globalAlpha = Math.min(1, Math.max(0, star.alpha * glow));
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    },
+    [reduceMotion, starConfig]
+  );
+
+  useCanvasAnimationLoop(canvasRef, {
+    onDraw: drawStars,
+  });
+
+  return (
+    <div className="stars-container">
+      <canvas ref={canvasRef} className="stars-canvas" aria-hidden="true" />
+    </div>
+  );
+});
+
 const ProjectsSection = ({ id }) => {
   const { t } = useTranslation();
-  const sectionRef = useRef(null);
-  const isVisibleRef = useRef(false);
-  const syncRef = useRef(null);
   const [showDoodles, setShowDoodles] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth > 768 : true
   );
@@ -85,24 +132,6 @@ const ProjectsSection = ({ id }) => {
       context: t('project_items.p3.context'), 
     },
   ], [t]);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisibleRef.current = entry.isIntersecting;
-        if (syncRef.current) {
-          syncRef.current();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
 
@@ -145,106 +174,7 @@ const ProjectsSection = ({ id }) => {
   }
   const doodleField = doodleRef.current;
 
-  const starsCanvasRef = useRef(null);
   const reduceMotion = useReducedMotion();
-  const starConfig = useMemo(
-    () =>
-      [...Array(200)].map(() => ({
-        x: Math.random(),
-        y: Math.random(),
-        size: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.4 + 0.2,
-        phase: Math.random() * Math.PI * 2,
-        speed: Math.random() * 0.002 + 0.0015,
-      })),
-    []
-  );
-
-  useEffect(() => {
-    const canvas = starsCanvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let frameId;
-    const dpr = window.devicePixelRatio || 1;
-    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    const resizeCanvas = () => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const drawStars = (time, isStatic = false) => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = "#ffffff";
-      ctx.shadowColor = "rgba(255,255,255,0.15)";
-      ctx.shadowBlur = 0;
-      starConfig.forEach((star) => {
-        const glow = isStatic || reduceMotion || reducedMotionQuery.matches || !isVisibleRef.current
-          ? 1
-          : 0.6 + Math.sin(time * star.speed + star.phase) * 0.25;
-        ctx.globalAlpha = Math.min(1, Math.max(0, star.alpha * glow));
-        ctx.beginPath();
-        ctx.arc(star.x * width, star.y * height, star.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    };
-
-    const render = (timestamp) => {
-      drawStars(timestamp);
-      if (!reduceMotion && !reducedMotionQuery.matches && isVisibleRef.current) {
-        frameId = requestAnimationFrame(render);
-      }
-    };
-
-    const syncLoop = () => {
-      if (frameId) {
-        cancelAnimationFrame(frameId);
-        frameId = undefined;
-      }
-
-      if (reducedMotionQuery.matches || reduceMotion || !isVisibleRef.current) {
-        drawStars(0, true);
-      } else {
-        frameId = requestAnimationFrame(render);
-      }
-    };
-
-    let resizeTimer;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(() => {
-        resizeCanvas();
-        drawStars(0, true);
-        syncLoop();
-      }, 100);
-    };
-
-    const handleMotionChange = () => {
-      syncLoop();
-    };
-
-    syncRef.current = syncLoop;
-    resizeCanvas();
-    syncLoop();
-    window.addEventListener("resize", handleResize);
-    reducedMotionQuery.addEventListener("change", handleMotionChange);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      reducedMotionQuery.removeEventListener("change", handleMotionChange);
-      clearTimeout(resizeTimer);
-      if (frameId) cancelAnimationFrame(frameId);
-      syncRef.current = null;
-    };
-  }, [reduceMotion, starConfig]);
 
   const visualizerRef = useRef();
   if (!visualizerRef.current) {
@@ -257,10 +187,8 @@ const ProjectsSection = ({ id }) => {
   const visualizerBars = visualizerRef.current;
 
   return (
-    <section id={id} ref={sectionRef} className="projects-section">
-      <div className="stars-container">
-        <canvas ref={starsCanvasRef} className="stars-canvas" aria-hidden="true" />
-      </div>
+    <section id={id} className="projects-section">
+      <ProjectsStarsCanvas />
 
       {showDoodles && doodleField.map((d) => (
         <motion.div

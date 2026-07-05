@@ -1,6 +1,8 @@
-import React, { forwardRef, useRef, useMemo, useState, useEffect } from "react";
+import React, { forwardRef, useRef, useMemo, useState, useEffect, useCallback } from "react";
 import HTMLFlipBook from "react-pageflip";
 import { useTranslation, Trans } from "react-i18next";
+import { useReducedMotion } from "framer-motion";
+import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop.js';
 import {
   Code,
   GraduationCap,
@@ -19,6 +21,8 @@ import resumePDF from "../../assets/files/Resume2026.pdf";
 
 const ResumeStarsCanvas = () => {
   const canvasRef = useRef(null);
+  const rootRef = useRef(null);
+  const reduceMotion = useReducedMotion();
   const stars = useMemo(
     () =>
       [...Array(500)].map((_, i) => {
@@ -48,35 +52,14 @@ const ResumeStarsCanvas = () => {
     []
   );
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId = null;
-    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const isVisibleRef = { current: true };
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-    const resizeCanvas = () => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawStars(0);
-    };
-
-    const drawStars = (time) => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
+  const drawStars = useCallback(
+    ({ ctx, width, height, timestamp, isStatic }) => {
       ctx.clearRect(0, 0, width, height);
 
       stars.forEach((star) => {
-        const twinkle = reducedMotionQuery.matches
+        const twinkle = reduceMotion || isStatic
           ? 1
-          : 0.75 + Math.sin(time * star.speed + star.phase) * 0.14;
+          : 0.75 + Math.sin(timestamp * star.speed + star.phase) * 0.14;
         const alpha = Math.min(1, Math.max(0, star.alpha * twinkle));
 
         ctx.globalAlpha = alpha;
@@ -105,63 +88,20 @@ const ResumeStarsCanvas = () => {
       });
 
       ctx.globalAlpha = 1;
-    };
+    },
+    [reduceMotion, stars]
+  );
 
-    const animate = (timestamp) => {
-      drawStars(timestamp);
-      if (!reducedMotionQuery.matches && isVisibleRef.current) {
-        animationFrameId = requestAnimationFrame(animate);
-      }
-    };
+  useCanvasAnimationLoop(canvasRef, {
+    rootRef,
+    onDraw: drawStars,
+  });
 
-    const syncStars = () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-        animationFrameId = null;
-      }
-      if (reducedMotionQuery.matches || !isVisibleRef.current) {
-        drawStars(0);
-      } else {
-        animationFrameId = requestAnimationFrame(animate);
-      }
-    };
-
-    let resizeTimer;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(resizeCanvas, 100);
-    };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisibleRef.current = entry.isIntersecting;
-        if (entry.isIntersecting) {
-          syncStars();
-        } else if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-          animationFrameId = null;
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    window.addEventListener('resize', handleResize);
-    reducedMotionQuery.addEventListener('change', syncStars);
-    observer.observe(canvas);
-
-    resizeCanvas();
-    syncStars();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimer);
-      reducedMotionQuery.removeEventListener('change', syncStars);
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      observer.disconnect();
-    };
-  }, [stars]);
-
-  return <canvas ref={canvasRef} className="resume-stars-canvas" aria-hidden="true" />;
+  return (
+    <div ref={rootRef} className="resume-stars-wrapper">
+      <canvas ref={canvasRef} className="resume-stars-canvas" aria-hidden="true" />
+    </div>
+  );
 };
 
 const StarBackground = () => {

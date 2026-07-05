@@ -1,9 +1,10 @@
-import { useMemo, memo, useRef, useEffect } from "react";
+import { useMemo, memo, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
 import sakuraTree from "../../assets/images/sakura2.png";
 import petalImg from "../../assets/images/petal.png";
+import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop.js';
 import {
   SiPython, SiJavascript, SiTypescript, SiPhp,
   SiDotnet, SiNodedotjs, SiOpensearch, SiBlazor, SiLaravel,
@@ -16,6 +17,7 @@ import { TbApi, TbBrandAzure } from "react-icons/tb";
 
 const SkillsStarsCanvas = memo(() => {
   const canvasRef = useRef(null);
+  const rootRef = useRef(null);
   const stars = useMemo(
     () =>
       [...Array(250)].map(() => ({
@@ -29,79 +31,29 @@ const SkillsStarsCanvas = memo(() => {
     []
   );
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let frameId;
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const dpr = window.devicePixelRatio || 1;
-
-    const resizeCanvas = () => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawStars(0);
-    };
-
-    const drawStars = (time) => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
+  useCanvasAnimationLoop(canvasRef, {
+    rootRef,
+    onDraw: ({ ctx, width, height, timestamp, isStatic }) => {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#ffffff';
       stars.forEach((star) => {
-        const twinkle = motionQuery.matches
+        const twinkle = isStatic
           ? 1
-          : 0.75 + Math.sin(time * star.speed + star.phase) * 0.15;
+          : 0.75 + Math.sin(timestamp * star.speed + star.phase) * 0.15;
         ctx.globalAlpha = Math.min(1, Math.max(0, star.opacity * twinkle));
         ctx.beginPath();
         ctx.arc(star.x * width, star.y * height, star.radius, 0, Math.PI * 2);
         ctx.fill();
       });
       ctx.globalAlpha = 1;
-    };
+    },
+  });
 
-    const render = (timestamp) => {
-      drawStars(timestamp);
-      if (!motionQuery.matches) {
-        frameId = requestAnimationFrame(render);
-      }
-    };
-
-    const handleMotionChange = () => {
-      if (frameId) cancelAnimationFrame(frameId);
-      if (motionQuery.matches) {
-        drawStars(0);
-      } else {
-        frameId = requestAnimationFrame(render);
-      }
-    };
-
-    let resizeTimer;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(resizeCanvas, 100);
-    };
-
-    window.addEventListener('resize', handleResize);
-    motionQuery.addEventListener('change', handleMotionChange);
-
-    resizeCanvas();
-    handleMotionChange();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      motionQuery.removeEventListener('change', handleMotionChange);
-      if (frameId) cancelAnimationFrame(frameId);
-      clearTimeout(resizeTimer);
-    };
-  }, [stars]);
-
-  return <canvas ref={canvasRef} className="skills-stars-canvas" aria-hidden="true" />;
+  return (
+    <div ref={rootRef} className="skills-stars-container">
+      <canvas ref={canvasRef} className="skills-stars-canvas" aria-hidden="true" />
+    </div>
+  );
 });
 
 const FallingPetal = memo(() => {

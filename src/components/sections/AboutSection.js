@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation, Trans } from 'react-i18next';
+import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop.js';
 import '../../styles/sections/AboutSection.scss';
 import foto1 from '../../assets/images/foto1.jpg';
 
@@ -23,101 +24,13 @@ const staggerVariants = {
   }
 };
 
-const useCanvasAnimationLoop = (canvasRef, isVisible, { onResize, onDraw }) => {
-  const isVisibleRef = useRef(isVisible);
-  const syncRef = useRef(null);
-
-  useEffect(() => {
-    isVisibleRef.current = isVisible;
-    if (syncRef.current) syncRef.current();
-  }, [isVisible]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId;
-    const reducedMotionQuery = matchMedia('(prefers-reduced-motion: reduce)');
-    const dpr = window.devicePixelRatio || 1;
-
-    const getSize = () => ({
-      width: canvas.clientWidth,
-      height: canvas.clientHeight,
-    });
-
-    const resizeCanvas = () => {
-      const { width, height } = getSize();
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      if (onResize) {
-        onResize({ canvas, ctx, width, height, dpr });
-      }
-    };
-
-    const drawFrame = (timestamp, isStatic = false) => {
-      const { width, height } = getSize();
-      onDraw({ canvas, ctx, width, height, timestamp, isStatic });
-    };
-
-    const animate = (timestamp) => {
-      drawFrame(timestamp, false);
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    const syncLoop = () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-      animationFrameId = undefined;
-
-      if (reducedMotionQuery.matches || !isVisibleRef.current) {
-        drawFrame(0, true);
-      } else {
-        animationFrameId = requestAnimationFrame(animate);
-      }
-    };
-
-    syncRef.current = syncLoop;
-
-    let resizeTimer;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(() => {
-        resizeCanvas();
-        syncLoop();
-      }, 100);
-    };
-
-    window.addEventListener('resize', handleResize);
-    reducedMotionQuery.addEventListener('change', syncLoop);
-
-    resizeCanvas();
-    syncLoop();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimer);
-      reducedMotionQuery.removeEventListener('change', syncLoop);
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-      syncRef.current = null;
-    };
-  }, [canvasRef, onResize, onDraw]);
-};
-
 const ORB_COLORS = {
   cyan: 'rgba(138, 230, 255, 0.8)',
   mid: 'rgba(167, 139, 250, 0.6)',
   purple: 'rgba(192, 132, 252, 0.5)',
 };
 
-const useOrbCanvas = (canvasRef, isVisible) => {
+const useOrbCanvas = (canvasRef, rootRef) => {
   const orbs = useMemo(
     () => [
       { x: 0.1, y: 0.1, r: 150, color: ORB_COLORS.cyan, vx: Math.random() - 0.5, vy: Math.random() - 0.5 },
@@ -161,13 +74,10 @@ const useOrbCanvas = (canvasRef, isVisible) => {
     [drawOrbs]
   );
 
-  useCanvasAnimationLoop(canvasRef, isVisible, {
-    onResize,
-    onDraw,
-  });
+  useCanvasAnimationLoop(canvasRef, { rootRef, onResize, onDraw });
 };
 
-const useStarfieldCanvas = (canvasRef, isVisible) => {
+const useStarfieldCanvas = (canvasRef, rootRef) => {
   const stars = useMemo(
     () =>
       [...Array(300)].map(() => ({
@@ -202,9 +112,7 @@ const useStarfieldCanvas = (canvasRef, isVisible) => {
     [drawStars]
   );
 
-  useCanvasAnimationLoop(canvasRef, isVisible, {
-    onDraw,
-  });
+  useCanvasAnimationLoop(canvasRef, { rootRef, onDraw });
 };
 
 const OrbBackground = React.memo(function OrbBackground({ isVisible }) {

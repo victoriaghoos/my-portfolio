@@ -1,9 +1,10 @@
-import React, { memo, useMemo, useRef, useEffect, useState } from "react";
+import React, { memo, useMemo, useRef, useEffect, useState, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Cloud, Sparkles, Float } from "@react-three/drei";
 import { motion, useReducedMotion } from "framer-motion";
 import { Github, Linkedin, Mail, ArrowUpCircle } from "lucide-react";
 import { useTranslation } from 'react-i18next';
+import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop.js';
 import "../../styles/sections/SocialsSection.scss";
 
 const CLOUD_URL = "https://raw.githubusercontent.com/pmndrs/drei-assets/456060a26bbeb8fdf9d32ff4dd80fa95863c129e/cloud.png";
@@ -27,8 +28,8 @@ const CloudPuff = ({ position, speed, opacity }) => {
 
 const SocialsStarsCanvas = memo(() => {
   const canvasRef = useRef(null);
+  const rootRef = useRef(null);
   const reduceMotion = useReducedMotion();
-  const isVisibleRef = useRef(true);
   const stars = useMemo(
     () =>
       [...Array(500)].map(() => ({
@@ -42,84 +43,34 @@ const SocialsStarsCanvas = memo(() => {
     []
   );
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId = null;
-
-    const resizeCanvas = () => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawStars(0);
-    };
-
-    const drawStars = (time) => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
+  const drawStars = useCallback(
+    ({ ctx, width, height, timestamp, isStatic }) => {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#ffffff';
       stars.forEach((star) => {
-        const flicker = reduceMotion
+        const flicker = isStatic || reduceMotion
           ? 1
-          : 0.72 + Math.sin(time * star.speed + star.phase) * 0.16;
+          : 0.72 + Math.sin(timestamp * star.speed + star.phase) * 0.16;
         ctx.globalAlpha = Math.min(1, Math.max(0, star.alpha * flicker));
         ctx.beginPath();
         ctx.arc(star.x * width, star.y * height, star.radius, 0, Math.PI * 2);
         ctx.fill();
       });
       ctx.globalAlpha = 1;
-    };
+    },
+    [reduceMotion, stars]
+  );
 
-    const animate = (timestamp) => {
-      drawStars(timestamp);
-      if (!reduceMotion && isVisibleRef.current) {
-        animationFrameId = requestAnimationFrame(animate);
-      }
-    };
+  useCanvasAnimationLoop(canvasRef, {
+    rootRef,
+    onDraw: drawStars,
+  });
 
-    let resizeTimer;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(resizeCanvas, 100);
-    };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisibleRef.current = entry.isIntersecting;
-        if (entry.isIntersecting) {
-          drawStars(performance.now());
-          if (!reduceMotion && animationFrameId === null) {
-            animationFrameId = requestAnimationFrame(animate);
-          }
-        } else if (animationFrameId !== null) {
-          cancelAnimationFrame(animationFrameId);
-          animationFrameId = null;
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    window.addEventListener('resize', handleResize);
-    observer.observe(canvas);
-    resizeCanvas();
-    animate(0);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimer);
-      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
-      observer.disconnect();
-    };
-  }, [stars, reduceMotion]);
-
-  return <canvas ref={canvasRef} className="socials-stars-canvas" aria-hidden="true" />;
+  return (
+    <div ref={rootRef} className="socials-stars-wrapper">
+      <canvas ref={canvasRef} className="socials-stars-canvas" aria-hidden="true" />
+    </div>
+  );
 });
 
 const SilkSkyScene = memo(() => {
