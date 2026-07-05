@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useEffect } from "react";
+import React, { memo, useMemo, useRef, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Cloud, Sparkles, Float } from "@react-three/drei";
 import { motion, useReducedMotion } from "framer-motion";
@@ -192,6 +192,9 @@ const SocialCard = ({ icon: Icon, title, handle, link, delay, strokeWidth = 1.5 
 };
 
 const SocialsSection = ({ id }) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const containerRef = useRef(null);
+
   const handleFlyToCosmos = () => {
     const home = document.getElementById("home-3d");
     if (home) {
@@ -199,13 +202,29 @@ const SocialsSection = ({ id }) => {
     }
   };
 
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
   const { t } = useTranslation();
   return (
     <section id={id} className="socials-section">
       <div className="transition-gradient-top"></div>
-      <div className="canvas-container">
+      <div className="canvas-container" ref={containerRef}>
         <SocialsStarsCanvas />
         <Canvas
+          frameloop={isVisible ? "always" : "never"}
           camera={{ position: [0, 0, 14], fov: 45 }}
           resize={{ scroll: false }}
           dpr={[1, 2]}
