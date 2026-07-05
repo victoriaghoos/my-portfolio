@@ -205,6 +205,7 @@ const ProjectsSection = ({ id }) => {
       clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
         resizeCanvas();
+        drawStars(0, true);
         syncLoop();
       }, 100);
     };
