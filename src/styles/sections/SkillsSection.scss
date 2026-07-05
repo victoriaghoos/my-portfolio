@@ -336,11 +336,6 @@ $cosmic-purple: #2a003d;
   }
 }
 
-@keyframes twinkle {
-  0%, 100% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 0.8; transform: scale(1.1); }
-}
-
 @keyframes neon-pulse {
   0% {
     box-shadow: 0 0 10px $sakura-glow, 0 0 5px white;
