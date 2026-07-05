@@ -296,6 +296,7 @@ const SocialsSection = ({ id }) => {
           transition={{ delay: 1 }}
         >
           <motion.button 
+            onClick={handleFlyToCosmos}
             onTap={handleFlyToCosmos} 
             className="return-orb"
             whileHover={{ y: -5 }}
