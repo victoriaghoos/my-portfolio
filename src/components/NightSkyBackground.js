@@ -1,4 +1,60 @@
-import { useRef, useEffect, useMemo, forwardRef, useImperativeHandle } from "react";
+import { useRef, useEffect, useMemo, useCallback, forwardRef, useImperativeHandle } from "react";
+
+const fbm = (noiseFn, x, y, z, octaves = 5, lacunarity = 2.0, gain = 0.5) => {
+  let amplitude = 0.5;
+  let frequency = 1;
+  let sum = 0;
+  let max = 0;
+
+  for (let i = 0; i < octaves; i++) {
+    sum += amplitude * noiseFn(x * frequency, y * frequency, z * frequency);
+    max += amplitude;
+    amplitude *= gain;
+    frequency *= lacunarity;
+  }
+
+  return sum / max;
+};
+
+const NEBULA_RAMP = [
+  { t: 0.00, c: [4, 3, 14] },
+  { t: 0.35, c: [10, 10, 35] },
+  { t: 0.48, c: [30, 25, 75] },
+  { t: 0.62, c: [80, 40, 120] },
+  { t: 0.80, c: [160, 70, 145] },
+  { t: 1.00, c: [220, 130, 110] },
+];
+
+const sampleRamp = (t) => {
+  const clampedT = Math.min(1, Math.max(0, t));
+
+  for (let i = 0; i < NEBULA_RAMP.length - 1; i++) {
+    const a = NEBULA_RAMP[i];
+    const b = NEBULA_RAMP[i + 1];
+
+    if (clampedT >= a.t && clampedT <= b.t) {
+      const localT = (clampedT - a.t) / (b.t - a.t);
+      return [
+        a.c[0] + (b.c[0] - a.c[0]) * localT,
+        a.c[1] + (b.c[1] - a.c[1]) * localT,
+        a.c[2] + (b.c[2] - a.c[2]) * localT,
+      ];
+    }
+  }
+
+  return NEBULA_RAMP[NEBULA_RAMP.length - 1].c;
+};
+
+// Weighted so most stars are white/blue-white (like real skies), with occasional warm outliers.
+const STAR_COLORS = [
+  { r: 255, g: 255, b: 255, weight: 40 },
+  { r: 202, g: 216, b: 255, weight: 25 },
+  { r: 170, g: 200, b: 255, weight: 12 },
+  { r: 255, g: 244, b: 214, weight: 12 },
+  { r: 255, g: 210, b: 161, weight: 7 },
+  { r: 255, g: 178, b: 158, weight: 4 },
+];
+const STAR_COLOR_TOTAL = STAR_COLORS.reduce((sum, c) => sum + c.weight, 0);
 
 const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
   const backgroundCanvasRef = useRef(null);
@@ -31,25 +87,14 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
     };
   }, []);
 
-  // Real stars aren't all white — spectral classes run blue-white -> white -> yellow -> orange/red.
-  // Weighted so most stars are white/blue-white (like real skies), with occasional warm outliers.
-  const STAR_COLORS = [
-    { r: 255, g: 255, b: 255, weight: 40 },
-    { r: 202, g: 216, b: 255, weight: 25 },
-    { r: 170, g: 200, b: 255, weight: 12 },
-    { r: 255, g: 244, b: 214, weight: 12 },
-    { r: 255, g: 210, b: 161, weight: 7 },
-    { r: 255, g: 178, b: 158, weight: 4 },
-  ];
-  const STAR_COLOR_TOTAL = STAR_COLORS.reduce((sum, c) => sum + c.weight, 0);
-  const pickStarColor = () => {
+  const pickStarColor = useCallback(() => {
     let r = Math.random() * STAR_COLOR_TOTAL;
     for (const c of STAR_COLORS) {
       if (r < c.weight) return c;
       r -= c.weight;
     }
     return STAR_COLORS[0];
-  };
+  }, []);
 
   useImperativeHandle(ref, () => ({
     triggerShockwave: (clientX, clientY) => {
@@ -78,6 +123,49 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
     const canvas = backgroundCanvasRef.current;
     const ctx = canvas.getContext("2d", { alpha: false });
 
+    const buildNebulaTexture = () => {
+      const tw = Math.max(1, Math.floor(window.innerWidth / 2));
+      const th = Math.max(1, Math.floor(window.innerHeight / 2));
+      const off = document.createElement("canvas");
+      off.width = tw;
+      off.height = th;
+
+      const octx = off.getContext("2d");
+      const img = octx.createImageData(tw, th);
+      const scale = 0.0022;
+      const CONTRAST = 2.2; 
+      const FORCE_OPAQUE_DEBUG = false;
+
+      for (let y = 0; y < th; y++) {
+        for (let x = 0; x < tw; x++) {
+          const n = fbm(perlinNoise.noise, x * scale, y * scale, 0, 4);
+          let v = (n + 1) * 0.5;
+          v = 0.5 + (v - 0.5) * CONTRAST;
+          v = Math.min(1, Math.max(0, v));
+          const [r, g, b] = sampleRamp(v);
+
+          let alpha = 0;
+          if (v > 0.32) {
+            alpha = Math.pow((v - 0.32) / 0.68, 1.2);
+          }
+          alpha *= 0.6; // global dimmer
+
+          const idx = (y * tw + x) * 4;
+          img.data[idx] = r;
+          img.data[idx + 1] = g;
+          img.data[idx + 2] = b;
+          img.data[idx + 3] = FORCE_OPAQUE_DEBUG ? 255 : Math.round(alpha * 255);
+        }
+      }
+
+      octx.putImageData(img, 0, 0);
+      return off;
+    };
+
+    let nebulaTexture = null;
+    let bloomCanvas = null;
+    let bloomCtx = null;
+
     const resize = () => {
       const dpr = Math.max(1, window.devicePixelRatio || 1);
       canvas.width = Math.floor(window.innerWidth * dpr);
@@ -87,14 +175,18 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const r = canvas.getBoundingClientRect();
       canvasBoundsRef.current = { left: r.left, top: r.top };
+      nebulaTexture = buildNebulaTexture();
+      bloomCanvas = document.createElement("canvas");
+      bloomCanvas.width = Math.floor(window.innerWidth / 3);
+      bloomCanvas.height = Math.floor(window.innerHeight / 3);
+      bloomCtx = bloomCanvas.getContext("2d");
     };
     resize();
     window.addEventListener("resize", resize);
 
-    // --- Depth layers -----------------------------------------------------
+    // Depth layers
     // Three layers with different size/brightness/parallax response.
-    // Parallax factor is how much each layer shifts relative to mouse movement —
-    // small for "far away", large for "close" — this is what actually reads as depth.
+    // Parallax factor is how much each layer shifts relative to mouse movement
     const areaFactor = (window.innerWidth * window.innerHeight) / 1_000_000;
 
     const makeStar = (sizeMin, sizeMax, brightMin, brightMax) => {
@@ -130,9 +222,8 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
       { stars: heroStars, parallax: 0.07 },
     ];
 
-    // --- Galactic band ------------------------------------------------------
-    // A soft tilted glow band plus its own denser faint-star scatter along it —
-    // this single element is the biggest "looks like a real photo of space" cue.
+    // Galactic band
+    // A soft tilted glow band plus its own denser faint-star scatter along it
     const bandAngle = -0.38;
     const bandCenter = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.42 };
     const bandLength = Math.max(window.innerWidth, window.innerHeight) * 1.7;
@@ -156,7 +247,6 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
       });
     layers.push({ stars: bandStars, parallax: 0.008 });
 
-    // --- Parallax (mouse-driven) --------------------------------------------
     const parallax = { x: 0, y: 0, tx: 0, ty: 0 };
     const onMouseMoveParallax = (e) => {
       parallax.tx = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -183,7 +273,6 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
     };
 
     const shockwaves = [];
-    let nebulaOffset = 0;
 
     const auroraParams = [
       { amp: 120, speed: 0.02, hue: 250, alpha: 0.25 },
@@ -266,7 +355,6 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
       const dt = Math.min((time - lastTime) * 0.001, 0.05);
       lastTime = time;
 
-      nebulaOffset += dt * 0.05;
       parallax.x += (parallax.tx - parallax.x) * Math.min(1, dt * 2);
       parallax.y += (parallax.ty - parallax.y) * Math.min(1, dt * 2);
 
@@ -279,46 +367,41 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, W, H);
 
+      // Drift a pre-baked fBm texture for nebula motion at low runtime cost
+      const driftX = Math.sin(t * 0.015) * 40;
+      const driftY = Math.cos(t * 0.012) * 25;
+      if (nebulaTexture) {
+        ctx.save();
+        ctx.globalCompositeOperation = "lighter";
+        ctx.globalAlpha = 1;
+        ctx.drawImage(nebulaTexture, -20 + driftX, -20 + driftY, W + 40, H + 40);
+        ctx.restore();
+      }
+
       ctx.globalCompositeOperation = "lighter";
 
-      // Galactic band glow, drawn before stars so the band starfield sits on top of it.
-      ctx.save();
-      ctx.translate(bandCenter.x, bandCenter.y);
-      ctx.rotate(bandAngle);
-      const bandGrad = ctx.createLinearGradient(0, -170, 0, 170);
-      bandGrad.addColorStop(0, "rgba(180, 195, 255, 0)");
-      bandGrad.addColorStop(0.5, "rgba(200, 205, 255, 0.06)");
-      bandGrad.addColorStop(1, "rgba(180, 195, 255, 0)");
-      ctx.fillStyle = bandGrad;
-      ctx.fillRect(-bandLength / 2, -170, bandLength, 340);
-      ctx.restore();
+      // Galactic band glow, drawn before stars so the band starfield sits on top of it
+      const bandNoiseScale = 0.006;
+      const bandPuffCount = 55;
+      const cos = Math.cos(bandAngle);
+      const sin = Math.sin(bandAngle);
 
-      const nebLayers = [
-        { scale: 0.0015, speed: 0.02, color: [120, 60, 220], intensity: 0.22 },
-        { scale: 0.0025, speed: 0.04, color: [220, 100, 180], intensity: 0.13 },
-      ];
+      for (let i = 0; i < bandPuffCount; i++) {
+  const alongPos = -bandLength / 2 + (i / bandPuffCount) * bandLength;
+  const n = perlinNoise.noise(alongPos * bandNoiseScale, 0.5, 2.1);
+  const density = Math.max(0, (n + 1) * 0.5 - 0.3) * 1.5;
+  if (density <= 0) continue;
 
-      const step = 96;
-      for (const layer of nebLayers) {
-        const { scale, speed, color, intensity } = layer;
-        const z = nebulaOffset * speed;
-        for (let y = 0; y < H; y += step) {
-          for (let x = 0; x < W; x += step) {
-            const n = perlinNoise.noise(x * scale, y * scale, z);
-            const v = (n + 1) * 0.5;
-            if (v > 0.48) {
-              const alpha = Math.pow((v - 0.48) / 0.52, 1.8) * intensity;
-              const radius = Math.max(1, step * (0.8 + v * 1.8));
-              const innerRadius = Math.max(0.1, radius * 0.1);
-              const grd = ctx.createRadialGradient(x, y, innerRadius, x, y, radius);
-              grd.addColorStop(0, `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`);
-              grd.addColorStop(1, `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0)`);
-              ctx.fillStyle = grd;
-              ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-            }
-          }
-        }
-      }
+  const px = bandCenter.x + alongPos * cos;
+  const py = bandCenter.y + alongPos * sin;
+  const puffRadius = 130;
+
+  const grd = ctx.createRadialGradient(px, py, 0, px, py, puffRadius);
+  grd.addColorStop(0, `rgba(210, 215, 255, ${0.22 * density})`);
+  grd.addColorStop(1, "rgba(210, 215, 255, 0)");
+  ctx.fillStyle = grd;
+  ctx.fillRect(px - puffRadius, py - puffRadius, puffRadius * 2, puffRadius * 2);
+}
 
       auroraParams.forEach((ap, idx) => {
         ctx.save();
@@ -367,7 +450,7 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
 
       const px0 = parallax.x, py0 = parallax.y;
       layers.forEach((layer) => {
-        drawStarLayer(layer, t, dt, px0 * layer.parallax * 100, py0 * layer.parallax * 100);
+        drawStarLayer(layer, t, dt, px0 * layer.parallax * 180, py0 * layer.parallax * 150);
       });
       ctx.globalAlpha = 1;
 
@@ -395,13 +478,29 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
       if (Math.random() < 0.025 && shooting.length < maxShooting)
         spawnShootingStar();
 
-      // Subtle vignette — darkens edges slightly, pulls the eye toward center, adds depth.
+      // Subtle vignette
       ctx.globalCompositeOperation = "source-over";
       const vignette = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.3, W / 2, H / 2, Math.max(W, H) * 0.75);
       vignette.addColorStop(0, "rgba(0,0,0,0)");
       vignette.addColorStop(1, "rgba(0,0,0,0.35)");
       ctx.fillStyle = vignette;
       ctx.fillRect(0, 0, W, H);
+
+      // Cheap bloom
+      if (bloomCanvas && bloomCtx) {
+      bloomCtx.clearRect(0, 0, bloomCanvas.width, bloomCanvas.height);
+      bloomCtx.filter = "brightness(0.4) contrast(2.2)";
+      bloomCtx.drawImage(canvas, 0, 0, bloomCanvas.width, bloomCanvas.height);
+      bloomCtx.filter = "none";
+
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      ctx.globalAlpha = 0.28;
+      ctx.filter = "blur(8px)";
+      ctx.drawImage(bloomCanvas, 0, 0, W, H);
+      ctx.filter = "none";
+      ctx.restore();
+    }
 
       animationFrameRef.current = requestAnimationFrame(draw);
     };
@@ -419,7 +518,7 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
       animationFrameRef.current = null;
       drawFrameRef.current = null;
     };
-  }, [perlinNoise]);
+  }, [perlinNoise, pickStarColor]);
 
   return (
     <canvas
