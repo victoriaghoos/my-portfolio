@@ -72,13 +72,14 @@ const SceneContent = memo(({
 
   return (
     <div id="home-3d" className="home-3d-content">
-      <NightSkyBackground ref={nightSkyRef} />
+      <NightSkyBackground ref={nightSkyRef} isVisible={isInView} />
 
       {navEnabled && initialRotationComplete && !hasDragged && (
         <DragHint isVisible={!hasDragged} />
       )}
 
       <Canvas
+        frameloop={isInView ? "always" : "never"}
         camera={{ position: [0, 5, 20], fov: 45 }}
         eventSource={eventSource}
         eventPrefix="client"
