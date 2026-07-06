@@ -295,7 +295,6 @@ $page-color: #0d0d2b;
             text-align: center;
             box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             position: relative;
-            background-color: rgba(255,255,255,0.10);
 
             &::before { content: '✦'; position: absolute; top: 15px; left: 15px; color: $book-gold; opacity: 0.5; font-size: 1.2rem; }
             &::after { content: '✦'; position: absolute; bottom: 15px; right: 15px; color: $book-gold; opacity: 0.5; font-size: 1.2rem; }
@@ -669,7 +668,6 @@ $page-color: #0d0d2b;
                     inset 0 0 5px rgba($book-gold, 0.1);
 
                 text-shadow: 0 0 5px rgba($book-gold, 0.3);
-                background-color: rgba(255,255,255,0.12);
             }
         }
     }
