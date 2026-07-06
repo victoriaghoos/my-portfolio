@@ -473,7 +473,7 @@ const Home = () => {
           }}
         >
           <SceneContent 
-            eventSource={homeRef.current}
+            eventSource={homeRef}
             nightSkyRef={nightSkyRef} 
             show3DNav={show3DNav}
             initialRotationComplete={initialRotationComplete}
