@@ -135,6 +135,25 @@ const Page = forwardRef((props, ref) => {
   );
 });
 
+const containerVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+      when: "beforeChildren",
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+};
+
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState({
     width: typeof window !== "undefined" ? window.innerWidth : 0,
@@ -324,25 +343,6 @@ const ResumeSection = ({ id }) => {
     if (socialsSection) {
       socialsSection.scrollIntoView({ behavior: "smooth" });
     }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-        when: "beforeChildren",
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
   };
 
   return (
