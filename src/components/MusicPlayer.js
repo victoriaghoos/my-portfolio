@@ -69,10 +69,13 @@ const MusicPlayer = () => {
   };
 
   return (
-    <motion.div 
+    <motion.button 
+      type="button"
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       className={`music-player-pill ${isPlaying ? 'active' : ''}`} 
+      aria-label={isPlaying ? 'Mute background audio' : 'Play background audio'}
+      aria-pressed={isPlaying}
       onClick={togglePlay}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -124,7 +127,7 @@ const MusicPlayer = () => {
           <div className="bar"></div>
         </div>
       )}
-    </motion.div>
+    </motion.button>
   );
 };
 
