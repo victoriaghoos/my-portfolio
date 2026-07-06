@@ -378,6 +378,7 @@ const ResumeSection = ({ id }) => {
             type="button"
             variants={itemVariants}
             className={`nav-arrow left ${isFrontCover ? "disabled" : ""}`}
+            aria-label={t("resume_content.nav.prev")}
             onClick={(e) => handlePrevClick(e)}
             disabled={isFrontCover}
             style={{
@@ -391,14 +392,14 @@ const ResumeSection = ({ id }) => {
 
           <motion.div className="book-container" variants={itemVariants}>
             {!isMobile && (
-              <div
+              <button
+                type="button"
                 className={`bookmark-tab ${bookmarkState}`}
-                onClick={
-                  !isFrontCover && !isBackCover ? onDownloadCV : undefined
-                }
+                aria-label={t("resume_content.actions.download_cv")}
+                onClick={onDownloadCV}
+                disabled={isFrontCover || isBackCover}
                 style={{
                   cursor: isFrontCover || isBackCover ? "default" : "pointer",
-                  pointerEvents: isFrontCover || isBackCover ? "none" : "auto",
                 }}
               >
                 <Download
@@ -412,7 +413,7 @@ const ResumeSection = ({ id }) => {
                 >
                   {t("resume")}
                 </span>
-              </div>
+              </button>
             )}
             <HTMLFlipBook
               width={450}
@@ -644,11 +645,12 @@ const ResumeSection = ({ id }) => {
                     >
                       <Download size={16} /> {t("resume_content.p6.btn_pdf")}
                     </button>
-                    <p
+                    <button
+                      type="button"
                       className="scroll-hint"
+                      aria-label={t("resume_content.actions.scroll_to_socials")}
                       onClick={scrollToSocials}
                       style={{
-                        cursor: "pointer",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -658,7 +660,7 @@ const ResumeSection = ({ id }) => {
                     >
                       {t("resume_content.p6.scroll_hint")}
                       <ArrowDown size={18} />
-                    </p>
+                    </button>
                   </div>
                 </div>
               </Page>
@@ -703,6 +705,7 @@ const ResumeSection = ({ id }) => {
             type="button"
             variants={itemVariants}
             className={`nav-arrow right ${isBackCover ? "disabled" : ""}`}
+            aria-label={t("resume_content.nav.next")}
             onClick={(e) => handleNextClick(e)}
             disabled={isBackCover}
             style={{

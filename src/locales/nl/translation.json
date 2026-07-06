@@ -55,6 +55,14 @@
       "edition": "Editie 2026 // Portfolio",
       "built_with": "Gebouwd met React"
     },
+    "nav": {
+      "prev": "Vorige pagina",
+      "next": "Volgende pagina"
+    },
+    "actions": {
+      "download_cv": "Download CV als PDF",
+      "scroll_to_socials": "Scroll naar socials-sectie"
+    },
     "p1": {
       "title": "Professioneel Profiel",
       "text": "Software-engineeringstudente met een sterke focus op backend development binnen het .NET-ecosysteem. Ik combineer een praktijkgerichte achtergrond in C# met een bacheloropleiding waarin ik me verdiep in software-architectuur en theoretische fundamenten. Ik deed hands-on ervaring op met het bouwen van complexe zoeksystemen met OpenSearch."

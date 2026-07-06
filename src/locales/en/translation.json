@@ -55,6 +55,14 @@
       "edition": "Edition 2026 // Portfolio",
       "built_with": "Built with React"
     },
+    "nav": {
+      "prev": "Previous page",
+      "next": "Next page"
+    },
+    "actions": {
+      "download_cv": "Download resume PDF",
+      "scroll_to_socials": "Scroll to socials section"
+    },
     "p1": {
       "title": "Professional Profile",
       "text": "Software engineering student with a strong focus on backend development within the .NET ecosystem. I combine a hands-on background in C# with a bachelor’s degree that deepens my understanding of software architecture and theoretical foundations. I have practical experience building complex search systems using OpenSearch."

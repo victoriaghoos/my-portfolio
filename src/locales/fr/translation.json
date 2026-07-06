@@ -55,6 +55,14 @@
       "edition": "Édition 2026 // Portfolio",
       "built_with": "Développé avec React"
     },
+    "nav": {
+      "prev": "Page précédente",
+      "next": "Page suivante"
+    },
+    "actions": {
+      "download_cv": "Télécharger le CV en PDF",
+      "scroll_to_socials": "Aller à la section des réseaux"
+    },
     "p1": {
       "title": "Profil",
       "text": "Je suis étudiante en informatique et me spécialise dans le développement back-end avec .NET. J’ai une solide expérience pratique en C# et je complète ma formation par des connaissances approfondies en architecture logicielle. J’ai également travaillé sur des systèmes de recherche complexes basés sur OpenSearch."
