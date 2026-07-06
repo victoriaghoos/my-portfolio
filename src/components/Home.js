@@ -190,7 +190,7 @@ const SceneContent = memo(({
                 style={{ '--item-color': `#${icon.color.getHexString()}` }}
               >
                 <div className="icon-wrapper">
-                  <img src={icon.png} alt={icon.label} />
+                  <img src={icon.png} alt={icon.label} decoding="async" />
                 </div>
                 <span className="label" style={{ userSelect: 'none' }}>{icon.label}</span>
               </button>
@@ -206,6 +206,19 @@ const Home = () => {
   const { t } = useTranslation();
 
   const nightSkyRef = useRef(null);
+
+  useEffect(() => {
+    const preloadLink = document.createElement("link");
+    preloadLink.rel = "preload";
+    preloadLink.as = "image";
+    preloadLink.href = avatarPng;
+    preloadLink.setAttribute("fetchpriority", "high");
+    document.head.appendChild(preloadLink);
+
+    return () => {
+      document.head.removeChild(preloadLink);
+    };
+  }, []);
 
   const icons = useMemo(() => [
     {
