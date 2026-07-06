@@ -267,7 +267,7 @@ const ResumeSection = ({ id }) => {
       setIsFlipping(true);
       setNextPageDirection("prev");
       setFlipStartData(currentPage);
-      bookRef.current.pageFlip().flipPrev();
+      bookRef.current?.pageFlip()?.flipPrev();
     }
   };
 
@@ -280,7 +280,7 @@ const ResumeSection = ({ id }) => {
       setIsFlipping(true);
       setNextPageDirection("next");
       setFlipStartData(currentPage);
-      bookRef.current.pageFlip().flipNext();
+      bookRef.current?.pageFlip()?.flipNext();
     }
   };
 
