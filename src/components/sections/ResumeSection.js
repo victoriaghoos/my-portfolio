@@ -305,6 +305,8 @@ const ResumeSection = ({ id }) => {
 
   useEffect(() => {
     if (isMobile) return;
+    // react-pageflip does not expose the internal page DOM nodes via its public ref,
+    // so this class-based lookup is used to capture mousedown on rendered .page elements.
     const bookElement = document.querySelector(".stellar-book");
     if (!bookElement) return;
 
