@@ -199,6 +199,9 @@ body {
 }
 
 .music-player-pill {
+  appearance: none;
+  border: none;
+  text-align: left;
   position: fixed;
   top: 30px;
   left: 30px;
