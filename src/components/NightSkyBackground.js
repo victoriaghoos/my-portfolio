@@ -1,8 +1,10 @@
 import { useRef, useEffect, useMemo, forwardRef, useImperativeHandle } from "react";
 
-const NightSkyBackground = forwardRef((_, ref) => {
+const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
   const backgroundCanvasRef = useRef(null);
   const animationFrameRef = useRef(null);
+  const drawFrameRef = useRef(null);
+  const isVisibleRef = useRef(isVisible);
   const triggerShockwaveRef = useRef(() => {});
   const canvasBoundsRef = useRef({ left: 0, top: 0 });
   const perlinNoise = useMemo(() => {
@@ -37,6 +39,19 @@ const NightSkyBackground = forwardRef((_, ref) => {
       }
     }
   }));
+
+  useEffect(() => {
+    isVisibleRef.current = isVisible;
+
+    if (!isVisible && animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    if (isVisible && !animationFrameRef.current && drawFrameRef.current) {
+      animationFrameRef.current = requestAnimationFrame(drawFrameRef.current);
+    }
+  }, [isVisible]);
 
   useEffect(() => {
     const canvas = backgroundCanvasRef.current;
@@ -112,6 +127,11 @@ const NightSkyBackground = forwardRef((_, ref) => {
 
     let lastTime = performance.now();
     const draw = (time) => {
+      if (!isVisibleRef.current) {
+        animationFrameRef.current = null;
+        return;
+      }
+
       if (time - lastTime < 1000 / 30) {
         animationFrameRef.current = requestAnimationFrame(draw);
         return;
@@ -272,11 +292,17 @@ const NightSkyBackground = forwardRef((_, ref) => {
       animationFrameRef.current = requestAnimationFrame(draw);
     };
 
-    animationFrameRef.current = requestAnimationFrame(draw);
+    drawFrameRef.current = draw;
+
+    if (isVisibleRef.current) {
+      animationFrameRef.current = requestAnimationFrame(draw);
+    }
 
     return () => {
       window.removeEventListener("resize", resize);
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+      drawFrameRef.current = null;
     };
   }, [perlinNoise]);
   
