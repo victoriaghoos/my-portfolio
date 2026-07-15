@@ -38,13 +38,20 @@ npm start
 
 ## 🌌 Main Features
 
-- **Animated Landing Page:** React video with typewriter intro, timed/skip-able transition, and smooth handoff into the main SPA.
+- **Animated Landing Page:** React video with typewriter intro and a timed or skip-able transition, leading into the main 3D cosmos experience.
+- **Interactive 3D Cosmos Navigation:** Once past the intro, a custom React Three Fiber scene featuring a rotating hologram-avatar hub, orbiting interactive panels with video-texture previews, and constellation reveals on hover with inertial drag rotation, click-triggered shockwave physics, and a procedurally generated night sky (Perlin-noise nebula, parallax star layers, galactic band, and bloom) built entirely with the Canvas API.
 - **About Section:** Framer Motion–animated bio with hologram-style avatar and content for education, goals, and interests.
 - **Skills Section:** Sakura‑themed skills galaxy built with React, Framer Motion, and SCSS, grouping languages, frameworks, backend, frontend, mobile/desktop, DevOps, and tooling. 
 - **Projects Section:** Lofi music-player–inspired cards using React, Framer Motion, and Lucide icons, with tech‑stack tags, internship/classified highlights, and an animated audio visualizer.
 - **Resume Section:** Interactive React flipbook, letting visitors “page through” experience and education.
 - **Socials Section:** 3D cloud-and-stars scene rendered with React Three Fiber and Drei, with animated sky and direct links to LinkedIn, GitHub, and email.
 - **Internationalization:** i18next-powered multi-language UI (English, Dutch, French, Japanese).
+
+## ⚡ Performance & Accessibility
+- Visibility-gated animation loops (IntersectionObserver + rAF) so canvas/WebGL rendering pauses when scrolled out of view
+- Respects `prefers-reduced-motion` throughout
+- Code-split, lazy-loaded sections; profiled and optimized for Core Web Vitals (LCP)
+- Keyboard-navigable controls with ARIA labeling
 
 ## 🏆 Sample Projects
 
@@ -54,12 +61,11 @@ npm start
 
 ## 🧑‍💻 Skills Overview
 
-- **Languages:** C#, Python, JavaScript, TypeScript, Dart, SQL
-- **Backend:** .NET, ASP.NET MVC, REST APIs, SignalR, OpenSearch
-- **Frontend:** React, Three.js, HTML, CSS, Tailwind CSS, Blazor
-- **Mobile/Desktop:** .NET MAUI, Flutter, WPF
-- **DevOps:** Docker, Linux, Virtual Machines
-- **Tooling:** Git, GitHub, GitLab, Postman
+- **Programming Languages:** C#, Python, JavaScript, TypeScript, SQL, PHP
+- **Backend Development:** .NET, ASP.NET MVC, Laravel, REST APIs, SignalR, OpenSearch, Node.js, EF Core, JWT
+- **Frontend & UI Development:** React, Three.js, HTML, CSS, Tailwind CSS, Vue.js, SCSS, Blazor, .NET MAUI, WPF
+- **DevOps & Infrastructure:** Docker, Kubernetes, Linux, Virtual Machines, CI/CD, Terraform, Azure
+- **Tooling & Version Control:** Git, GitHub, GitLab, Postman, Swagger
 
 ## 📬 Contact & Socials
 
