@@ -244,10 +244,6 @@ $mobile-breakpoint: 600px;
 @media (prefers-reduced-motion: reduce) {
   .landing-page {
     .particles,
-    .background-video {
-      display: none;
-    }
-
     *,
     *::before,
     *::after {

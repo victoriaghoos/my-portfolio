@@ -21,6 +21,7 @@ const TYPEWRITER_WORDS = ["Hi", "My name is Victoria", "Welcome to my world"];
 const LandingPage = () => {
   const [transitionActive, setTransitionActive] = useState(false);
   const [showSkipButton, setShowSkipButton] = useState(false);
+  const [reducedMotion] = useState(prefersReducedMotion);
   const navigate = useNavigate();
   const skipButtonTimerRef = useRef(null);
   const autoExitTimerRef = useRef(null);
@@ -118,16 +119,25 @@ const LandingPage = () => {
 
   return (
     <div className={`landing-page ${transitionActive ? "page-exit" : ""}`}>
-      <video
-        poster={posterSrc}
-        autoPlay loop muted playsInline
-        className="background-video"
-        aria-hidden="true"
-        onError={handleVideoError}
-      >
-        <source src={videoWebm} type="video/webm" />
-        <source src={videoMp4} type="video/mp4" />
-      </video>
+      {reducedMotion ? (
+        <img
+          src={posterSrc}
+          alt=""
+          aria-hidden="true"
+          className="background-video"
+        />
+      ) : (
+        <video
+          poster={posterSrc}
+          autoPlay loop muted playsInline
+          className="background-video"
+          aria-hidden="true"
+          onError={handleVideoError}
+        >
+          <source src={videoWebm} type="video/webm" />
+          <source src={videoMp4} type="video/mp4" />
+        </video>
+      )}
 
       <div className="gradient-overlay" />
 
