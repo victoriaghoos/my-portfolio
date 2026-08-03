@@ -8,19 +8,14 @@ $mobile-breakpoint: 600px;
   left: 0;
   width: 100%;
   height: 100vh;
-  height: 100dvh; 
-  
+  height: 100dvh;
+
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #000;
   z-index: 1000;
-
-  @keyframes entranceFade {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
 
   .background-video {
     position: absolute;
@@ -48,7 +43,7 @@ $mobile-breakpoint: 600px;
         rgba(0, 0, 0, 0.3) 100%);
     z-index: 2;
     opacity: 0;
-    animation: entranceFade 1s ease-out 0.5s forwards;
+    animation: lp-entranceFade 1s ease-out 0.5s forwards;
   }
 
   .message-container {
@@ -60,16 +55,16 @@ $mobile-breakpoint: 600px;
     font-size: clamp(1.5rem, 2.5vw, 2.2rem);
     padding: 0 20px;
     box-sizing: border-box;
-    width: 100%; 
+    width: 100%;
     color: white;
     letter-spacing: 2px;
     opacity: 0;
-    animation: entranceFade 1.5s ease-out 0.2s forwards;
+    animation: lp-entranceFade 1.5s ease-out 0.2s forwards;
     transition: all 0.5s ease;
 
     @media (max-width: $mobile-breakpoint) {
-      padding: 0 15px; 
-      font-size: clamp(1.5rem, 6vw, 2.2rem); 
+      padding: 0 15px;
+      font-size: clamp(1.5rem, 6vw, 2.2rem);
     }
 
     .typewriter-text {
@@ -91,8 +86,8 @@ $mobile-breakpoint: 600px;
     height: 100%;
     z-index: 2;
     opacity: 0;
-    pointer-events: none; 
-    animation: entranceFade 4s ease-out 1s forwards;
+    pointer-events: none;
+    animation: lp-entranceFade 4s ease-out 1s forwards;
   }
 
   .particle {
@@ -103,8 +98,8 @@ $mobile-breakpoint: 600px;
     height: var(--size);
     background: rgba(255, 255, 255, 0.8);
     border-radius: 50%;
-    animation: float 3s ease-in-out var(--delay) infinite;
-    will-change: transform; 
+    animation: lp-float 3s ease-in-out var(--delay) infinite;
+    will-change: transform;
 
     &::after {
       content: "";
@@ -128,15 +123,15 @@ $mobile-breakpoint: 600px;
     }
 
     .message-container {
-      animation: messageExit 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation: lp-messageExit 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
     .particle {
-      animation: particleExit 1s ease-out forwards;
+      animation: lp-particleExit 1s ease-out forwards;
     }
 
     .skip-intro-button {
-      animation: buttonExit 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation: lp-buttonExit 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
   }
 
@@ -148,27 +143,27 @@ $mobile-breakpoint: 600px;
     height: 100%;
     background: linear-gradient(45deg, #0a0a2a 0%, #1a1a4a 50%, #0a0a2a 100%);
     z-index: 1001;
-    animation: overlayReveal 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: lp-overlayReveal 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
   .skip-intro-button {
     position: fixed;
     top: max(25px, env(safe-area-inset-top) + 15px);
     right: max(25px, env(safe-area-inset-right) + 15px);
-    bottom: auto; 
-    left: auto;   
+    bottom: auto;
+    left: auto;
     background: rgba(10, 10, 42, 0.4);
     border: 1px solid rgba(168, 192, 255, 0.3);
     color: rgba(224, 224, 255, 0.8);
     font-size: clamp(12px, 2.5vw, 16px);
     padding: 0.8em 1.6em;
-    border-radius: 50px; 
+    border-radius: 50px;
     font-family: "Poppins", sans-serif;
     font-weight: 400;
-    letter-spacing: 0.5px; 
+    letter-spacing: 0.5px;
     cursor: pointer;
     z-index: 1000;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);   
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
     transform: translateY(-10px) scale(0.95);
     pointer-events: none;
@@ -198,7 +193,7 @@ $mobile-breakpoint: 600px;
 
     &.is-visible {
       pointer-events: auto;
-      animation: buttonEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation: lp-buttonEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
     &.is-hidden {
@@ -208,32 +203,37 @@ $mobile-breakpoint: 600px;
     }
   }
 
-  @keyframes float {
+  @keyframes lp-entranceFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes lp-float {
     0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
     50% { transform: translateY(-20px) scale(1.1); opacity: 1; }
   }
 
-  @keyframes messageExit {
+  @keyframes lp-messageExit {
     0% { transform: translateY(0) scale(1); opacity: 1; }
     100% { transform: translateY(-60px) scale(1.1); opacity: 0; }
   }
 
-  @keyframes particleExit {
+  @keyframes lp-particleExit {
     0% { transform: translateY(0) scale(1); opacity: 0.7; }
     100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
   }
 
-  @keyframes overlayReveal {
+  @keyframes lp-overlayReveal {
     0% { opacity: 0; clip-path: circle(0% at 50% 50%); }
     100% { opacity: 1; clip-path: circle(100% at 50% 50%); }
   }
 
-  @keyframes buttonEntrance {
+  @keyframes lp-buttonEntrance {
     0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  @keyframes buttonExit {
+  @keyframes lp-buttonExit {
     0% { opacity: 1; transform: translateY(0) scale(1); }
     100% { opacity: 0; transform: translateY(-20px) scale(0.9); }
   }
@@ -264,10 +264,10 @@ $mobile-breakpoint: 600px;
   height: 100vh;
   background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 100%);
   z-index: 999;
-  animation: pageFade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: lp-pageFade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@keyframes pageFade {
+@keyframes lp-pageFade {
   0% { opacity: 1; }
   100% { opacity: 0; visibility: hidden; }
 }

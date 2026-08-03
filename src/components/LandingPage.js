@@ -9,7 +9,7 @@ import "../styles/landingPage.scss";
 const SKIP_BUTTON_DELAY_MS = 1500;
 // Safety net only. The typewriter's onLoopDone is the primary exit trigger.
 const AUTO_EXIT_FALLBACK_MS = 12000;
-// Keep this in sync with `overlayReveal` duration in landingPage.scss.
+// Keep this in sync with `lp-overlayReveal` duration in landingPage.scss.
 const TRANSITION_DURATION_MS = 1500;
 const TRANSITION_FAILSAFE_MS = TRANSITION_DURATION_MS + 500;
 const REDUCED_MOTION_FAILSAFE_MS = 300;
