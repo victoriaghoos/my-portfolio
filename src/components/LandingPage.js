@@ -24,9 +24,11 @@ const LandingPage = () => {
   const [transitionActive, setTransitionActive] = useState(false);
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [reducedMotion] = useState(prefersReducedMotion);
+  const [cursorIdle, setCursorIdle] = useState(false);
   const navigate = useNavigate();
   const skipButtonTimerRef = useRef(null);
   const autoExitTimerRef = useRef(null);
+  const idleTimerRef = useRef(null);
   const hasNavigatedRef = useRef(false);
   // Keep a synchronous guard separate from render state so the exit callback can stay stable and avoid rescheduling the effect while still reflecting whether the transition has already begun.
   const transitionActiveRef = useRef(false);
@@ -44,6 +46,7 @@ const LandingPage = () => {
   const clearTimers = useCallback(() => {
     clearTimeout(skipButtonTimerRef.current);
     clearTimeout(autoExitTimerRef.current);
+    clearTimeout(idleTimerRef.current);
   }, []);
 
   const handleVideoError = useCallback(() => {
@@ -58,6 +61,12 @@ const LandingPage = () => {
     transitionActiveRef.current = true;
     clearTimeout(autoExitTimerRef.current);
     setTransitionActive(true);
+  }, []);
+
+  const handleType = useCallback(() => {
+    setCursorIdle(false);
+    clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => setCursorIdle(true), 400);
   }, []);
 
   const handleTransitionComplete = useCallback((event) => {
@@ -167,22 +176,30 @@ const LandingPage = () => {
 
       <div className="message-container">
         <h1 aria-label={HEADING_LABEL}>
-          <span className="typewriter-text" aria-hidden="true">
-            {reducedMotion ? (
-              "Welcome to my world"
-            ) : (
-              <Typewriter
-                words={TYPEWRITER_WORDS}
-                loop={1}
-                typeSpeed={80}
-                deleteSpeed={30}
-                delaySpeed={1500}
-                cursor
-                cursorStyle="|"
-                onLoopDone={startExitAndNavigate}
-              />
-            )}
-          </span>
+          {reducedMotion ? (
+            <span className="typewriter-text" aria-hidden="true">
+              Welcome to my world
+            </span>
+          ) : (
+            <>
+              <span className="typewriter-text" aria-hidden="true">
+                <Typewriter
+                  words={TYPEWRITER_WORDS}
+                  loop={1}
+                  typeSpeed={80}
+                  deleteSpeed={30}
+                  delaySpeed={1500}
+                  cursor={false}
+                  onType={handleType}
+                  onDelete={handleType}
+                  onLoopDone={startExitAndNavigate}
+                />
+              </span>
+              <span className={`typewriter-cursor ${cursorIdle ? "is-blinking" : ""}`} aria-hidden="true">
+                |
+              </span>
+            </>
+          )}
         </h1>
       </div>
 

@@ -76,6 +76,16 @@ $mobile-breakpoint: 600px;
       display: inline-block;
       line-height: 1.2;
     }
+
+    .typewriter-cursor {
+      -webkit-text-fill-color: #a8c0ff;
+      color: #a8c0ff;
+      display: inline-block;
+
+      &.is-blinking {
+        animation: lp-blink 1.0s infinite;
+      }
+    }
   }
 
   .particles {
@@ -196,7 +206,7 @@ $mobile-breakpoint: 600px;
   .landing-page {
     .particles { display: none; }
 
-    &.page-exit .background-video {
+    &.page-exit .background-media {
       transform: none;
       filter: none;
     }
@@ -242,4 +252,9 @@ $mobile-breakpoint: 600px;
 @keyframes lp-buttonExit {
   0% { opacity: 1; transform: translateY(0) scale(1); }
   100% { opacity: 0; transform: translateY(-20px) scale(0.9); }
+}
+
+@keyframes lp-blink {
+  0%, 49.9% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
