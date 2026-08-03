@@ -70,6 +70,12 @@ const LandingPage = () => {
     navigate("/home", { replace: true, state: { transitioning: true } });
   }, [navigate]);
 
+  const completeRef = useRef(handleTransitionComplete);
+
+  useEffect(() => {
+    completeRef.current = handleTransitionComplete;
+  }, [handleTransitionComplete]);
+
   useEffect(() => {
     if (!transitionActive) {
       return undefined;
@@ -79,12 +85,12 @@ const LandingPage = () => {
       ? REDUCED_MOTION_FAILSAFE_MS
       : TRANSITION_FAILSAFE_MS;
 
-    const failsafeTimer = setTimeout(handleTransitionComplete, delay);
+    const failsafeTimer = setTimeout(() => completeRef.current(), delay);
 
     return () => {
       clearTimeout(failsafeTimer);
     };
-  }, [transitionActive, handleTransitionComplete]);
+  }, [transitionActive]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
