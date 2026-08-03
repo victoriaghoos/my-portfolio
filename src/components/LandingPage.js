@@ -120,15 +120,13 @@ const LandingPage = () => {
         ))}
       </div>
 
-      {!transitionActive && (
-        <button 
-          className={`skip-intro-button ${showSkipButton ? "is-visible" : "is-hidden"}`}
-          onClick={startExitAndNavigate}
-          aria-label="Skip Intro" 
-        >
-          Skip Intro
-        </button>
-      )}
+      <button
+        className={`skip-intro-button ${showSkipButton ? "is-visible" : "is-hidden"}`}
+        onClick={startExitAndNavigate}
+        disabled={transitionActive}
+      >
+        Skip Intro
+      </button>
 
       <div className="message-container">
         <h1>
