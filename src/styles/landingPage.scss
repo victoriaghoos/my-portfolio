@@ -130,7 +130,7 @@ $mobile-breakpoint: 600px;
       animation: lp-particleExit 1s ease-out forwards;
     }
 
-    .skip-intro-button {
+    .skip-intro-button.is-visible {
       animation: lp-buttonExit 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
   }
