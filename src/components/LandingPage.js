@@ -87,6 +87,17 @@ const LandingPage = () => {
   }, [transitionActive, handleTransitionComplete]);
 
   useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
+        startExitAndNavigate();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [startExitAndNavigate]);
+
+  useEffect(() => {
     skipButtonTimerRef.current = setTimeout(
       () => setShowSkipButton(true),
       SKIP_BUTTON_DELAY_MS,
