@@ -145,8 +145,8 @@ const LandingPage = () => {
       </button>
 
       <div className="message-container">
-        <h1>
-          <span className="typewriter-text">
+        <h1 aria-label="Hi, my name is Victoria. Welcome to my world.">
+          <span className="typewriter-text" aria-hidden="true">
             <Typewriter
               words={TYPEWRITER_WORDS}
               loop={1}
