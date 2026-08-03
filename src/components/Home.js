@@ -57,12 +57,30 @@ const LoadWatcher = ({ onReady }) => {
   const { active, progress } = useProgress();
   const firedRef = useRef(false);
 
-  useEffect(() => {
-    if (!active && progress === 100 && !firedRef.current) {
-      firedRef.current = true;
-      requestAnimationFrame(() => requestAnimationFrame(onReady));
+  const triggerReady = useCallback(() => {
+    if (firedRef.current) {
+      return;
     }
-  }, [active, progress, onReady]);
+
+    firedRef.current = true;
+    requestAnimationFrame(() => requestAnimationFrame(onReady));
+  }, [onReady]);
+
+  useEffect(() => {
+    if (!active && progress === 100) {
+      triggerReady();
+    }
+  }, [active, progress, triggerReady]);
+
+  useEffect(() => {
+    const failsafe = setTimeout(() => {
+      triggerReady();
+    }, 4000);
+
+    return () => {
+      clearTimeout(failsafe);
+    };
+  }, [triggerReady]);
 
   return null;
 };
