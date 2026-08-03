@@ -32,6 +32,12 @@ html, body {
     position: relative;
     width: 100%;
     height: 100%;
+    background: radial-gradient(ellipse at 50% 40%, #2a1a4a 0%, #0d0b26 60%, #06050f 100%);
+  }
+
+  .webgl-canvas {
+    position: relative;
+    z-index: 1;
   }
 
   .night-sky-canvas {
