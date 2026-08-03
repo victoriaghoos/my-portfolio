@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo, useCallback, memo, Suspense } from "react"; 
 import { Canvas } from "@react-three/fiber";
 import { useTranslation } from "react-i18next";
-import { Environment, Preload } from "@react-three/drei"; 
+import { Environment, Preload, useProgress } from "@react-three/drei"; 
 import { motion, useInView } from "framer-motion";
 import * as THREE from "three";
 import "../styles/home.scss";
@@ -53,10 +53,26 @@ const DragHint = ({ isVisible }) => {
   );
 };
 
+const LoadWatcher = ({ onReady }) => {
+  const { active, progress } = useProgress();
+  const firedRef = useRef(false);
+
+  useEffect(() => {
+    if (!active && progress === 100 && !firedRef.current) {
+      firedRef.current = true;
+      requestAnimationFrame(() => requestAnimationFrame(onReady));
+    }
+  }, [active, progress, onReady]);
+
+  return null;
+};
+
 const SceneContent = memo(({ 
   eventSource,
   nightSkyRef, 
   show3DNav, 
+  canvasReady,
+  onCanvasReady,
   initialRotationComplete, 
   hasDragged, 
   icons, 
@@ -74,6 +90,26 @@ const SceneContent = memo(({
     <div id="home-3d" className="home-3d-content">
       <NightSkyBackground ref={nightSkyRef} isVisible={isInView} />
 
+      {!canvasReady && (
+        <img
+          src={avatarPng}
+          alt="Victoria"
+          className="hero-fallback-poster"
+          crossOrigin="anonymous"
+          fetchPriority="high"
+          decoding="async"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: 2,
+            pointerEvents: "none",
+          }}
+        />
+      )}
+
       {navEnabled && initialRotationComplete && !hasDragged && (
         <DragHint isVisible={!hasDragged} />
       )}
@@ -88,6 +124,8 @@ const SceneContent = memo(({
         style={{ pointerEvents: navEnabled ? "auto" : "none" }}
       >
         <Suspense fallback={null}>
+          <LoadWatcher onReady={onCanvasReady} />
+
           <group>
             <Environment preset="sunset" />
             
@@ -206,12 +244,15 @@ const Home = () => {
   const { t } = useTranslation();
 
   const nightSkyRef = useRef(null);
+  const [canvasReady, setCanvasReady] = useState(false);
+  const handleCanvasReady = useCallback(() => setCanvasReady(true), []);
 
   useEffect(() => {
     const preloadLink = document.createElement("link");
     preloadLink.rel = "preload";
     preloadLink.as = "image";
     preloadLink.href = avatarPng;
+    preloadLink.crossOrigin = "anonymous";
     preloadLink.setAttribute("fetchpriority", "high");
     document.head.appendChild(preloadLink);
 
@@ -501,6 +542,8 @@ const Home = () => {
             eventSource={homeRef}
             nightSkyRef={nightSkyRef} 
             show3DNav={show3DNav}
+            canvasReady={canvasReady}
+            onCanvasReady={handleCanvasReady}
             initialRotationComplete={initialRotationComplete}
             hasDragged={hasDragged}
             icons={icons}

@@ -7,6 +7,9 @@ import "../styles/landingPage.scss";
 
 const SKIP_BUTTON_DELAY_MS = 1500;
 const AUTO_EXIT_DELAY_MS = 8500;
+// Keep this in sync with `overlayReveal` duration in landingPage.scss.
+const TRANSITION_DURATION_MS = 1500;
+const TRANSITION_FAILSAFE_MS = TRANSITION_DURATION_MS + 500;
 const TYPEWRITER_WORDS = ["Hi", "My name is Victoria", "Welcome to my world"];
 
 const LandingPage = () => {
@@ -48,7 +51,11 @@ const LandingPage = () => {
     setTransitionActive(true);
   }, []);
 
-  const handleTransitionComplete = useCallback(() => {
+  const handleTransitionComplete = useCallback((event) => {
+    if (event && event.target !== event.currentTarget) {
+      return;
+    }
+
     if (hasNavigatedRef.current) {
       return;
     }
@@ -56,6 +63,21 @@ const LandingPage = () => {
     hasNavigatedRef.current = true;
     navigate("/home", { replace: true, state: { transitioning: true } });
   }, [navigate]);
+
+  useEffect(() => {
+    if (!transitionActive) {
+      return undefined;
+    }
+
+    const failsafeTimer = setTimeout(
+      handleTransitionComplete,
+      TRANSITION_FAILSAFE_MS,
+    );
+
+    return () => {
+      clearTimeout(failsafeTimer);
+    };
+  }, [transitionActive, handleTransitionComplete]);
 
   useEffect(() => {
     skipButtonTimerRef.current = setTimeout(
