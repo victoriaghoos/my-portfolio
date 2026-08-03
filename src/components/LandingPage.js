@@ -12,6 +12,10 @@ const AUTO_EXIT_FALLBACK_MS = 12000;
 // Keep this in sync with `overlayReveal` duration in landingPage.scss.
 const TRANSITION_DURATION_MS = 1500;
 const TRANSITION_FAILSAFE_MS = TRANSITION_DURATION_MS + 500;
+const REDUCED_MOTION_FAILSAFE_MS = 300;
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const TYPEWRITER_WORDS = ["Hi", "My name is Victoria", "Welcome to my world"];
 
 const LandingPage = () => {
@@ -71,10 +75,11 @@ const LandingPage = () => {
       return undefined;
     }
 
-    const failsafeTimer = setTimeout(
-      handleTransitionComplete,
-      TRANSITION_FAILSAFE_MS,
-    );
+    const delay = prefersReducedMotion()
+      ? REDUCED_MOTION_FAILSAFE_MS
+      : TRANSITION_FAILSAFE_MS;
+
+    const failsafeTimer = setTimeout(handleTransitionComplete, delay);
 
     return () => {
       clearTimeout(failsafeTimer);

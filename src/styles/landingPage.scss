@@ -234,6 +234,23 @@ $mobile-breakpoint: 600px;
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .landing-page {
+    .particles,
+    .background-video {
+      display: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
 .page-transition {
   position: fixed;
   top: 0;
