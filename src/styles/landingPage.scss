@@ -194,7 +194,10 @@ $mobile-breakpoint: 600px;
 
 @media (prefers-reduced-motion: reduce) {
   .landing-page {
-    .particles,
+    .particles {
+      display: none;
+    }
+
     *,
     *::before,
     *::after {
