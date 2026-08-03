@@ -152,8 +152,6 @@ $mobile-breakpoint: 600px;
     right: max(25px, env(safe-area-inset-right) + 15px);
     bottom: auto;
     left: auto;
-    background: rgba(10, 10, 42, 0.4);
-    border: 1px solid rgba(168, 192, 255, 0.3);
     color: rgba(224, 224, 255, 0.8);
     font-size: clamp(12px, 2.5vw, 16px);
     padding: 0.8em 1.6em;
