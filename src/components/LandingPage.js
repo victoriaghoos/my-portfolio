@@ -6,7 +6,8 @@ import posterSrc from "../assets/images/intro.png";
 import "../styles/landingPage.scss";
 
 const SKIP_BUTTON_DELAY_MS = 1500;
-const AUTO_EXIT_DELAY_MS = 8500;
+// Safety net only. The typewriter's onLoopDone is the primary exit trigger.
+const AUTO_EXIT_FALLBACK_MS = 12000;
 // Keep this in sync with `overlayReveal` duration in landingPage.scss.
 const TRANSITION_DURATION_MS = 1500;
 const TRANSITION_FAILSAFE_MS = TRANSITION_DURATION_MS + 500;
@@ -85,7 +86,7 @@ const LandingPage = () => {
       SKIP_BUTTON_DELAY_MS,
     );
 
-    autoExitTimerRef.current = setTimeout(startExitAndNavigate, AUTO_EXIT_DELAY_MS);
+    autoExitTimerRef.current = setTimeout(startExitAndNavigate, AUTO_EXIT_FALLBACK_MS);
 
     return () => {
       clearTimers();
@@ -138,6 +139,7 @@ const LandingPage = () => {
               delaySpeed={1500}
               cursor
               cursorStyle="|"
+              onLoopDone={startExitAndNavigate}
             />
           </span>
         </h1>
