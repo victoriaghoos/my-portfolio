@@ -18,6 +18,7 @@ const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const TYPEWRITER_WORDS = ["Hi", "My name is Victoria", "Welcome to my world"];
+const HEADING_LABEL = `${TYPEWRITER_WORDS.join(". ")}.`;
 
 const LandingPage = () => {
   const [transitionActive, setTransitionActive] = useState(false);
@@ -128,13 +129,13 @@ const LandingPage = () => {
           src={posterSrc}
           alt=""
           aria-hidden="true"
-          className="background-video"
+          className="background-media"
         />
       ) : (
         <video
           poster={posterSrc}
           autoPlay loop muted playsInline
-          className="background-video"
+          className="background-media"
           aria-hidden="true"
           onError={handleVideoError}
         >
@@ -165,7 +166,7 @@ const LandingPage = () => {
       </button>
 
       <div className="message-container">
-        <h1 aria-label="Hi, my name is Victoria. Welcome to my world.">
+        <h1 aria-label={HEADING_LABEL}>
           <span className="typewriter-text" aria-hidden="true">
             {reducedMotion ? (
               "Welcome to my world"

@@ -24,7 +24,7 @@ $mobile-breakpoint: 600px;
   background: #000;
   z-index: 1000;
 
-  .background-video {
+  .background-media {
     position: absolute;
     @include lp-fill;
     object-fit: cover;
@@ -113,7 +113,7 @@ $mobile-breakpoint: 600px;
   }
 
   &.page-exit {
-    .background-video {
+    .background-media {
       transform: scale(1.1);
       filter: brightness(0.7) blur(3px);
       opacity: 0.8;
@@ -144,8 +144,6 @@ $mobile-breakpoint: 600px;
     position: fixed;
     top: max(25px, env(safe-area-inset-top) + 15px);
     right: max(25px, env(safe-area-inset-right) + 15px);
-    bottom: auto;
-    left: auto;
     color: rgba(224, 224, 255, 0.8);
     font-size: clamp(12px, 2.5vw, 16px);
     padding: 0.8em 1.6em;
@@ -192,18 +190,18 @@ $mobile-breakpoint: 600px;
       animation: lp-buttonEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {
   .landing-page {
-    .particles {
-      display: none;
+    .particles { display: none; }
+
+    &.page-exit .background-video {
+      transform: none;
+      filter: none;
     }
 
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -244,9 +242,4 @@ $mobile-breakpoint: 600px;
 @keyframes lp-buttonExit {
   0% { opacity: 1; transform: translateY(0) scale(1); }
   100% { opacity: 0; transform: translateY(-20px) scale(0.9); }
-}
-
-@keyframes lp-pageFade {
-  0% { opacity: 1; }
-  100% { opacity: 0; visibility: hidden; }
 }
