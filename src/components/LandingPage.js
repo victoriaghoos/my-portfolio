@@ -68,7 +68,7 @@ const LandingPage = () => {
     }
 
     hasNavigatedRef.current = true;
-    navigate("/home", { replace: true, state: { transitioning: true } });
+    navigate("/home", { replace: true });
   }, [navigate]);
 
   const completeRef = useRef(handleTransitionComplete);
