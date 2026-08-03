@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
-import videoSrc from "../assets/videos/intro.webm"; 
+import videoWebm from "../assets/videos/intro.webm";
+import videoMp4 from "../assets/videos/intro.mp4";
 import posterSrc from "../assets/images/intro.png"; 
 import "../styles/landingPage.scss";
 
@@ -102,7 +103,8 @@ const LandingPage = () => {
         aria-hidden="true"
         onError={handleVideoError}
       >
-        <source src={videoSrc} type="video/webm" />
+        <source src={videoWebm} type="video/webm" />
+        <source src={videoMp4} type="video/mp4" />
       </video>
 
       <div className="gradient-overlay" />
