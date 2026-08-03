@@ -433,7 +433,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (!show3DNav) return; 
+    if (!show3DNav || initialRotationComplete) return;
 
     let rotationInterval;
     const startDelay = setTimeout(() => {
