@@ -182,11 +182,12 @@ $mobile-breakpoint: 600px;
         linear-gradient(45deg, #a8c0ff, #e0e0ff, #a8c0ff) border-box;
       color: #ffffff;
       box-shadow: 0 8px 25px rgba(168, 192, 255, 0.15), 0 0 0 1px rgba(168, 192, 255, 0.2);
-    }
-
-    &:focus-visible {
       outline: 2px solid #a8c0ff;
       outline-offset: 3px;
+    }
+
+    &:disabled {
+      cursor: default;
     }
 
     &.is-visible {

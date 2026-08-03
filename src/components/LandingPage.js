@@ -143,7 +143,7 @@ const LandingPage = () => {
       </div>
 
       <button
-        className={`skip-intro-button ${showSkipButton ? "is-visible" : "is-hidden"}`}
+        className={`skip-intro-button ${showSkipButton ? "is-visible" : ""}`}
         onClick={startExitAndNavigate}
         disabled={transitionActive}
       >
