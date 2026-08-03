@@ -197,12 +197,6 @@ $mobile-breakpoint: 600px;
       pointer-events: auto;
       animation: lp-buttonEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
-
-    &.is-hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-10px) scale(0.95);
-    }
   }
 
   @keyframes lp-entranceFade {
