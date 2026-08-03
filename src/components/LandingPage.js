@@ -9,6 +9,7 @@ import "../styles/landingPage.scss";
 const SKIP_BUTTON_DELAY_MS = 1500;
 // Safety net only. The typewriter's onLoopDone is the primary exit trigger.
 const AUTO_EXIT_FALLBACK_MS = 12000;
+const REDUCED_MOTION_EXIT_MS = 2500;
 // Keep this in sync with `lp-overlayReveal` duration in landingPage.scss.
 const TRANSITION_DURATION_MS = 1500;
 const TRANSITION_FAILSAFE_MS = TRANSITION_DURATION_MS + 500;
@@ -82,7 +83,7 @@ const LandingPage = () => {
       return undefined;
     }
 
-    const delay = prefersReducedMotion()
+    const delay = reducedMotion
       ? REDUCED_MOTION_FAILSAFE_MS
       : TRANSITION_FAILSAFE_MS;
 
@@ -91,7 +92,7 @@ const LandingPage = () => {
     return () => {
       clearTimeout(failsafeTimer);
     };
-  }, [transitionActive]);
+  }, [transitionActive, reducedMotion]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -110,12 +111,15 @@ const LandingPage = () => {
       SKIP_BUTTON_DELAY_MS,
     );
 
-    autoExitTimerRef.current = setTimeout(startExitAndNavigate, AUTO_EXIT_FALLBACK_MS);
+    autoExitTimerRef.current = setTimeout(
+      startExitAndNavigate,
+      reducedMotion ? REDUCED_MOTION_EXIT_MS : AUTO_EXIT_FALLBACK_MS,
+    );
 
     return () => {
       clearTimers();
     };
-  }, [clearTimers, startExitAndNavigate]);
+  }, [clearTimers, reducedMotion, startExitAndNavigate]);
 
   return (
     <div className={`landing-page ${transitionActive ? "page-exit" : ""}`}>
@@ -163,16 +167,20 @@ const LandingPage = () => {
       <div className="message-container">
         <h1 aria-label="Hi, my name is Victoria. Welcome to my world.">
           <span className="typewriter-text" aria-hidden="true">
-            <Typewriter
-              words={TYPEWRITER_WORDS}
-              loop={1}
-              typeSpeed={80}
-              deleteSpeed={30}
-              delaySpeed={1500}
-              cursor
-              cursorStyle="|"
-              onLoopDone={startExitAndNavigate}
-            />
+            {reducedMotion ? (
+              "Welcome to my world"
+            ) : (
+              <Typewriter
+                words={TYPEWRITER_WORDS}
+                loop={1}
+                typeSpeed={80}
+                deleteSpeed={30}
+                delaySpeed={1500}
+                cursor
+                cursorStyle="|"
+                onLoopDone={startExitAndNavigate}
+              />
+            )}
           </span>
         </h1>
       </div>

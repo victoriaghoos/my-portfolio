@@ -1,7 +1,6 @@
 $mobile-breakpoint: 600px;
 
-@mixin lp-absolute-fill {
-  position: absolute;
+@mixin lp-fill {
   top: 0;
   left: 0;
   width: 100%;
@@ -26,7 +25,8 @@ $mobile-breakpoint: 600px;
   z-index: 1000;
 
   .background-video {
-    @include lp-absolute-fill;
+    position: absolute;
+    @include lp-fill;
     object-fit: cover;
     z-index: 1;
     transition:
@@ -36,7 +36,8 @@ $mobile-breakpoint: 600px;
   }
 
   .gradient-overlay {
-    @include lp-absolute-fill;
+    position: absolute;
+    @include lp-fill;
     background: linear-gradient(135deg,
         rgba(0, 0, 0, 0.3) 0%,
         rgba(74, 0, 128, 0.1) 50%,
@@ -78,7 +79,8 @@ $mobile-breakpoint: 600px;
   }
 
   .particles {
-    @include lp-absolute-fill;
+    position: absolute;
+    @include lp-fill;
     z-index: 2;
     opacity: 0;
     pointer-events: none;
@@ -131,7 +133,8 @@ $mobile-breakpoint: 600px;
   }
 
   .transition-overlay {
-    @include lp-absolute-fill;
+    position: absolute;
+    @include lp-fill;
     background: linear-gradient(45deg, #0a0a2a 0%, #1a1a4a 50%, #0a0a2a 100%);
     z-index: 1001;
     animation: lp-overlayReveal 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -206,14 +209,6 @@ $mobile-breakpoint: 600px;
       transition-duration: 0.01ms !important;
     }
   }
-}
-
-.page-transition {
-  @include lp-absolute-fill;
-  position: fixed;
-  background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 100%);
-  z-index: 999;
-  animation: lp-pageFade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes lp-entranceFade {
