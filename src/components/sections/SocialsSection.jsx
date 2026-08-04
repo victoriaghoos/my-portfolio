@@ -161,6 +161,7 @@ const SocialCard = ({ icon: Icon, title, handle, link, delay, strokeWidth = 1.5 
 
 const SocialsSection = ({ id }) => {
   const [isVisible, setIsVisible] = useState(true);
+  const [hasBeenVisible, setHasBeenVisible] = useState(false);
   const containerRef = useRef(null);
 
   const handleFlyToCosmos = () => {
@@ -177,6 +178,9 @@ const SocialsSection = ({ id }) => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setHasBeenVisible(true);
+        }
       },
       { threshold: 0.1 }
     );
@@ -191,15 +195,17 @@ const SocialsSection = ({ id }) => {
       <div className="transition-gradient-top"></div>
       <div className="canvas-container" ref={containerRef}>
         <SocialsStarsCanvas />
-        <Canvas
-          frameloop={isVisible ? "always" : "never"}
-          camera={{ position: [0, 0, 14], fov: 45 }}
-          resize={{ scroll: false }}
-          dpr={[1, 2]}
-          performance={{ min: 0.5, max: 1 }}
-        >
-          <SilkSkyScene />
-        </Canvas>
+        {hasBeenVisible && (
+          <Canvas
+            frameloop={isVisible ? "always" : "never"}
+            camera={{ position: [0, 0, 14], fov: 45 }}
+            resize={{ scroll: false }}
+            dpr={[1, 2]}
+            performance={{ min: 0.5, max: 1 }}
+          >
+            <SilkSkyScene />
+          </Canvas>
+        )}
       </div>
       
       <div className="content-overlay">
