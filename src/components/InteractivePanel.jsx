@@ -98,7 +98,6 @@ const usePanelVideoTexture = (videoSrc) => {
     video.loop = true;
     video.muted = true;
     video.playsInline = true;
-    video.crossOrigin = "anonymous";
     video.preload = "none";
     videoRef.current = video;
 
