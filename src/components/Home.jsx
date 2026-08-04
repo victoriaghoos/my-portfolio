@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback, memo, Suspense } from "react"; 
+import { suspend } from 'suspend-react';
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useTranslation } from "react-i18next";
 import { Environment, Preload } from "@react-three/drei"; 
@@ -30,6 +31,8 @@ import cameraPoints from "../cameraPoints.json";
 import bookPoints from "../bookPoints.json";
 import flowerPoints from "../flowerPoints.json";
 import headsetPoints from "../headsetPoints.json";
+
+const sunsetHdri = import('@pmndrs/assets/hdri/sunset.exr');
 
 const DragHint = ({ isVisible }) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
@@ -183,7 +186,7 @@ const SceneContent = memo(({
       >
         <Suspense fallback={null}>
           <group>
-            <Environment files="/hdri/venice_sunset_1k.hdr" />
+            <Environment files={suspend(sunsetHdri).default} />
 
             <RotatingPanels
               navEnabled={navEnabled}
