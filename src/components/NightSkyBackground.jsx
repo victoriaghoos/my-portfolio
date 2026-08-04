@@ -167,7 +167,7 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
     let bloomCtx = null;
 
     const resize = () => {
-      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = Math.floor(window.innerWidth * dpr);
       canvas.height = Math.floor(window.innerHeight * dpr);
       canvas.style.width = `${window.innerWidth}px`;
@@ -489,16 +489,14 @@ const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
       // Cheap bloom
       if (bloomCanvas && bloomCtx) {
       bloomCtx.clearRect(0, 0, bloomCanvas.width, bloomCanvas.height);
-      bloomCtx.filter = "brightness(0.4) contrast(2.2)";
+      bloomCtx.filter = "brightness(0.4) contrast(2.2) blur(3px)";
       bloomCtx.drawImage(canvas, 0, 0, bloomCanvas.width, bloomCanvas.height);
       bloomCtx.filter = "none";
 
       ctx.save();
       ctx.globalCompositeOperation = "lighter";
       ctx.globalAlpha = 0.28;
-      ctx.filter = "blur(8px)";
-      ctx.drawImage(bloomCanvas, 0, 0, W, H);
-      ctx.filter = "none";
+      ctx.drawImage(bloomCanvas, 0, 0, W, H);  
       ctx.restore();
     }
 
