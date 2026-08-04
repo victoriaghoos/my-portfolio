@@ -115,12 +115,12 @@ const useStarfieldCanvas = (canvasRef, rootRef) => {
   useCanvasAnimationLoop(canvasRef, { rootRef, onDraw });
 };
 
-const OrbBackground = React.memo(function OrbBackground({ isVisible }) {
+const OrbBackground = React.memo(function OrbBackground({ rootRef }) {
   const canvasRef = useRef(null);
   const starFieldRef = useRef(null);
 
-  useOrbCanvas(canvasRef, isVisible);
-  useStarfieldCanvas(starFieldRef, isVisible);
+  useOrbCanvas(canvasRef, rootRef);
+  useStarfieldCanvas(starFieldRef, rootRef);
 
   return (
     <div className="cosmic-background">
@@ -152,7 +152,7 @@ const AboutSection = ({ id }) => {
 
   return (
     <section id={id} ref={sectionRef} className="about-section">
-      <OrbBackground isVisible={isVisible} />
+      <OrbBackground rootRef={sectionRef} />
 
       <div className="about-content">
         <motion.div 
