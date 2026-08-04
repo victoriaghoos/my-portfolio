@@ -1,10 +1,10 @@
 
 import React from 'react';
-import AboutSection from './AboutSection.js';
-import ProjectsSection from './ProjectsSection.js';
-import SkillsSection from './SkillsSection.js';
-import ResumeSection from './ResumeSection.js';
-import SocialsSection from './SocialsSection.js';
+import AboutSection from './AboutSection';
+import ProjectsSection from './ProjectsSection';
+import SkillsSection from './SkillsSection';
+import ResumeSection from './ResumeSection';
+import SocialsSection from './SocialsSection';
 
 const SectionsContainer = () => {
   return (

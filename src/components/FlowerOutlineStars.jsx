@@ -1,6 +1,6 @@
 import React from "react";
 import flowerPoints from "../flowerPoints.json"; 
-import OutlineStars from "./OutlineStars.js";
+import OutlineStars from "./OutlineStars";
 
 const FlowerOutlineStars = ({ active, position = [0, 0, 0] }) => (
   <OutlineStars

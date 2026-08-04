@@ -2,7 +2,7 @@ import React, { forwardRef, useRef, useMemo, useState, useEffect, useCallback } 
 import HTMLFlipBook from "react-pageflip";
 import { useTranslation, Trans } from "react-i18next";
 import { useReducedMotion } from "framer-motion";
-import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop.js';
+import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import {
   Code,
   GraduationCap,

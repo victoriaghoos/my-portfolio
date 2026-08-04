@@ -1,6 +1,6 @@
 import React from "react";
 import bookPoints from "../bookPoints.json";
-import OutlineStars from "./OutlineStars.js";
+import OutlineStars from "./OutlineStars";
 
 const BookOutlineStars = ({ active, position = [0, 0, 0] }) => (
   <OutlineStars

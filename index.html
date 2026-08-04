@@ -4,29 +4,25 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <title>Victoria Ghoos | Software Engineering Student</title>
+    <title>Victoria Ghoos</title>
     <meta 
       name="description" 
       content="Portfolio of Victoria Ghoos. Software Engineering student specialized in .NET, C# and modern web technologies. Check out my projects and CV." 
     />
     <meta name="author" content="Victoria Ghoos" />
-
-    <meta property="og:title" content="Victoria Ghoos | Software Engineering Student" />
-    <meta property="og:description" content="Take a look at my e-portfolio, projects and skills. Specialized in .NET." />
+    <meta property="og:title" content="Victoria Ghoos" />
+    <meta property="og:description" content="Take a look at my e-portfolio, projects and skills." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://victoriaghoos.com/og-image.png">
-
-    <link rel="icon" href="petal.png" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="icon" href="/petal.png" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
-
     <style>
       body, html {
         background-color: #000000;
         margin: 0; padding: 0;
       }
-
       .static-glow {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
@@ -35,13 +31,11 @@
         opacity: 0;
         animation: entranceFade 3s ease-out 0.2s forwards;
       }
-
       .static-particles {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         z-index: 2;
       }
-
       .static-dot {
         position: absolute;
         background: rgba(255, 255, 255, 0.8);
@@ -49,7 +43,6 @@
         opacity: 0;
         animation: entranceFade 4s ease-out 0.5s forwards;
       }
-
       @keyframes entranceFade {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -59,5 +52,6 @@
   <body style="background-color: #000000;">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root" style="background-color: #000000;"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

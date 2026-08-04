@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
 import sakuraTree from "../../assets/images/sakura2.png";
 import petalImg from "../../assets/images/petal.png";
-import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop.js';
+import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import {
   SiPython, SiJavascript, SiTypescript, SiPhp,
   SiDotnet, SiNodedotjs, SiOpensearch, SiBlazor, SiLaravel,

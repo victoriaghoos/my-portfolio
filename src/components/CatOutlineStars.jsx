@@ -1,6 +1,6 @@
 import React from "react";
 import catPoints from "../catPoints.json";
-import OutlineStars from "./OutlineStars.js";
+import OutlineStars from "./OutlineStars";
 
 const CatOutlineStars = ({ active, position = [0, 0, 0] }) => (
   <OutlineStars

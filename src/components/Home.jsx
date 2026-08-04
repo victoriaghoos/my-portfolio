@@ -6,8 +6,8 @@ import { motion, useInView } from "framer-motion";
 import * as THREE from "three";
 import "../styles/home.scss";
 
-import MusicPlayer from "./MusicPlayer.js";
-import LanguageSelector from "./LanguageSelector.js";
+import MusicPlayer from "./MusicPlayer";
+import LanguageSelector from "./LanguageSelector";
 
 import avatarVideo from "../assets/images/avatar.webm";
 import avatarPng from "../assets/images/avatar.png";
@@ -19,11 +19,11 @@ import resumeVideo from "../assets/images/resume.webm";
 import resumePng from "../assets/images/resume.png";
 import socialsVideo from "../assets/images/social-media.webm";
 import socialsPng from "../assets/images/social-media.png";
-import NightSkyBackground from "./NightSkyBackground.js";
-import InteractivePanel from "./InteractivePanel.js";
-import CentralHologram from "./CentralHologram.js";
-import OutlineStars from "./OutlineStars.js";
-import SectionsContainer from "./sections/SectionsContainer.js";
+import NightSkyBackground from "./NightSkyBackground";
+import InteractivePanel from "./InteractivePanel";
+import CentralHologram from "./CentralHologram";
+import OutlineStars from "./OutlineStars";
+import SectionsContainer from "./sections/SectionsContainer";
 
 import catPoints from "../catPoints.json";
 import cameraPoints from "../cameraPoints.json";

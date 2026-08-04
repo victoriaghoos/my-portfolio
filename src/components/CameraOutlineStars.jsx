@@ -1,6 +1,6 @@
 import React from "react";
 import cameraPoints from "../cameraPoints.json";
-import OutlineStars from "./OutlineStars.js";
+import OutlineStars from "./OutlineStars";
 
 const CameraOutlineStars = ({ active, position = [0, 0, 0] }) => (
   <OutlineStars

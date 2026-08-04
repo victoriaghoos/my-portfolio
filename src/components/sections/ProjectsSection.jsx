@@ -1,7 +1,7 @@
 import React, { useMemo, memo, useRef, useEffect, useState, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
-import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop.js';
+import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import {
   Music,
   Star,
