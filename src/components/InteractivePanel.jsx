@@ -99,7 +99,7 @@ const usePanelVideoTexture = (videoSrc) => {
     video.muted = true;
     video.playsInline = true;
     video.crossOrigin = "anonymous";
-    video.preload = "auto";
+    video.preload = "none";
     videoRef.current = video;
 
     const texture = new THREE.VideoTexture(video);
