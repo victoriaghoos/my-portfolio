@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback, memo, Suspense } from "react"; 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { useTranslation } from "react-i18next";
 import { Environment, Preload } from "@react-three/drei"; 
 import { motion, useInView } from "framer-motion";
@@ -53,6 +53,97 @@ const DragHint = ({ isVisible }) => {
   );
 };
 
+const RotatingPanels = memo(({
+  navEnabled,
+  icons,
+  scalingConfig,
+  setActive,
+  panelPositions,
+  handleIconClick,
+  isInView,
+  initialRotationComplete,
+  onInitialRotationComplete,
+  rotationYRef,
+  targetRotationYRef,
+}) => {
+  const panelsGroupRef = useRef(null);
+  const introStartTimeRef = useRef(null);
+  const introSpeedRef = useRef(0.5);
+
+  useFrame(({ clock }, delta) => {
+    if (!panelsGroupRef.current) {
+      return;
+    }
+
+    if (!navEnabled || !isInView) {
+      panelsGroupRef.current.rotation.y = rotationYRef.current;
+      return;
+    }
+
+    if (!initialRotationComplete) {
+      if (introStartTimeRef.current === null) {
+        introStartTimeRef.current = clock.getElapsedTime();
+      }
+
+      const introElapsed = clock.getElapsedTime() - introStartTimeRef.current;
+      if (introElapsed >= 0.8) {
+        const frameFactor = delta * 60;
+        rotationYRef.current += introSpeedRef.current * frameFactor;
+        introSpeedRef.current *= Math.pow(0.9, frameFactor);
+        targetRotationYRef.current = rotationYRef.current;
+
+        if (introSpeedRef.current < 0.001) {
+          onInitialRotationComplete();
+        }
+      }
+    } else {
+      rotationYRef.current = THREE.MathUtils.lerp(
+        rotationYRef.current,
+        targetRotationYRef.current,
+        0.35,
+      );
+    }
+
+    panelsGroupRef.current.rotation.y = rotationYRef.current;
+  });
+
+  if (!navEnabled) {
+    return null;
+  }
+
+  return (
+    <group ref={panelsGroupRef}>
+      {icons.map((icon, i) => (
+        <motion.group
+          key={i}
+          initial={{ opacity: 0, scale: scalingConfig.iconScale, y: 1 }}
+          animate={{ opacity: 1, scale: scalingConfig.iconScale, y: 0 }}
+          transition={{
+            duration: 1.2,
+            delay: 0.5 + i * 0.15,
+            ease: [0.6, 0.01, 0.05, 0.95],
+          }}
+        >
+          <InteractivePanel
+            icon={icon}
+            setActive={setActive}
+            index={i}
+            position={panelPositions[i]}
+            orbitRotationYRef={rotationYRef}
+            onIconClick={() => handleIconClick(icon.id)}
+            isParentVisible={isInView}
+            iconScale={scalingConfig.iconScale}
+            iconPlaneSize={scalingConfig.iconPlaneSize}
+            ringInner={scalingConfig.ringInner}
+            ringOuter={scalingConfig.ringOuter}
+            labelMargin={scalingConfig.labelMargin}
+          />
+        </motion.group>
+      ))}
+    </group>
+  );
+});
+
 const SceneContent = memo(({ 
   eventSource,
   nightSkyRef, 
@@ -66,7 +157,10 @@ const SceneContent = memo(({
   panelPositions, 
   handleIconClick, 
   isInView, 
-  constellationScales 
+  constellationScales,
+  onInitialRotationComplete,
+  rotationYRef,
+  targetRotationYRef,
 }) => {
   const navEnabled = show3DNav && isInView;
 
@@ -90,33 +184,20 @@ const SceneContent = memo(({
         <Suspense fallback={null}>
           <group>
             <Environment preset="sunset" />
-            
-            {navEnabled && icons.map((icon, i) => (
-              <motion.group
-                key={i}
-                initial={{ opacity: 0, scale: scalingConfig.iconScale, y: 1 }}
-                animate={{ opacity: 1, scale: scalingConfig.iconScale, y: 0 }}
-                transition={{
-                  duration: 1.2,
-                  delay: 0.5 + i * 0.15,
-                  ease: [0.6, 0.01, 0.05, 0.95],
-                }}
-              >
-                <InteractivePanel
-                  icon={icon}
-                  setActive={setActive}
-                  index={i}
-                  position={panelPositions[i]}
-                  onIconClick={() => handleIconClick(icon.id)}
-                  isParentVisible={isInView}
-                  iconScale={scalingConfig.iconScale}
-                  iconPlaneSize={scalingConfig.iconPlaneSize}
-                  ringInner={scalingConfig.ringInner}
-                  ringOuter={scalingConfig.ringOuter}
-                  labelMargin={scalingConfig.labelMargin}
-                />
-              </motion.group>
-            ))}
+
+            <RotatingPanels
+              navEnabled={navEnabled}
+              icons={icons}
+              scalingConfig={scalingConfig}
+              setActive={setActive}
+              panelPositions={panelPositions}
+              handleIconClick={handleIconClick}
+              isInView={isInView}
+              initialRotationComplete={initialRotationComplete}
+              onInitialRotationComplete={onInitialRotationComplete}
+              rotationYRef={rotationYRef}
+              targetRotationYRef={targetRotationYRef}
+            />
           </group>
 
           <motion.group
@@ -247,6 +328,8 @@ const Home = () => {
 
   const [active, setActive] = useState(null);
   const homeRef = useRef(null);
+  const rotationYRef = useRef(0);
+  const targetRotationYRef = useRef(0);
   
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
   useEffect(() => {
@@ -341,8 +424,6 @@ const Home = () => {
 
   const numberOfIcons = icons.length;
 
-  const [rotationY, setRotationY] = useState(0);
-  
   const dragRef = useRef({
     dragging: false,
     startX: 0,
@@ -353,9 +434,13 @@ const Home = () => {
   });  
 
   const [initialRotationComplete, setInitialRotationComplete] = useState(false);
-  const rotationSpeedRef = useRef(0.5);
+  const [isDragging, setIsDragging] = useState(false);
 
   const [hasDragged, setHasDragged] = useState(false);
+
+  const markInitialRotationComplete = useCallback(() => {
+    setInitialRotationComplete((prev) => (prev ? prev : true));
+  }, []);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -379,29 +464,6 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (!show3DNav || initialRotationComplete) return;
-
-    let rotationInterval;
-    const startDelay = setTimeout(() => {
-      rotationInterval = setInterval(() => {
-        if (!initialRotationComplete) {
-          setRotationY((prev) => prev + rotationSpeedRef.current);
-          rotationSpeedRef.current *= 0.90;
-          if (rotationSpeedRef.current < 0.001) {
-            setInitialRotationComplete(true);
-            clearInterval(rotationInterval);
-          }
-        }
-      }, 16);
-    }, 800); 
-
-    return () => {
-      clearTimeout(startDelay);
-      if (rotationInterval) clearInterval(rotationInterval);
-    };
-  }, [initialRotationComplete, show3DNav]);
-
-  useEffect(() => {
     const onMouseMove = (e) => {
       if (!dragRef.current.dragging || !initialRotationComplete || !show3DNav) return;
       
@@ -411,9 +473,9 @@ const Home = () => {
       const centerY = window.innerHeight / 2;
       const isFront = dragRef.current.startY > centerY;
       
-      const direction = isFront ? -1 : 1;
+      const direction = isFront ? 1 : -1;
 
-      setRotationY(dragRef.current.startRot + (deltaX * rotationSpeed * direction));
+      targetRotationYRef.current = dragRef.current.startRot + (deltaX * rotationSpeed * direction);
 
       if (!hasDragged && Math.abs(deltaX) > 5) {
         setHasDragged(true);
@@ -434,6 +496,7 @@ const Home = () => {
         }
       }
       dragRef.current.dragging = false;
+      setIsDragging(false);
     };
 
     window.addEventListener("mousemove", onMouseMove);
@@ -447,11 +510,10 @@ const Home = () => {
 
   const panelPositions = useMemo(() => icons.map((_, i) => {
     const angle = (i / numberOfIcons) * 2 * Math.PI;
-    const finalAngle = angle + rotationY;
-    const x = scalingConfig.radius * Math.cos(finalAngle);
-    const z = scalingConfig.radius * Math.sin(finalAngle);
+    const x = scalingConfig.radius * Math.cos(angle);
+    const z = scalingConfig.radius * Math.sin(angle);
     return [x, 0, z];
-  }), [icons, numberOfIcons, rotationY, scalingConfig.radius]);
+  }), [icons, numberOfIcons, scalingConfig.radius]);
 
   const constellationScales = useMemo(() => ({
     about: isDesktop ? 1.3 : 0.9,
@@ -473,14 +535,15 @@ const Home = () => {
           onMouseDown={show3DNav && isInView ? (e) => {
             if (!initialRotationComplete) return;
             dragRef.current.dragging = true;
+            setIsDragging(true);
             dragRef.current.hasDraggedThisGesture = false;
             dragRef.current.startX = e.clientX;
             dragRef.current.startY = e.clientY; 
-            dragRef.current.startRot = rotationY;
+            dragRef.current.startRot = targetRotationYRef.current;
           } : undefined}
           style={{
             cursor: show3DNav
-              ? dragRef.current.dragging ? "grabbing" : "grab"
+              ? isDragging ? "grabbing" : "grab"
               : "default",
           }}
         >
@@ -498,6 +561,9 @@ const Home = () => {
             handleIconClick={handleIconClick}
             isInView={isInView}
             constellationScales={constellationScales}
+            onInitialRotationComplete={markInitialRotationComplete}
+            rotationYRef={rotationYRef}
+            targetRotationYRef={targetRotationYRef}
           />
         </section>
 

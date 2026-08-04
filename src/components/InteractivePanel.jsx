@@ -198,7 +198,7 @@ const useLabelVisibility = (camera) => {
   };
 };
 
-const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, onIconClick, iconScale = 0.7, iconPlaneSize = 1.6, ringInner = 0.9, ringOuter = 1.0, labelMargin = 70 }) => {
+const InteractivePanel = ({ icon, setActive, index, position, orbitRotationYRef, isParentVisible, onIconClick, iconScale = 0.7, iconPlaneSize = 1.6, ringInner = 0.9, ringOuter = 1.0, labelMargin = 70 }) => {
   const ref = useRef();
   const ringRef = useRef();
   const panelPositionRef = useRef(new THREE.Vector3());
@@ -218,7 +218,9 @@ const InteractivePanel = ({ icon, setActive, index, position, isParentVisible, o
 
     ref.current.position.y =
       position[1] + Math.sin(elapsedTime * 0.5 + index) * 0.1;
-    ref.current.rotation.y = Math.sin(elapsedTime * 0.3 + index) * 0.05;
+    const localWobbleY = Math.sin(elapsedTime * 0.3 + index) * 0.05;
+    const orbitRotationY = orbitRotationYRef?.current ?? 0;
+    ref.current.rotation.y = localWobbleY - orbitRotationY;
 
     return ref.current.getWorldPosition(panelPositionRef.current);
   };
