@@ -56,7 +56,7 @@ const SkillsStarsCanvas = memo(() => {
   );
 });
 
-const FallingPetal = memo(({ reduceMotion }) => {
+const FallingPetal = memo(() => {
   const settings = useMemo(() => ({
     left: Math.random() * 100,
     duration: 10 + Math.random() * 15,
@@ -77,28 +77,20 @@ const FallingPetal = memo(({ reduceMotion }) => {
         filter: `brightness(${settings.brightness})`
       }}
       initial={{ y: -50, opacity: 0, rotate: 0, rotateX: 0, rotateY: 0 }}
-      animate={
-        reduceMotion
-          ? undefined
-          : {
-              y: "110vh",
-              opacity: [0, 1, 1, 0],
-              x: [0, settings.drift, -settings.drift / 2, settings.drift, 0],
-              rotate: [0, settings.rotate],
-              rotateX: [0, 180, 360],
-              rotateY: [0, 180, 360],
-            }
-      }
-      transition={
-        reduceMotion
-          ? undefined
-          : {
-              duration: settings.duration,
-              repeat: Infinity,
-              delay: settings.delay,
-              ease: "linear",
-            }
-      }
+      animate={{
+        y: "110vh",
+        opacity: [0, 1, 1, 0],
+        x: [0, settings.drift, -settings.drift / 2, settings.drift, 0],
+        rotate: [0, settings.rotate],
+        rotateX: [0, 180, 360],
+        rotateY: [0, 180, 360],
+      }}
+      transition={{
+        duration: settings.duration,
+        repeat: Infinity,
+        delay: settings.delay,
+        ease: "linear",
+      }}
     />
   );
 });
