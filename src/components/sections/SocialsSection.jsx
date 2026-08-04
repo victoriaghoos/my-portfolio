@@ -6,8 +6,7 @@ import { Github, Linkedin, Mail, ArrowUpCircle } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import "../../styles/sections/SocialsSection.scss";
-
-const CLOUD_URL = "https://raw.githubusercontent.com/pmndrs/drei-assets/456060a26bbeb8fdf9d32ff4dd80fa95863c129e/cloud.png";
+import cloudTexture from "../../assets/images/cloud.png";
 
 const CloudPuff = ({ position, speed, opacity }) => {
   return (
@@ -18,7 +17,7 @@ const CloudPuff = ({ position, speed, opacity }) => {
       width={10}
       depth={1.5}
       segments={20}
-      texture={CLOUD_URL}
+      texture={cloudTexture}
       color="#fff0f5"
       bounds={[6, 2, 2]}
       volume={10}
