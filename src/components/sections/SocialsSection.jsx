@@ -199,7 +199,7 @@ const SocialsSection = ({ id }) => {
             frameloop={isVisible ? "always" : "never"}
             camera={{ position: [0, 0, 14], fov: 45 }}
             resize={{ scroll: false }}
-            dpr={[1, 2]}
+            dpr={[1, 1.5]}
             performance={{ min: 0.5, max: 1 }}
           >
             <SilkSkyScene />
