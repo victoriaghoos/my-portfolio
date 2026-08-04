@@ -1,6 +1,6 @@
 import React from "react";
 import headsetPoints from "../headsetPoints.json"; 
-import OutlineStars from "./OutlineStars.js";
+import OutlineStars from "./OutlineStars";
 
 const HeadsetOutlineStars = ({ active, position = [0, 0, 0] }) => (
   <OutlineStars

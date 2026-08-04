@@ -2,16 +2,13 @@
   "name": "my-portfolio",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "framer-motion": "^12.28.1",
     "i18next": "^25.8.0",
     "i18next-browser-languagedetector": "^8.2.0",
-    "jsdom": "^27.0.0",
     "lucide-react": "^0.562.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -20,37 +17,16 @@
     "react-pageflip": "^2.0.3",
     "react-router-dom": "^6.25.1",
     "react-simple-typewriter": "^5.0.1",
-    "sass": "^1.77.8",
-    "three": "^0.166.1",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "three": "^0.166.1"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "react-scripts": "^5.0.1"
+    "@vitejs/plugin-react": "^6.0.5",
+    "sass": "^1.77.8",
+    "vite": "^8.2.0"
   },
-  "type": "module"
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
 }

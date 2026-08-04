@@ -4,7 +4,7 @@ import { Cloud, Sparkles, Float } from "@react-three/drei";
 import { motion, useReducedMotion } from "framer-motion";
 import { Github, Linkedin, Mail, ArrowUpCircle } from "lucide-react";
 import { useTranslation } from 'react-i18next';
-import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop.js';
+import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import "../../styles/sections/SocialsSection.scss";
 
 const CLOUD_URL = "https://raw.githubusercontent.com/pmndrs/drei-assets/456060a26bbeb8fdf9d32ff4dd80fa95863c129e/cloud.png";
