@@ -35,19 +35,19 @@ const OutlineStars = ({
     const particles = particlesRef.current;
     if (!particles) return;
 
-    const elapsedTime = clock.getElapsedTime();
-    const positions = particles.geometry.attributes.position.array;
-
-    for (let i = 2; i < positions.length; i += 3) {
-      positions[i] = Math.sin(elapsedTime * animationSpeed + i) * waveIntensity * scale;
-    }
-
-    particles.geometry.attributes.position.needsUpdate = true;
-
     const targetOpacity = active ? 0.9 : 0;
     const fadeSpeed = active ? 0.005 : 0.2;
     opacityRef.current += (targetOpacity - opacityRef.current) * fadeSpeed;
     particles.material.opacity = opacityRef.current;
+
+    if (opacityRef.current < 0.01) return;  
+
+    const elapsedTime = clock.getElapsedTime();
+    const positions = particles.geometry.attributes.position.array;
+    for (let i = 2; i < positions.length; i += 3) {
+      positions[i] = Math.sin(elapsedTime * animationSpeed + i) * waveIntensity * scale;
+    }
+    particles.geometry.attributes.position.needsUpdate = true;
   });
 
   return (
