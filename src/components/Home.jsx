@@ -183,7 +183,7 @@ const SceneContent = memo(({
       >
         <Suspense fallback={null}>
           <group>
-            <Environment preset="sunset" />
+            <Environment files="/hdri/venice_sunset_1k.hdr" />
 
             <RotatingPanels
               navEnabled={navEnabled}
