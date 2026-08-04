@@ -17,7 +17,7 @@ const CloudPuff = ({ position, speed, opacity }) => {
       speed={speed}
       width={10}
       depth={1.5}
-      segments={40}
+      segments={20}
       texture={CLOUD_URL}
       color="#fff0f5"
       bounds={[6, 2, 2]}
