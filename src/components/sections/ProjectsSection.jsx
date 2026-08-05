@@ -14,7 +14,7 @@ import {
   SkipBack,
 } from "lucide-react";
 import "../../styles/sections/ProjectsSection.scss";
-import baseballImg from "../../assets/images/BaseballLive.png";
+import baseballImg from "../../assets/images/BaseballLive.webp";
 import flutterImg from "../../assets/images/VrijeTeid.png";
 
 const containerVariants = {
