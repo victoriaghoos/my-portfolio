@@ -40,7 +40,12 @@ const OutlineStars = ({
     opacityRef.current += (targetOpacity - opacityRef.current) * fadeSpeed;
     particles.material.opacity = opacityRef.current;
 
-    if (opacityRef.current < 0.01) return;  
+    if (opacityRef.current < 0.01) {
+      particles.visible = false;
+      return;
+    }
+
+    particles.visible = true;
 
     const elapsedTime = clock.getElapsedTime();
     const positions = particles.geometry.attributes.position.array;
