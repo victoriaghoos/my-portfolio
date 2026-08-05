@@ -2,7 +2,7 @@ import { useMemo, memo, useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import "../../styles/sections/SkillsSection.scss";
-import sakuraTree from "../../assets/images/sakura2.png";
+import sakuraTree from "../../assets/images/sakura2.webp";
 import petalImg from "../../assets/images/petal.png";
 import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import {

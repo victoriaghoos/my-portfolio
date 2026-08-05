@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useTranslation, Trans } from 'react-i18next';
 import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import '../../styles/sections/AboutSection.scss';
-import foto1 from '../../assets/images/foto1.jpg';
+import foto1 from '../../assets/images/foto1.webp';
 
 const textVariants = {
   hidden: { opacity: 0, y: 50 },
