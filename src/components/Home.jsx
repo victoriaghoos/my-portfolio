@@ -63,6 +63,7 @@ const RotatingPanels = memo(({
   setActive,
   panelPositions,
   handleIconClick,
+  onPanelPointerUp,
   isInView,
   initialRotationComplete,
   onInitialRotationComplete,
@@ -134,6 +135,7 @@ const RotatingPanels = memo(({
             position={panelPositions[i]}
             orbitRotationYRef={rotationYRef}
             onIconClick={() => handleIconClick(icon.id)}
+            onPanelPointerUp={onPanelPointerUp}
             isParentVisible={isInView}
             iconScale={scalingConfig.iconScale}
             iconPlaneSize={scalingConfig.iconPlaneSize}
@@ -159,6 +161,7 @@ const SceneContent = memo(({
   setActive, 
   panelPositions, 
   handleIconClick, 
+  onPanelPointerUp,
   isInView, 
   constellationScales,
   onInitialRotationComplete,
@@ -195,6 +198,7 @@ const SceneContent = memo(({
               setActive={setActive}
               panelPositions={panelPositions}
               handleIconClick={handleIconClick}
+              onPanelPointerUp={onPanelPointerUp}
               isInView={isInView}
               initialRotationComplete={initialRotationComplete}
               onInitialRotationComplete={onInitialRotationComplete}
@@ -434,6 +438,7 @@ const Home = () => {
     startRot: 0,
     hasInteracted: false,
     hasDraggedThisGesture: false,
+    clickedPanel: false,
   });  
 
   const [initialRotationComplete, setInitialRotationComplete] = useState(false);
@@ -466,6 +471,11 @@ const Home = () => {
     scrollToSection(sectionMap[iconId]);
   }, []);
 
+  // pointerup fires before native mouseup, so this beats the shockwave check
+  const markPanelPointerUp = useCallback(() => {
+    dragRef.current.clickedPanel = true;
+  }, []);
+
   useEffect(() => {
     const onMouseMove = (e) => {
       if (!dragRef.current.dragging || !initialRotationComplete || !show3DNav) return;
@@ -492,13 +502,14 @@ const Home = () => {
     const onMouseUp = (e) => {
       if (dragRef.current.dragging) {
         dragRef.current.hasInteracted = true;
-        if (!dragRef.current.hasDraggedThisGesture) {
+        if (!dragRef.current.hasDraggedThisGesture && !dragRef.current.clickedPanel) {
           if (nightSkyRef.current) {
             nightSkyRef.current.triggerShockwave(e.clientX, e.clientY);
           }
         }
       }
       dragRef.current.dragging = false;
+      dragRef.current.clickedPanel = false;
       setIsDragging(false);
     };
 
@@ -540,6 +551,7 @@ const Home = () => {
             dragRef.current.dragging = true;
             setIsDragging(true);
             dragRef.current.hasDraggedThisGesture = false;
+            dragRef.current.clickedPanel = false;
             dragRef.current.startX = e.clientX;
             dragRef.current.startY = e.clientY; 
             dragRef.current.startRot = targetRotationYRef.current;
@@ -562,6 +574,7 @@ const Home = () => {
             setActive={setActive}
             panelPositions={panelPositions}
             handleIconClick={handleIconClick}
+            onPanelPointerUp={markPanelPointerUp}
             isInView={isInView}
             constellationScales={constellationScales}
             onInitialRotationComplete={markInitialRotationComplete}

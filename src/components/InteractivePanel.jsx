@@ -197,7 +197,7 @@ const useLabelVisibility = (camera) => {
   };
 };
 
-const InteractivePanel = ({ icon, setActive, index, position, orbitRotationYRef, isParentVisible, onIconClick, iconScale = 0.7, iconPlaneSize = 1.6, ringInner = 0.9, ringOuter = 1.0, labelMargin = 70 }) => {
+const InteractivePanel = ({ icon, setActive, index, position, orbitRotationYRef, isParentVisible, onIconClick, onPanelPointerUp, iconScale = 0.7, iconPlaneSize = 1.6, ringInner = 0.9, ringOuter = 1.0, labelMargin = 70 }) => {
   const ref = useRef();
   const ringRef = useRef();
   const panelPositionRef = useRef(new THREE.Vector3());
@@ -289,6 +289,10 @@ const InteractivePanel = ({ icon, setActive, index, position, orbitRotationYRef,
           <mesh
             onPointerOver={handlePointerOver}
             onPointerOut={handlePointerOut}
+            onPointerUp={(e) => {
+              e.stopPropagation();
+              onPanelPointerUp?.();
+            }}
             onClick={(e) => {
               e.stopPropagation();
               onIconClick(icon.id);
