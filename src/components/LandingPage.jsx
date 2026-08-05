@@ -6,7 +6,7 @@ import videoMp4 from "../assets/videos/intro.mp4";
 import posterSrc from "../assets/images/intro.png"; 
 import "../styles/landingPage.scss";
 
-const SKIP_BUTTON_DELAY_MS = 1500;
+const SKIP_BUTTON_DELAY_MS = 500;
 // Safety net only. The typewriter's onLoopDone is the primary exit trigger.
 const AUTO_EXIT_FALLBACK_MS = 12000;
 const REDUCED_MOTION_EXIT_MS = 2500;
@@ -14,6 +14,7 @@ const REDUCED_MOTION_EXIT_MS = 2500;
 const TRANSITION_DURATION_MS = 1500;
 const TRANSITION_FAILSAFE_MS = TRANSITION_DURATION_MS + 500;
 const REDUCED_MOTION_FAILSAFE_MS = 300;
+const INTRO_SEEN_KEY = "intro-seen";
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -78,6 +79,12 @@ const LandingPage = () => {
       return;
     }
 
+    try {
+      sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+    } catch {
+      // ignore
+    }
+
     hasNavigatedRef.current = true;
     navigate("/home", { replace: true });
   }, [navigate]);
@@ -116,6 +123,16 @@ const LandingPage = () => {
   }, [startExitAndNavigate]);
 
   useEffect(() => {
+    try {
+      if (sessionStorage.getItem(INTRO_SEEN_KEY)) {
+        hasNavigatedRef.current = true;
+        navigate("/home", { replace: true });
+        return undefined;
+      }
+    } catch {
+      // sessionStorage can throw in privacy mode
+    }
+
     skipButtonTimerRef.current = setTimeout(
       () => setShowSkipButton(true),
       SKIP_BUTTON_DELAY_MS,
@@ -129,7 +146,7 @@ const LandingPage = () => {
     return () => {
       clearTimers();
     };
-  }, [clearTimers, reducedMotion, startExitAndNavigate]);
+  }, [clearTimers, reducedMotion, startExitAndNavigate, navigate]);
 
   return (
     <div className={`landing-page ${transitionActive ? "page-exit" : ""}`}>
@@ -170,6 +187,7 @@ const LandingPage = () => {
         className={`skip-intro-button ${showSkipButton ? "is-visible" : ""}`}
         onClick={startExitAndNavigate}
         disabled={transitionActive}
+        title="Skip intro (Esc)"
       >
         Skip Intro
       </button>

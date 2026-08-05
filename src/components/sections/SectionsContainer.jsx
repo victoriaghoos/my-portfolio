@@ -8,23 +8,21 @@ const ResumeSection = lazy(() => import('./ResumeSection'));
 const SocialsSection = lazy(() => import('./SocialsSection'));
 
 const SectionsContainer = () => {
-  const sectionFallback = <div className="section-placeholder" aria-hidden="true" />;
-
   return (
     <div className="sections-container">
-      <Suspense fallback={sectionFallback}>
+      <Suspense fallback={<div className="section-placeholder" />}>
         <AboutSection id="about-section" />
       </Suspense>
-      <Suspense fallback={sectionFallback}>
+      <Suspense fallback={<div className="section-placeholder" />}>
         <SkillsSection id="skills-section" />
       </Suspense>
-      <Suspense fallback={sectionFallback}>
+      <Suspense fallback={<div className="section-placeholder" />}>
         <ProjectsSection id="projects-section" />
       </Suspense>
-      <Suspense fallback={sectionFallback}>
+      <Suspense fallback={<div className="section-placeholder" />}>
         <ResumeSection id="resume-section" />
       </Suspense>
-      <Suspense fallback={sectionFallback}>
+      <Suspense fallback={<div className="section-placeholder" />}>
         <SocialsSection id="socials-section" />
       </Suspense>
     </div>

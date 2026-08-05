@@ -141,7 +141,7 @@ const SocialCard = ({ icon: Icon, title, handle, link, delay, strokeWidth = 1.5 
       className="social-card"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.8, delay: delay, ease: "easeOut" }}
       whileHover={{ y: -10, scale: 1.02 }}
     >
@@ -212,6 +212,7 @@ const SocialsSection = ({ id }) => {
           className="header-container"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 1 }}
         >
           <h2 className="section-title">{t('contact')}</h2>
@@ -249,6 +250,7 @@ const SocialsSection = ({ id }) => {
           className="footer-action"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 1 }}
         >
           <motion.button 
