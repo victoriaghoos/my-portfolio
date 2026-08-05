@@ -71,7 +71,7 @@ const RotatingPanels = memo(({
 }) => {
   const panelsGroupRef = useRef(null);
   const introStartTimeRef = useRef(null);
-  const introSpeedRef = useRef(0.5);
+  const introSpeedRef = useRef(0.6);
 
   useFrame(({ clock }, delta) => {
     if (!panelsGroupRef.current) {
@@ -89,10 +89,10 @@ const RotatingPanels = memo(({
       }
 
       const introElapsed = clock.getElapsedTime() - introStartTimeRef.current;
-      if (introElapsed >= 0.8) {
+      if (introElapsed >= 0.2) {
         const frameFactor = delta * 60;
         rotationYRef.current += introSpeedRef.current * frameFactor;
-        introSpeedRef.current *= Math.pow(0.9, frameFactor);
+        introSpeedRef.current *= Math.pow(0.96, frameFactor);
         targetRotationYRef.current = rotationYRef.current;
 
         if (introSpeedRef.current < 0.001) {
