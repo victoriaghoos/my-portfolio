@@ -9,7 +9,9 @@ const MusicPlayer = () => {
   const [isHovered, setIsHovered] = useState(false); 
 
   useEffect(() => {
-    const audio = new Audio(routineTrack);
+    const audio = new Audio();
+    audio.preload = 'none';
+    audio.src = routineTrack;
     audio.loop = true;
     audio.volume = 0.15;
     audioRef.current = audio;
