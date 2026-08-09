@@ -195,6 +195,11 @@ const ResumeSection = ({ id }) => {
   const totalPages = 8;
   const { t } = useTranslation();
 
+  // warm the SocialsSection chunk early so it's ready before the user scroll-snaps into it
+  useEffect(() => {
+    import("./SocialsSection");
+  }, []);
+
   const onFlip = (e) => {
     setCurrentPage(e.data);
     setIsFlipping(false);
