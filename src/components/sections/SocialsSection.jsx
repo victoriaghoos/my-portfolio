@@ -177,11 +177,27 @@ const SocialsSection = ({ id }) => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
-        if (entry.isIntersecting) {
-          setHasBeenVisible(true);
-        }
       },
       { threshold: 0.1 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  // mount the scene a viewport-height early so its first paint doesn't jank the scroll-snap into this section
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasBeenVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "100% 0px" }
     );
 
     observer.observe(element);
