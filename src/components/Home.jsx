@@ -414,10 +414,10 @@ const Home = () => {
         ringInner: 0.55,
         ringOuter: 0.65,
         labelMargin: 32,
-        hologramScale: 0.7, 
+        hologramScale: 1.2,
         hologramRadius: 4.0, 
         hologramHalo: [4.2, 4.4],
-        hologramY: 1.2, 
+        hologramY: 0.4, 
       };
     }
   }, [isDesktop, isTablet]);
