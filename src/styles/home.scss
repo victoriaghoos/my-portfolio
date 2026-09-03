@@ -427,8 +427,23 @@ body {
     max-width: 600px;
     padding: 0 20px;
 
-    @media (max-width: 400px) {
-      gap: 12px;
+    // Below this, 5 items no longer fit on one line; wrapping to a 2nd row
+    // makes the overlay tall enough to cover the photo above it. Scroll
+    // horizontally instead so the overlay always stays a single row.
+    @media (max-width: 520px) {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      gap: 10px;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0 16px 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+
+      &::-webkit-scrollbar { height: 4px; }
+      &::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.25); border-radius: 4px; }
     }
   }
 
@@ -477,11 +492,19 @@ body {
       letter-spacing: 1px;
     }
 
-    @media (max-width: 400px) {
-      min-width: 70px;
-      padding: 10px;
-      .icon-wrapper { width: 40px; height: 40px; }
-      .label { font-size: 0.65rem; }
+    @media (max-width: 520px) {
+      flex-shrink: 0;
+      min-width: 62px;
+      padding: 8px;
+      .icon-wrapper { width: 36px; height: 36px; margin-bottom: 6px; }
+      .label { font-size: 0.62rem; letter-spacing: 0.5px; }
+    }
+
+    @media (max-width: 360px) {
+      min-width: 54px;
+      padding: 6px;
+      .icon-wrapper { width: 30px; height: 30px; }
+      .label { font-size: 0.56rem; }
     }
   }
 }
@@ -497,8 +520,21 @@ body {
     overflow: hidden !important;
   }
 
+  // stack the 3D scene and the menu instead of layering them, so the menu can't cover the hologram
+  .home-3d-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .webgl-canvas {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+  }
+
   .static-menu-overlay {
-    position: absolute; 
+    position: static;
+    flex-shrink: 0;
     z-index: 20; 
     margin-top: 10px;
   }

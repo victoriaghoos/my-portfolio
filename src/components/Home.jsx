@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo, useCallback, memo, Suspense } from "react"; 
+import { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, memo, Suspense } from "react"; 
 import { suspend } from 'suspend-react';
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useTranslation } from "react-i18next";
@@ -376,6 +376,7 @@ const Home = () => {
 
   const isDesktop = dimensions.width >= 1024;
   const isTablet = !isDesktop && dimensions.width < 1024 && dimensions.width >= 600;
+  const isMobile = !isDesktop && !isTablet;
   const show3DNav = isDesktop && isDragCapable;
 
   const scalingConfig = useMemo(() => {
