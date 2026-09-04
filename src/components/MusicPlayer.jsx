@@ -65,7 +65,11 @@ const MusicPlayer = () => {
 
   const togglePlay = (e) => {
     e.stopPropagation();
-    isPlaying ? audioRef.current.pause() : audioRef.current.play();
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
     setIsPlaying(!isPlaying);
   };
 

@@ -552,6 +552,7 @@ const Home = () => {
         <LanguageSelector />
         <MusicPlayer />
 
+        {/* oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- drag-to-rotate is a pointer-only enhancement; every icon stays reachable via its own button/click handler */}
         <section
           ref={homeRef}
           className="home-3d"

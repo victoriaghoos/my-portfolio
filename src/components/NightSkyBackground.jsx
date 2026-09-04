@@ -248,15 +248,16 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
       };
     };
 
-    const distantStars = new Array(Math.min(1600, Math.floor(280 * areaFactor) + 500))
-      .fill(0)
-      .map(() => makeStar(0.5, 1.0, 0.25, 0.55));
-    const midStars = new Array(Math.min(500, Math.floor(90 * areaFactor) + 150))
-      .fill(0)
-      .map(() => makeStar(1.0, 1.7, 0.5, 0.85));
-    const heroStars = new Array(Math.min(45, Math.floor(6 * areaFactor) + 18))
-      .fill(0)
-      .map(() => makeStar(1.9, 3.0, 0.8, 1.0));
+    const distantStars = Array.from(
+      { length: Math.min(1600, Math.floor(280 * areaFactor) + 500) },
+      () => makeStar(0.5, 1.0, 0.25, 0.55),
+    );
+    const midStars = Array.from({ length: Math.min(500, Math.floor(90 * areaFactor) + 150) }, () =>
+      makeStar(1.0, 1.7, 0.5, 0.85),
+    );
+    const heroStars = Array.from({ length: Math.min(45, Math.floor(6 * areaFactor) + 18) }, () =>
+      makeStar(1.9, 3.0, 0.8, 1.0),
+    );
 
     [distantStars, midStars, heroStars].forEach((layer) =>
       layer.forEach((s) => {
@@ -277,9 +278,9 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
     const bandCenter = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.42 };
     const bandLength = Math.max(window.innerWidth, window.innerHeight) * 1.7;
 
-    const bandStars = new Array(Math.min(700, Math.floor(140 * areaFactor) + 200))
-      .fill(0)
-      .map(() => {
+    const bandStars = Array.from(
+      { length: Math.min(700, Math.floor(140 * areaFactor) + 200) },
+      () => {
         const along = (Math.random() - 0.5) * bandLength;
         const across = (Math.random() - 0.5) * 140 * (0.3 + Math.random() * 0.7);
         const cos = Math.cos(bandAngle),
@@ -299,7 +300,8 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
           twinkleOffset: Math.random() * Math.PI * 2,
           color: pickStarColor(),
         };
-      });
+      },
+    );
     layers.push({ stars: bandStars, parallax: 0.008 });
 
     const parallax = { x: 0, y: 0, tx: 0, ty: 0 };
