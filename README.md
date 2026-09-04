@@ -41,11 +41,11 @@ npm run dev
 Other available scripts:
 
 ```bash
-npm run build       
-npm run test    
-npm run lint    
-npm run typecheck   
-npm run format      
+npm run build
+npm run test
+npm run lint
+npm run typecheck
+npm run format
 ```
 
 ## 🌌 Main Features
