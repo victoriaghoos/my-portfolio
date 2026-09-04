@@ -1,17 +1,17 @@
-import { useRef, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import { useRef, useMemo } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 
-const OutlineStars = ({ 
-  active, 
-  position = [0, 0, 0], 
-  pointsData, 
-  scale = 0.8, 
-  color = "#7FFFD4",
+const OutlineStars = ({
+  active,
+  position = [0, 0, 0],
+  pointsData,
+  scale = 0.8,
+  color = '#7FFFD4',
   pointSize = 0.1,
   samplingRate = 1,
   animationSpeed = 2,
-  waveIntensity = 0.003
+  waveIntensity = 0.003,
 }) => {
   const particlesRef = useRef();
   const opacityRef = useRef(0);

@@ -8,8 +8,8 @@ This portfolio is a React single-page application exploring time-based animation
 
 ## 💡 About Me & Name Usage
 
-- **Victoria Ghoos** is my current legal and preferred name, which I use on both academic/professional and personal projects.  
-- **Victoria Marinus** is my former legal name and may still appear on some older accounts or materials/posts.  
+- **Victoria Ghoos** is my current legal and preferred name, which I use on both academic/professional and personal projects.
+- **Victoria Marinus** is my former legal name and may still appear on some older accounts or materials/posts.
 
 Regardless of which name you come across, it's always **me** behind the work! 😊
 
@@ -41,13 +41,14 @@ npm run dev
 - **Animated Landing Page:** React video with typewriter intro and a timed or skip-able transition, leading into the main 3D cosmos experience.
 - **Interactive 3D Cosmos Navigation:** Once past the intro, a custom React Three Fiber scene featuring a rotating hologram-avatar hub, orbiting interactive panels with video-texture previews, and constellation reveals on hover with inertial drag rotation, click-triggered shockwave physics, and a procedurally generated night sky (Perlin-noise nebula, parallax star layers, galactic band, and bloom) built entirely with the Canvas API.
 - **About Section:** Framer Motion–animated bio with hologram-style avatar and content for education, goals, and interests.
-- **Skills Section:** Sakura‑themed skills galaxy built with React, Framer Motion, and SCSS, grouping languages, frameworks, backend, frontend, mobile/desktop, DevOps, and tooling. 
+- **Skills Section:** Sakura‑themed skills galaxy built with React, Framer Motion, and SCSS, grouping languages, frameworks, backend, frontend, mobile/desktop, DevOps, and tooling.
 - **Projects Section:** Lofi music-player–inspired cards using React, Framer Motion, and Lucide icons, with tech‑stack tags, internship/classified highlights, and an animated audio visualizer.
 - **Resume Section:** Interactive React flipbook, letting visitors “page through” experience and education.
 - **Socials Section:** 3D cloud-and-stars scene rendered with React Three Fiber and Drei, with animated sky and direct links to LinkedIn, GitHub, and email.
 - **Internationalization:** i18next-powered multi-language UI (English, Dutch, French, Japanese).
 
 ## ⚡ Performance & Accessibility
+
 - Visibility-gated animation loops (IntersectionObserver + rAF) so canvas/WebGL rendering pauses when scrolled out of view
 - Respects `prefers-reduced-motion` throughout
 - Code-split, lazy-loaded sections; profiled and optimized for Core Web Vitals (LCP)
@@ -55,9 +56,9 @@ npm run dev
 
 ## 🏆 Sample Projects
 
-- **BaseballLive** (Blazor, SignalR, C#): Real-time match updates using websockets. *(Solo project, 2024)*
-- **Vrije Teid!** (Flutter, Dart, Firebase): Mobile app for community activity management. *(Group effort, 2024)*
-- **Search Infrastructure** (OpenSearch, Docker): Large-scale data retrieval optimization. *(Internship, 2025, classified)*
+- **BaseballLive** (Blazor, SignalR, C#): Real-time match updates using websockets. _(Solo project, 2024)_
+- **Vrije Teid!** (Flutter, Dart, Firebase): Mobile app for community activity management. _(Group effort, 2024)_
+- **Search Infrastructure** (OpenSearch, Docker): Large-scale data retrieval optimization. _(Internship, 2025, classified)_
 
 ## 🧑‍💻 Skills Overview
 

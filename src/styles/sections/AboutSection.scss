@@ -1,7 +1,12 @@
-$about-glow-cyan: #8AE6FF;
-$about-glow-mid: #A78BFA;
-$about-glow-purple: #C084FC;
-$about-gradient-primary: linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 50%, $about-glow-purple 100%);
+$about-glow-cyan: #8ae6ff;
+$about-glow-mid: #a78bfa;
+$about-glow-purple: #c084fc;
+$about-gradient-primary: linear-gradient(
+  135deg,
+  $about-glow-cyan 0%,
+  $about-glow-mid 50%,
+  $about-glow-purple 100%
+);
 $white: #ffffff;
 
 @mixin text-gradient($gradient) {
@@ -11,9 +16,21 @@ $white: #ffffff;
   -webkit-text-fill-color: transparent;
 }
 
-$orbit-ring-sizes: (1: 320px, 2: 360px, 3: 400px);
-$orbit-ring-sizes-1024: (1: 220px, 2: 260px, 3: 300px);
-$orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
+$orbit-ring-sizes: (
+  1: 320px,
+  2: 360px,
+  3: 400px,
+);
+$orbit-ring-sizes-1024: (
+  1: 220px,
+  2: 260px,
+  3: 300px,
+);
+$orbit-ring-sizes-600: (
+  1: 180px,
+  2: 210px,
+  3: 240px,
+);
 .about-section {
   $sakura-glow: #ff00cc;
   $space-black: #05020a;
@@ -26,7 +43,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background:  
+  background:
     radial-gradient(circle at 50% 100%, rgba($sakura-glow, 0.15) 0%, transparent 50%),
     linear-gradient(to bottom, transparent 80%, $space-black 100%),
     linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 40%, #2a0a2a 100%);
@@ -42,7 +59,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
+    background:
       radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.08) 0%, transparent 50%),
       radial-gradient(circle at 40% 40%, rgba(100, 219, 255, 0.05) 0%, transparent 50%);
@@ -104,19 +121,19 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
 .section-header {
   text-align: center;
   margin-bottom: 2rem;
-  
+
   .section-title {
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 800;
     margin-bottom: 1rem;
-    
+
     .title-glow {
       @include text-gradient($about-gradient-primary);
       filter: drop-shadow(0 0 12px rgba(138, 230, 255, 0.5));
       position: relative;
     }
   }
-  
+
   .title-underline {
     width: 100px;
     height: 3px;
@@ -141,7 +158,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   .hologram-avatar {
     position: relative;
     width: 280px;
@@ -149,7 +166,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
     border-radius: 50%;
     overflow: hidden;
     padding: 4px;
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -157,12 +174,17 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
       left: 0;
       right: 0;
       bottom: 0;
-      background: conic-gradient($about-glow-cyan, $about-glow-mid, $about-glow-purple, $about-glow-cyan);
+      background: conic-gradient(
+        $about-glow-cyan,
+        $about-glow-mid,
+        $about-glow-purple,
+        $about-glow-cyan
+      );
       animation: rotateGlow 8s linear infinite;
       will-change: transform;
       z-index: 0;
     }
-    
+
     .avatar-image {
       width: 100%;
       height: 100%;
@@ -172,25 +194,30 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
       position: relative;
       z-index: 2;
       transition: transform 0.3s ease;
-      
+
       &:hover {
         transform: scale(1.05);
       }
     }
-    
+
     .avatar-glitch {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(45deg, transparent 45%, rgba(138, 230, 255, 0.3) 50%, transparent 55%);
+      background: linear-gradient(
+        45deg,
+        transparent 45%,
+        rgba(138, 230, 255, 0.3) 50%,
+        transparent 55%
+      );
       opacity: 0;
       z-index: 3;
       animation: glitchEffect 4s infinite;
       pointer-events: none;
     }
-    
+
     .avatar-glow {
       position: absolute;
       top: -2px;
@@ -198,7 +225,13 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
       right: -2px;
       bottom: -2px;
       border-radius: 50%;
-      background: conic-gradient(from 0deg, $about-glow-cyan, $about-glow-mid, $about-glow-purple, $about-glow-cyan);
+      background: conic-gradient(
+        from 0deg,
+        $about-glow-cyan,
+        $about-glow-mid,
+        $about-glow-purple,
+        $about-glow-cyan
+      );
       z-index: 1;
       opacity: 0.7;
       filter: blur(10px);
@@ -206,28 +239,24 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
       animation: rotateGlow 6s linear infinite;
     }
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.1) 50%
-      ), linear-gradient(
-        90deg, 
-        rgba(255, 0, 0, 0.03), 
-        rgba(0, 255, 0, 0.01), 
-        rgba(0, 0, 255, 0.03)
-      );
-      background-size: 100% 3px, 3px 100%;
+      background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size:
+        100% 3px,
+        3px 100%;
       pointer-events: none;
       z-index: 3;
       opacity: 0.4;
     }
   }
-  
+
   .avatar-orbits {
     position: absolute;
     top: 50%;
@@ -235,7 +264,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
     transform: translate(-50%, -50%);
     width: 400px;
     height: 400px;
-    
+
     .orbit-ring {
       position: absolute;
       top: 50%;
@@ -315,13 +344,13 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
       font-size: clamp(1.5rem, 3vw, 2.5rem);
       margin-bottom: 1.5rem;
       color: white;
-      
+
       .name-glow {
         @include text-gradient(linear-gradient(135deg, $about-glow-cyan, $about-glow-purple));
         filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.4));
       }
     }
-    
+
     .bio-text {
       text-align: left;
       p {
@@ -329,13 +358,17 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
         line-height: 1.7;
         margin-bottom: 1.5rem;
         color: rgba(255, 255, 255, 0.9);
-        
+
         .highlight {
           display: inline-block;
           padding: 0 3px;
-          transition: filter 0.3s ease, transform 0.3s ease;
+          transition:
+            filter 0.3s ease,
+            transform 0.3s ease;
           cursor: default;
-          @include text-gradient(linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 100%));
+          @include text-gradient(
+            linear-gradient(135deg, $about-glow-cyan 0%, $about-glow-mid 100%)
+          );
           font-weight: 600;
           filter: drop-shadow(0 0 5px rgba(138, 230, 255, 0.25));
           &:hover {
@@ -349,7 +382,8 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
 }
 
 @keyframes glitchEffect {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
     transform: translateX(0);
   }
@@ -387,12 +421,17 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
 
 @keyframes neon-pulse-about {
   0% {
-    box-shadow: 0 0 10px $about-glow-cyan, 0 0 5px $white;
+    box-shadow:
+      0 0 10px $about-glow-cyan,
+      0 0 5px $white;
     opacity: 0.8;
     transform: scaleX(0.88);
   }
   100% {
-    box-shadow: 0 0 25px $about-glow-cyan, 0 0 10px $white, 0 0 5px $about-glow-purple;
+    box-shadow:
+      0 0 25px $about-glow-cyan,
+      0 0 10px $white,
+      0 0 5px $about-glow-purple;
     opacity: 1;
     transform: scaleX(1);
   }
@@ -400,49 +439,49 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
 
 @media (max-width: 1024px) {
   .about-section {
-    height: auto; 
-    min-height: 100vh; 
+    height: auto;
+    min-height: 100vh;
     overflow: hidden;
-    display: flex;       
+    display: flex;
     flex-direction: column;
-    justify-content: flex-start; 
-    padding-top: 80px;  
+    justify-content: flex-start;
+    padding-top: 80px;
     padding-bottom: 2rem;
   }
 
   .about-content {
     width: 100%;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     padding: 0 2rem;
-    max-width: 800px; 
+    max-width: 800px;
     margin: 0 auto;
   }
 
   .about-grid {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     gap: 1.5rem;
   }
 
   .section-header {
-    margin-bottom: 5rem; 
-    
+    margin-bottom: 5rem;
+
     .section-title {
       font-size: 3rem;
     }
   }
-  
+
   .avatar-container {
     position: relative;
-    width: 280px; 
+    width: 280px;
     height: 280px;
     display: flex;
     justify-content: center;
     align-items: center;
-    transform: none; 
+    transform: none;
     margin-bottom: 1rem;
-    
+
     .hologram-avatar {
       width: 200px;
       height: 200px;
@@ -451,7 +490,7 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
       left: auto;
       transform: none;
     }
-    
+
     .avatar-orbits {
       position: absolute;
       top: 50%;
@@ -459,9 +498,9 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
       transform: translate(-50%, -50%);
       width: 340px;
       height: 340px;
-      max-width: 100%; 
+      max-width: 100%;
       max-height: 100%;
-      
+
       .orbit-ring {
         @each $ring, $size in $orbit-ring-sizes-1024 {
           &.ring-#{$ring} {
@@ -472,23 +511,23 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
       }
     }
   }
-  
+
   .bio-container {
     width: 100%;
-    
+
     .bio-content {
-      text-align: center; 
-      
+      text-align: center;
+
       .bio-greeting {
         margin-top: 0.5rem;
         font-size: 2rem;
       }
 
       .bio-text {
-        text-align: left; 
+        text-align: left;
         p {
           font-size: 1.1rem;
-          line-height: 1.6; 
+          line-height: 1.6;
           margin-bottom: 1.2rem;
         }
       }
@@ -498,17 +537,17 @@ $orbit-ring-sizes-600: (1: 180px, 2: 210px, 3: 240px);
 
 @media (max-width: 600px) {
   .about-section {
-    padding-top: 100px; 
+    padding-top: 100px;
   }
 
   .section-header .section-title {
     font-size: 2.2rem;
   }
-  
+
   .avatar-container {
     width: 240px;
     height: 240px;
-    
+
     .hologram-avatar {
       width: 160px;
       height: 160px;

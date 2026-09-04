@@ -1,4 +1,3 @@
-
 import { Suspense, lazy } from 'react';
 
 const AboutSection = lazy(() => import('./AboutSection'));

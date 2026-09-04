@@ -1,36 +1,36 @@
-import { useState, useRef, useEffect, useMemo, useCallback, memo, Suspense } from "react"; 
+import { useState, useRef, useEffect, useMemo, useCallback, memo, Suspense } from 'react';
 import { suspend } from 'suspend-react';
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useTranslation } from "react-i18next";
-import { Environment, Preload } from "@react-three/drei"; 
-import { motion, useInView } from "framer-motion";
-import * as THREE from "three";
-import "../styles/home.scss";
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useTranslation } from 'react-i18next';
+import { Environment, Preload } from '@react-three/drei';
+import { motion, useInView } from 'framer-motion';
+import * as THREE from 'three';
+import '../styles/home.scss';
 
-import MusicPlayer from "./MusicPlayer";
-import LanguageSelector from "./LanguageSelector";
+import MusicPlayer from './MusicPlayer';
+import LanguageSelector from './LanguageSelector';
 
-import avatarVideo from "../assets/images/avatar.webm";
-import avatarPng from "../assets/images/avatar.png";
-import skillVideo from "../assets/images/think.webm";
-import skillPng from "../assets/images/think.png";
-import codeVideo from "../assets/images/web-developer.webm";
-import codePng from "../assets/images/web-developer.png";
-import resumeVideo from "../assets/images/resume.webm";
-import resumePng from "../assets/images/resume.png";
-import socialsVideo from "../assets/images/social-media.webm";
-import socialsPng from "../assets/images/social-media.png";
-import NightSkyBackground from "./NightSkyBackground";
-import InteractivePanel from "./InteractivePanel";
-import CentralHologram from "./CentralHologram";
-import OutlineStars from "./OutlineStars";
-import SectionsContainer from "./sections/SectionsContainer";
+import avatarVideo from '../assets/images/avatar.webm';
+import avatarPng from '../assets/images/avatar.png';
+import skillVideo from '../assets/images/think.webm';
+import skillPng from '../assets/images/think.png';
+import codeVideo from '../assets/images/web-developer.webm';
+import codePng from '../assets/images/web-developer.png';
+import resumeVideo from '../assets/images/resume.webm';
+import resumePng from '../assets/images/resume.png';
+import socialsVideo from '../assets/images/social-media.webm';
+import socialsPng from '../assets/images/social-media.png';
+import NightSkyBackground from './NightSkyBackground';
+import InteractivePanel from './InteractivePanel';
+import CentralHologram from './CentralHologram';
+import OutlineStars from './OutlineStars';
+import SectionsContainer from './sections/SectionsContainer';
 
-import catPoints from "../catPoints.json";
-import cameraPoints from "../cameraPoints.json";
-import bookPoints from "../bookPoints.json";
-import flowerPoints from "../flowerPoints.json";
-import headsetPoints from "../headsetPoints.json";
+import catPoints from '../catPoints.json';
+import cameraPoints from '../cameraPoints.json';
+import bookPoints from '../bookPoints.json';
+import flowerPoints from '../flowerPoints.json';
+import headsetPoints from '../headsetPoints.json';
 
 const sunsetHdri = import('@pmndrs/assets/hdri/sunset.exr');
 
@@ -49,11 +49,7 @@ const DragHint = ({ isVisible }) => {
 
   if (!shouldRender) return null;
 
-  return (
-    <div className={`drag-hint ${!isVisible ? "fade-out" : ""}`}>
-      {t('drag_hint')}
-    </div>
-  );
+  return <div className={`drag-hint ${!isVisible ? 'fade-out' : ''}`}>{t('drag_hint')}</div>;
 };
 
 const RotatingPanels = memo(function RotatingPanels({
@@ -149,20 +145,20 @@ const RotatingPanels = memo(function RotatingPanels({
   );
 });
 
-const SceneContent = memo(function SceneContent({ 
+const SceneContent = memo(function SceneContent({
   eventSource,
-  nightSkyRef, 
-  show3DNav, 
-  initialRotationComplete, 
-  hasDragged, 
-  icons, 
-  scalingConfig, 
-  active, 
-  setActive, 
-  panelPositions, 
-  handleIconClick, 
+  nightSkyRef,
+  show3DNav,
+  initialRotationComplete,
+  hasDragged,
+  icons,
+  scalingConfig,
+  active,
+  setActive,
+  panelPositions,
+  handleIconClick,
   onPanelPointerUp,
-  isInView, 
+  isInView,
   constellationScales,
   onInitialRotationComplete,
   rotationYRef,
@@ -174,18 +170,16 @@ const SceneContent = memo(function SceneContent({
     <div id="home-3d" className="home-3d-content">
       <NightSkyBackground ref={nightSkyRef} isVisible={isInView} />
 
-      {navEnabled && initialRotationComplete && !hasDragged && (
-        <DragHint isVisible={!hasDragged} />
-      )}
+      {navEnabled && initialRotationComplete && !hasDragged && <DragHint isVisible={!hasDragged} />}
 
       <Canvas
-        frameloop={isInView ? "always" : "never"}
+        frameloop={isInView ? 'always' : 'never'}
         camera={{ position: [0, 5, 20], fov: 45 }}
         eventSource={eventSource}
         eventPrefix="client"
         className="webgl-canvas"
-        dpr={[1, 1.5]} 
-        style={{ pointerEvents: navEnabled ? "auto" : "none" }}
+        dpr={[1, 1.5]}
+        style={{ pointerEvents: navEnabled ? 'auto' : 'none' }}
       >
         <Suspense fallback={null}>
           <group>
@@ -226,44 +220,44 @@ const SceneContent = memo(function SceneContent({
           {navEnabled && (
             <>
               <OutlineStars
-                active={active === "About"}
+                active={active === 'About'}
                 position={[-scalingConfig.radius + 1, 0, 0]}
                 pointsData={catPoints}
                 scale={constellationScales.about}
               />
               <OutlineStars
-                active={active === "Socials"}
+                active={active === 'Socials'}
                 position={[-scalingConfig.radius - 3, -scalingConfig.radius * 0.6, 0]}
                 pointsData={cameraPoints}
                 scale={constellationScales.socials}
               />
               <OutlineStars
-                active={active === "Resume"}
+                active={active === 'Resume'}
                 position={[-scalingConfig.radius - 2, scalingConfig.radius * 0.4, 0]}
                 pointsData={bookPoints}
                 scale={constellationScales.resume}
               />
               <OutlineStars
-                active={active === "Skills"}
+                active={active === 'Skills'}
                 position={[scalingConfig.radius + 2, scalingConfig.radius * 0.4, 0]}
                 pointsData={flowerPoints}
                 scale={constellationScales.skills}
               />
               <OutlineStars
-                active={active === "Projects"}
+                active={active === 'Projects'}
                 position={[scalingConfig.radius - 1, -scalingConfig.radius * 0.6, 0]}
                 pointsData={headsetPoints}
                 scale={constellationScales.projects}
               />
             </>
           )}
-          
+
           <Preload all />
         </Suspense>
       </Canvas>
 
       {!show3DNav && (
-        <motion.div 
+        <motion.div
           className="static-menu-overlay mobile-home-layout"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -271,7 +265,7 @@ const SceneContent = memo(function SceneContent({
         >
           <div className="menu-grid">
             {icons.map((icon) => (
-              <button 
+              <button
                 key={icon.id}
                 className="menu-item"
                 onClick={() => handleIconClick(icon.id)}
@@ -280,7 +274,9 @@ const SceneContent = memo(function SceneContent({
                 <div className="icon-wrapper">
                   <img src={icon.png} alt={icon.label} decoding="async" />
                 </div>
-                <span className="label" style={{ userSelect: 'none' }}>{icon.label}</span>
+                <span className="label" style={{ userSelect: 'none' }}>
+                  {icon.label}
+                </span>
               </button>
             ))}
           </div>
@@ -295,50 +291,56 @@ const Home = () => {
 
   const nightSkyRef = useRef(null);
 
-  const icons = useMemo(() => [
-    {
-      id: "Socials", 
-      label: t('nav.socials'), 
-      png: socialsPng,
-      video: socialsVideo,
-      color: new THREE.Color(0.4, 0.7, 0.9),
-    },
-    {
-      id: "Resume",
-      label: t('nav.resume'),
-      png: resumePng,
-      video: resumeVideo,
-      color: new THREE.Color(0.9, 0.6, 0.4),
-    },
-    {
-      id: "Projects",
-      label: t('nav.projects'),
-      png: codePng,
-      video: codeVideo,
-      color: new THREE.Color(0.4, 0.8, 0.6),
-    },
-    {
-      id: "About", 
-      label: t('nav.about'), 
-      png: avatarPng,
-      video: avatarVideo, 
-      color: new THREE.Color(0.8, 0.5, 0.9),
-    },
-    {
-      id: "Skills",
-      label: t('nav.skills'),
-      png: skillPng,
-      video: skillVideo,
-      color: new THREE.Color(0.7, 0.5, 0.9),
-    },
-  ], [t]); 
+  const icons = useMemo(
+    () => [
+      {
+        id: 'Socials',
+        label: t('nav.socials'),
+        png: socialsPng,
+        video: socialsVideo,
+        color: new THREE.Color(0.4, 0.7, 0.9),
+      },
+      {
+        id: 'Resume',
+        label: t('nav.resume'),
+        png: resumePng,
+        video: resumeVideo,
+        color: new THREE.Color(0.9, 0.6, 0.4),
+      },
+      {
+        id: 'Projects',
+        label: t('nav.projects'),
+        png: codePng,
+        video: codeVideo,
+        color: new THREE.Color(0.4, 0.8, 0.6),
+      },
+      {
+        id: 'About',
+        label: t('nav.about'),
+        png: avatarPng,
+        video: avatarVideo,
+        color: new THREE.Color(0.8, 0.5, 0.9),
+      },
+      {
+        id: 'Skills',
+        label: t('nav.skills'),
+        png: skillPng,
+        video: skillVideo,
+        color: new THREE.Color(0.7, 0.5, 0.9),
+      },
+    ],
+    [t],
+  );
 
   const [active, setActive] = useState(null);
   const homeRef = useRef(null);
   const rotationYRef = useRef(0);
   const targetRotationYRef = useRef(0);
-  
-  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  const [dimensions, setDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
   useEffect(() => {
     let resizeTimeout;
 
@@ -349,10 +351,10 @@ const Home = () => {
       }, 100);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimeout);
     };
   }, []);
@@ -390,7 +392,7 @@ const Home = () => {
         hologramScale: 1,
         hologramRadius: 5,
         hologramHalo: [5.2, 5.4],
-        hologramY: 0, 
+        hologramY: 0,
       };
     } else if (isTablet) {
       return {
@@ -400,12 +402,12 @@ const Home = () => {
         ringInner: 0.7,
         ringOuter: 0.8,
         labelMargin: 48,
-        hologramScale: 0.9, 
-        hologramRadius: 4.5, 
+        hologramScale: 0.9,
+        hologramRadius: 4.5,
         hologramHalo: [4.7, 4.9],
-        hologramY: 0.5, 
+        hologramY: 0.5,
       };
-    } else { 
+    } else {
       return {
         radius: 5.2,
         iconScale: 0.42,
@@ -414,9 +416,9 @@ const Home = () => {
         ringOuter: 0.65,
         labelMargin: 32,
         hologramScale: 1.2,
-        hologramRadius: 4.0, 
+        hologramRadius: 4.0,
         hologramHalo: [4.2, 4.4],
-        hologramY: 0.4, 
+        hologramY: 0.4,
       };
     }
   }, [isDesktop, isTablet]);
@@ -434,12 +436,12 @@ const Home = () => {
   const dragRef = useRef({
     dragging: false,
     startX: 0,
-    startY: 0, 
+    startY: 0,
     startRot: 0,
     hasInteracted: false,
     hasDraggedThisGesture: false,
     clickedPanel: false,
-  });  
+  });
 
   const [initialRotationComplete, setInitialRotationComplete] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -454,19 +456,19 @@ const Home = () => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
+        behavior: 'smooth',
+        block: 'start',
       });
     }
   };
 
   const handleIconClick = useCallback((iconId) => {
     const sectionMap = {
-      About: "about-section",
-      Skills: "skills-section",
-      Projects: "projects-section",
-      Resume: "resume-section",
-      Socials: "socials-section",
+      About: 'about-section',
+      Skills: 'skills-section',
+      Projects: 'projects-section',
+      Resume: 'resume-section',
+      Socials: 'socials-section',
     };
     scrollToSection(sectionMap[iconId]);
   }, []);
@@ -479,16 +481,16 @@ const Home = () => {
   useEffect(() => {
     const onMouseMove = (e) => {
       if (!dragRef.current.dragging || !initialRotationComplete || !show3DNav) return;
-      
+
       const deltaX = e.clientX - dragRef.current.startX;
       const rotationSpeed = 0.003;
 
       const centerY = window.innerHeight / 2;
       const isFront = dragRef.current.startY > centerY;
-      
+
       const direction = isFront ? 1 : -1;
 
-      targetRotationYRef.current = dragRef.current.startRot + (deltaX * rotationSpeed * direction);
+      targetRotationYRef.current = dragRef.current.startRot + deltaX * rotationSpeed * direction;
 
       if (!hasDragged && Math.abs(deltaX) > 5) {
         setHasDragged(true);
@@ -513,58 +515,67 @@ const Home = () => {
       setIsDragging(false);
     };
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
 
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
     };
   }, [initialRotationComplete, hasDragged, show3DNav]);
 
-  const panelPositions = useMemo(() => icons.map((_, i) => {
-    const angle = (i / numberOfIcons) * 2 * Math.PI;
-    const x = scalingConfig.radius * Math.cos(angle);
-    const z = scalingConfig.radius * Math.sin(angle);
-    return [x, 0, z];
-  }), [icons, numberOfIcons, scalingConfig.radius]);
+  const panelPositions = useMemo(
+    () =>
+      icons.map((_, i) => {
+        const angle = (i / numberOfIcons) * 2 * Math.PI;
+        const x = scalingConfig.radius * Math.cos(angle);
+        const z = scalingConfig.radius * Math.sin(angle);
+        return [x, 0, z];
+      }),
+    [icons, numberOfIcons, scalingConfig.radius],
+  );
 
-  const constellationScales = useMemo(() => ({
-    about: isDesktop ? 1.3 : 0.9,
-    socials: isDesktop ? 0.8 : 0.6,
-    resume: isDesktop ? 0.8 : 0.6,
-    skills: isDesktop ? 0.8 : 0.6,
-    projects: isDesktop ? 0.8 : 0.6,
-  }), [isDesktop]);
+  const constellationScales = useMemo(
+    () => ({
+      about: isDesktop ? 1.3 : 0.9,
+      socials: isDesktop ? 0.8 : 0.6,
+      resume: isDesktop ? 0.8 : 0.6,
+      skills: isDesktop ? 0.8 : 0.6,
+      projects: isDesktop ? 0.8 : 0.6,
+    }),
+    [isDesktop],
+  );
 
   return (
     <>
       <div className="main-container">
         <LanguageSelector />
         <MusicPlayer />
-        
+
         <section
           ref={homeRef}
           className="home-3d"
-          onMouseDown={show3DNav && isInView ? (e) => {
-            if (!initialRotationComplete) return;
-            dragRef.current.dragging = true;
-            setIsDragging(true);
-            dragRef.current.hasDraggedThisGesture = false;
-            dragRef.current.clickedPanel = false;
-            dragRef.current.startX = e.clientX;
-            dragRef.current.startY = e.clientY; 
-            dragRef.current.startRot = targetRotationYRef.current;
-          } : undefined}
+          onMouseDown={
+            show3DNav && isInView
+              ? (e) => {
+                  if (!initialRotationComplete) return;
+                  dragRef.current.dragging = true;
+                  setIsDragging(true);
+                  dragRef.current.hasDraggedThisGesture = false;
+                  dragRef.current.clickedPanel = false;
+                  dragRef.current.startX = e.clientX;
+                  dragRef.current.startY = e.clientY;
+                  dragRef.current.startRot = targetRotationYRef.current;
+                }
+              : undefined
+          }
           style={{
-            cursor: show3DNav
-              ? isDragging ? "grabbing" : "grab"
-              : "default",
+            cursor: show3DNav ? (isDragging ? 'grabbing' : 'grab') : 'default',
           }}
         >
-          <SceneContent 
+          <SceneContent
             eventSource={homeRef}
-            nightSkyRef={nightSkyRef} 
+            nightSkyRef={nightSkyRef}
             show3DNav={show3DNav}
             initialRotationComplete={initialRotationComplete}
             hasDragged={hasDragged}

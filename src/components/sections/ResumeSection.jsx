@@ -1,7 +1,7 @@
-import { forwardRef, useRef, useMemo, useState, useEffect, useCallback } from "react";
-import HTMLFlipBook from "react-pageflip";
-import { useTranslation, Trans } from "react-i18next";
-import { useReducedMotion } from "framer-motion";
+import { forwardRef, useRef, useMemo, useState, useEffect, useCallback } from 'react';
+import HTMLFlipBook from 'react-pageflip';
+import { useTranslation, Trans } from 'react-i18next';
+import { useReducedMotion } from 'framer-motion';
 import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import {
   Code,
@@ -14,10 +14,10 @@ import {
   Target,
   User,
   ArrowDown,
-} from "lucide-react";
-import { motion } from "framer-motion";
-import "../../styles/sections/ResumeSection.scss";
-import resumePDF from "../../assets/files/Resume2026.pdf";
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import '../../styles/sections/ResumeSection.scss';
+import resumePDF from '../../assets/files/Resume2026.pdf';
 
 const ResumeStarsCanvas = () => {
   const canvasRef = useRef(null);
@@ -37,19 +37,19 @@ const ResumeStarsCanvas = () => {
             starType === 'hero'
               ? Math.random() * 1.1 + 1.4
               : starType === 'mid'
-              ? Math.random() * 0.3 + 0.45
-              : Math.random() * 0.22 + 0.28,
+                ? Math.random() * 0.3 + 0.45
+                : Math.random() * 0.22 + 0.28,
           alpha:
             starType === 'hero'
               ? Math.random() * 0.4 + 0.6
               : starType === 'mid'
-              ? Math.random() * 0.18 + 0.45
-              : Math.random() * 0.12 + 0.25,
+                ? Math.random() * 0.18 + 0.45
+                : Math.random() * 0.12 + 0.25,
           phase: Math.random() * Math.PI * 2,
           speed: Math.random() * 0.002 + 0.001,
         };
       }),
-    []
+    [],
   );
 
   const drawStars = useCallback(
@@ -57,9 +57,10 @@ const ResumeStarsCanvas = () => {
       ctx.clearRect(0, 0, width, height);
 
       stars.forEach((star) => {
-        const twinkle = reduceMotion || isStatic
-          ? 1
-          : 0.75 + Math.sin(timestamp * star.speed + star.phase) * 0.14;
+        const twinkle =
+          reduceMotion || isStatic
+            ? 1
+            : 0.75 + Math.sin(timestamp * star.speed + star.phase) * 0.14;
         const alpha = Math.min(1, Math.max(0, star.alpha * twinkle));
 
         ctx.globalAlpha = alpha;
@@ -89,7 +90,7 @@ const ResumeStarsCanvas = () => {
 
       ctx.globalAlpha = 1;
     },
-    [reduceMotion, stars]
+    [reduceMotion, stars],
   );
 
   useCanvasAnimationLoop(canvasRef, {
@@ -123,9 +124,9 @@ const StarBackground = () => {
 const Page = forwardRef(function Page(props, ref) {
   return (
     <div
-      className={`page ${props.className || ""}`}
+      className={`page ${props.className || ''}`}
       ref={ref}
-      data-density={props.density || "soft"}
+      data-density={props.density || 'soft'}
     >
       <div className="page-content">
         {props.children}
@@ -142,8 +143,8 @@ const containerVariants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: "easeOut",
-      when: "beforeChildren",
+      ease: 'easeOut',
+      when: 'beforeChildren',
       staggerChildren: 0.2,
     },
   },
@@ -156,8 +157,8 @@ const itemVariants = {
 
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState({
-    width: typeof window !== "undefined" ? window.innerWidth : 0,
-    height: typeof window !== "undefined" ? window.innerHeight : 0,
+    width: typeof window !== 'undefined' ? window.innerWidth : 0,
+    height: typeof window !== 'undefined' ? window.innerHeight : 0,
   });
 
   useEffect(() => {
@@ -173,11 +174,11 @@ const useWindowSize = () => {
       }, 100);
     }
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
       clearTimeout(resizeTimeout);
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -197,7 +198,7 @@ const ResumeSection = ({ id }) => {
 
   // warm the SocialsSection chunk early so it's ready before the user scroll-snaps into it
   useEffect(() => {
-    import("./SocialsSection");
+    import('./SocialsSection');
   }, []);
 
   const onFlip = (e) => {
@@ -212,29 +213,29 @@ const ResumeSection = ({ id }) => {
     setFlipStartData(e.data);
 
     if (e.data === 0) {
-      setNextPageDirection("next");
+      setNextPageDirection('next');
     } else if (e.data === totalPages - 2) {
-      setNextPageDirection("next");
+      setNextPageDirection('next');
     } else if (e.data === totalPages - 1) {
-      setNextPageDirection("prev");
+      setNextPageDirection('prev');
     } else if (e.data === 1 && currentPage === 0) {
-      setNextPageDirection("prev");
+      setNextPageDirection('prev');
     } else {
-      const direction = e.data > currentPage ? "next" : "prev";
+      const direction = e.data > currentPage ? 'next' : 'prev';
       setNextPageDirection(direction);
     }
   };
 
   const onDownloadCV = () => {
-    window.open(resumePDF, "_blank");
+    window.open(resumePDF, '_blank');
   };
 
   const getBookmarkState = () => {
-    if (isMobile) return "is-mobile-hidden";
+    if (isMobile) return 'is-mobile-hidden';
     if (isFlipping && nextPageDirection && flipStartData !== null) {
       let predictedPage;
 
-      if (nextPageDirection === "next") {
+      if (nextPageDirection === 'next') {
         predictedPage = flipStartData + 1;
       } else {
         predictedPage = flipStartData - 1;
@@ -242,21 +243,21 @@ const ResumeSection = ({ id }) => {
 
       predictedPage = Math.max(0, Math.min(totalPages - 1, predictedPage));
 
-      if (predictedPage === 0) return "is-front";
-      if (predictedPage === totalPages - 1) return "is-back";
-      return "is-open";
+      if (predictedPage === 0) return 'is-front';
+      if (predictedPage === totalPages - 1) return 'is-back';
+      return 'is-open';
     }
 
-    if (currentPage === 0) return "is-front";
-    if (currentPage === totalPages - 1) return "is-back";
-    return "is-open";
+    if (currentPage === 0) return 'is-front';
+    if (currentPage === totalPages - 1) return 'is-back';
+    return 'is-open';
   };
 
   const getInteractiveState = () => {
     if (isFlipping && nextPageDirection && flipStartData !== null) {
       let predictedPage;
 
-      if (nextPageDirection === "next") {
+      if (nextPageDirection === 'next') {
         predictedPage = flipStartData + 1;
       } else {
         predictedPage = flipStartData - 1;
@@ -289,7 +290,7 @@ const ResumeSection = ({ id }) => {
     }
     if (!isFrontCover) {
       setIsFlipping(true);
-      setNextPageDirection("prev");
+      setNextPageDirection('prev');
       setFlipStartData(currentPage);
       bookRef.current?.pageFlip()?.flipPrev();
     }
@@ -302,7 +303,7 @@ const ResumeSection = ({ id }) => {
     }
     if (!isBackCover) {
       setIsFlipping(true);
-      setNextPageDirection("next");
+      setNextPageDirection('next');
       setFlipStartData(currentPage);
       bookRef.current?.pageFlip()?.flipNext();
     }
@@ -312,43 +313,41 @@ const ResumeSection = ({ id }) => {
     if (isMobile) return;
     // react-pageflip does not expose the internal page DOM nodes via its public ref,
     // so this class-based lookup is used to capture mousedown on rendered .page elements.
-    const bookElement = document.querySelector(".stellar-book");
+    const bookElement = document.querySelector('.stellar-book');
     if (!bookElement) return;
 
     const handlePageMouseDown = (e) => {
-      const pageElement = e.target.closest(".page");
+      const pageElement = e.target.closest('.page');
       if (pageElement) {
-        const pageIndex = Array.from(
-          bookElement.querySelectorAll(".page"),
-        ).indexOf(pageElement);
+        const pageIndex = Array.from(bookElement.querySelectorAll('.page')).indexOf(pageElement);
         if (pageIndex !== -1) {
           setIsFlipping(true);
           setFlipStartData(pageIndex);
 
           if (pageIndex === 0) {
-            setNextPageDirection("next");
+            setNextPageDirection('next');
           } else if (pageIndex === totalPages - 2) {
-            setNextPageDirection("next");
+            setNextPageDirection('next');
           } else if (pageIndex === totalPages - 1) {
-            setNextPageDirection("prev");
+            setNextPageDirection('prev');
           } else if (pageIndex === 1 && currentPage === 0) {
-            setNextPageDirection("prev");
+            setNextPageDirection('prev');
           }
         }
       }
     };
 
-    bookElement.addEventListener("mousedown", handlePageMouseDown);
+    bookElement.addEventListener('mousedown', handlePageMouseDown);
 
     return () => {
-      bookElement.removeEventListener("mousedown", handlePageMouseDown);
+      bookElement.removeEventListener('mousedown', handlePageMouseDown);
     };
   }, [currentPage, isMobile]);
 
   const scrollToSocials = () => {
-    const socialsSection = document.getElementById("socials-section");
+    const socialsSection = document.getElementById('socials-section');
     if (socialsSection) {
-      socialsSection.scrollIntoView({ behavior: "smooth" });
+      socialsSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -369,24 +368,22 @@ const ResumeSection = ({ id }) => {
               <Code size={40} className="mobile-icon" />
             </div>
             <h1 className="mobile-title">Victoria</h1>
-            <p className="mobile-subtitle">
-              {t("resume_content.cover.subtitle")}
-            </p>
+            <p className="mobile-subtitle">{t('resume_content.cover.subtitle')}</p>
 
             <div className="mobile-divider"></div>
 
-            <p className="mobile-desc">{t("resume_content.p1.text")}</p>
+            <p className="mobile-desc">{t('resume_content.p1.text')}</p>
 
             <button className="mobile-download-btn" onClick={onDownloadCV}>
               <Download size={20} />
-              <span>{t("resume_content.p6.btn_pdf")}</span>
+              <span>{t('resume_content.p6.btn_pdf')}</span>
             </button>
           </div>
         </motion.div>
       ) : (
         <motion.div
           key="desktop-view"
-          className={`book-wrapper ${isMobile ? "mobile-mode" : ""}`}
+          className={`book-wrapper ${isMobile ? 'mobile-mode' : ''}`}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -395,13 +392,13 @@ const ResumeSection = ({ id }) => {
           <motion.button
             type="button"
             variants={itemVariants}
-            className={`nav-arrow left ${isFrontCover ? "disabled" : ""}`}
-            aria-label={t("resume_content.nav.prev")}
+            className={`nav-arrow left ${isFrontCover ? 'disabled' : ''}`}
+            aria-label={t('resume_content.nav.prev')}
             onClick={(e) => handlePrevClick(e)}
             disabled={isFrontCover}
             style={{
-              cursor: isFrontCover ? "default" : "pointer",
-              pointerEvents: isFrontCover ? "none" : "auto",
+              cursor: isFrontCover ? 'default' : 'pointer',
+              pointerEvents: isFrontCover ? 'none' : 'auto',
               opacity: isFrontCover ? 0.3 : 1,
             }}
           >
@@ -413,11 +410,11 @@ const ResumeSection = ({ id }) => {
               <button
                 type="button"
                 className={`bookmark-tab ${bookmarkState}`}
-                aria-label={t("resume_content.actions.download_cv")}
+                aria-label={t('resume_content.actions.download_cv')}
                 onClick={onDownloadCV}
                 disabled={isFrontCover || isBackCover}
                 style={{
-                  cursor: isFrontCover || isBackCover ? "default" : "pointer",
+                  cursor: isFrontCover || isBackCover ? 'default' : 'pointer',
                 }}
               >
                 <Download
@@ -429,7 +426,7 @@ const ResumeSection = ({ id }) => {
                   className="bookmark-text"
                   style={{ opacity: isFrontCover || isBackCover ? 0 : 1 }}
                 >
-                  {t("resume")}
+                  {t('resume')}
                 </span>
               </button>
             )}
@@ -477,12 +474,8 @@ const ResumeSection = ({ id }) => {
                       <span className="line"></span>
                       <span className="dot"></span>
                     </div>
-                    <h2 className="book-subtitle">
-                      {t("resume_content.cover.subtitle")}
-                    </h2>
-                    <div className="edition-badge">
-                      {t("resume_content.cover.edition")}
-                    </div>
+                    <h2 className="book-subtitle">{t('resume_content.cover.subtitle')}</h2>
+                    <div className="edition-badge">{t('resume_content.cover.edition')}</div>
                   </div>
                 </div>
               </Page>
@@ -491,12 +484,10 @@ const ResumeSection = ({ id }) => {
               <Page number="1" className="page-left">
                 <div className="page-inner-centered">
                   <h2 className="page-header">
-                    <User size={18} /> {t("resume_content.p1.title")}
+                    <User size={18} /> {t('resume_content.p1.title')}
                   </h2>
                   <div className="section-content">
-                    <p className="summary-text">
-                      {t("resume_content.p1.text")}
-                    </p>
+                    <p className="summary-text">{t('resume_content.p1.text')}</p>
                   </div>
                 </div>
               </Page>
@@ -505,17 +496,13 @@ const ResumeSection = ({ id }) => {
               <Page number="2" className="page-right">
                 <div className="page-inner">
                   <h2 className="page-header">
-                    <GraduationCap size={18} /> {t("resume_content.p2.title")}
+                    <GraduationCap size={18} /> {t('resume_content.p2.title')}
                   </h2>
                   <div className="section-content">
                     <span className="year-label">2023 - 2025</span>
-                    <h3>{t("resume_content.p2.program")}</h3>
-                    <p className="subtitle-text">
-                      {t("resume_content.p2.school")}
-                    </p>
-                    <p className="distinction-badge">
-                      {t("resume_content.p2.distinction")}
-                    </p>
+                    <h3>{t('resume_content.p2.program')}</h3>
+                    <p className="subtitle-text">{t('resume_content.p2.school')}</p>
+                    <p className="distinction-badge">{t('resume_content.p2.distinction')}</p>
                     <ul className="achievement-list">
                       <li>
                         <Trans i18nKey="resume_content.p2.list_dev">
@@ -541,14 +528,12 @@ const ResumeSection = ({ id }) => {
               <Page number="3" className="page-left">
                 <div className="page-inner">
                   <h2 className="page-header">
-                    <TrendingUp size={22} /> {t("resume_content.p3.title")}
+                    <TrendingUp size={22} /> {t('resume_content.p3.title')}
                   </h2>
                   <div className="section-content">
                     <span className="year-label">2025 - 2027</span>
-                    <h3>{t("resume_content.p3.program")}</h3>
-                    <p className="subtitle-text">
-                      {t("resume_content.p3.specialization")}
-                    </p>
+                    <h3>{t('resume_content.p3.program')}</h3>
+                    <p className="subtitle-text">{t('resume_content.p3.specialization')}</p>
                     <div className="highlight-box">
                       <Trans i18nKey="resume_content.p3.track_info">
                         <strong>Accelerated Track:</strong>
@@ -579,16 +564,12 @@ const ResumeSection = ({ id }) => {
               <Page number="4" className="page-right">
                 <div className="page-inner">
                   <h2 className="page-header">
-                    <Briefcase size={22} /> {t("resume_content.p4.title")}
+                    <Briefcase size={22} /> {t('resume_content.p4.title')}
                   </h2>
                   <div className="section-content">
-                    <span className="year-label">
-                      {t("resume_content.p4.context")}
-                    </span>
+                    <span className="year-label">{t('resume_content.p4.context')}</span>
                     <h3>Vanden Broele</h3>
-                    <p className="subtitle-text">
-                      {t("resume_content.p4.role")}
-                    </p>
+                    <p className="subtitle-text">{t('resume_content.p4.role')}</p>
                     <ul>
                       <li>
                         <Trans i18nKey="resume_content.p4.bullet_1">
@@ -602,9 +583,8 @@ const ResumeSection = ({ id }) => {
                       </li>
                     </ul>
                     <div className="tech-tags-container">
-                      <span>.NET CORE</span> <span>C#</span>{" "}
-                      <span>OPENSEARCH</span> <span>DOCKER</span>{" "}
-                      <span>TYPESCRIPT</span>
+                      <span>.NET CORE</span> <span>C#</span> <span>OPENSEARCH</span>{' '}
+                      <span>DOCKER</span> <span>TYPESCRIPT</span>
                     </div>
                   </div>
                 </div>
@@ -614,19 +594,15 @@ const ResumeSection = ({ id }) => {
               <Page number="5" className="page-left">
                 <div className="page-inner">
                   <h2 className="page-header">
-                    <Target size={18} /> {t("resume_content.p5.title")}
+                    <Target size={18} /> {t('resume_content.p5.title')}
                   </h2>
                   <div className="section-content">
                     <div className="goal-section">
-                      <h4 className="subtitle-gold">
-                        {t("resume_content.p5.target_title")}
-                      </h4>
-                      <p>{t("resume_content.p5.target_text")}</p>
+                      <h4 className="subtitle-gold">{t('resume_content.p5.target_title')}</h4>
+                      <p>{t('resume_content.p5.target_text')}</p>
                     </div>
-                    <div className="goal-section" style={{ marginTop: "20px" }}>
-                      <h4 className="subtitle-gold">
-                        {t("resume_content.p5.readiness_title")}
-                      </h4>
+                    <div className="goal-section" style={{ marginTop: '20px' }}>
+                      <h4 className="subtitle-gold">{t('resume_content.p5.readiness_title')}</h4>
                       <ul className="goal-list-compact">
                         <li>
                           <Trans i18nKey="resume_content.p5.list_jp">
@@ -649,7 +625,7 @@ const ResumeSection = ({ id }) => {
                 <div className="page-inner-back">
                   <div className="closing-content">
                     <Code size={40} className="faded-icon" />
-                    <h3>{t("resume_content.p6.title")}</h3>
+                    <h3>{t('resume_content.p6.title')}</h3>
                     <div className="divider-small"></div>
                     <p className="sub-text">
                       <Trans
@@ -657,26 +633,23 @@ const ResumeSection = ({ id }) => {
                         components={[<strong key="net" />, <strong key="intl" />]}
                       />
                     </p>
-                    <button
-                      className="download-btn-styled"
-                      onClick={onDownloadCV}
-                    >
-                      <Download size={16} /> {t("resume_content.p6.btn_pdf")}
+                    <button className="download-btn-styled" onClick={onDownloadCV}>
+                      <Download size={16} /> {t('resume_content.p6.btn_pdf')}
                     </button>
                     <button
                       type="button"
                       className="scroll-hint"
-                      aria-label={t("resume_content.actions.scroll_to_socials")}
+                      aria-label={t('resume_content.actions.scroll_to_socials')}
                       onClick={scrollToSocials}
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "6px",
-                        marginTop: "15px",
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        marginTop: '15px',
                       }}
                     >
-                      {t("resume_content.p6.scroll_hint")}
+                      {t('resume_content.p6.scroll_hint')}
                       <ArrowDown size={18} />
                     </button>
                   </div>
@@ -684,11 +657,7 @@ const ResumeSection = ({ id }) => {
               </Page>
 
               {/* Pagina 7: Back Cover */}
-              <Page
-                number=""
-                className="is-cover is-back-cover page-left"
-                density="hard"
-              >
+              <Page number="" className="is-cover is-back-cover page-left" density="hard">
                 <div className="cover-content">
                   <div className="corner-ornament top-left"></div>
                   <div className="corner-ornament top-right"></div>
@@ -696,11 +665,7 @@ const ResumeSection = ({ id }) => {
                   <div className="corner-ornament bottom-right"></div>
                   <div className="back-cover-content">
                     <div className="back-seal">
-                      <Code
-                        size={55}
-                        strokeWidth={1}
-                        className="back-logo-icon"
-                      />
+                      <Code size={55} strokeWidth={1} className="back-logo-icon" />
                     </div>
                     <div className="back-text-group">
                       <div className="title-separator small">
@@ -709,9 +674,7 @@ const ResumeSection = ({ id }) => {
                         <span className="line"></span>
                       </div>
                       <p className="copyright">© 2026 Victoria Ghoos</p>
-                      <div className="tech-badge">
-                        {t("resume_content.cover.built_with")}
-                      </div>
+                      <div className="tech-badge">{t('resume_content.cover.built_with')}</div>
                     </div>
                   </div>
                 </div>
@@ -722,13 +685,13 @@ const ResumeSection = ({ id }) => {
           <motion.button
             type="button"
             variants={itemVariants}
-            className={`nav-arrow right ${isBackCover ? "disabled" : ""}`}
-            aria-label={t("resume_content.nav.next")}
+            className={`nav-arrow right ${isBackCover ? 'disabled' : ''}`}
+            aria-label={t('resume_content.nav.next')}
             onClick={(e) => handleNextClick(e)}
             disabled={isBackCover}
             style={{
-              cursor: isBackCover ? "default" : "pointer",
-              pointerEvents: isBackCover ? "none" : "auto",
+              cursor: isBackCover ? 'default' : 'pointer',
+              pointerEvents: isBackCover ? 'none' : 'auto',
               opacity: isBackCover ? 0.3 : 1,
             }}
           >

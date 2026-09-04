@@ -1,12 +1,12 @@
-import { memo, useMemo, useRef, useEffect, useState, useCallback } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Cloud, Sparkles, Float } from "@react-three/drei";
-import { motion, useReducedMotion } from "framer-motion";
-import { Github, Linkedin, Mail, ArrowUpCircle } from "lucide-react";
+import { memo, useMemo, useRef, useEffect, useState, useCallback } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { Cloud, Sparkles, Float } from '@react-three/drei';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Github, Linkedin, Mail, ArrowUpCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
-import "../../styles/sections/SocialsSection.scss";
-import cloudTexture from "../../assets/images/cloud.png";
+import '../../styles/sections/SocialsSection.scss';
+import cloudTexture from '../../assets/images/cloud.png';
 
 const CloudPuff = ({ position, speed, opacity }) => {
   return (
@@ -39,7 +39,7 @@ const SocialsStarsCanvas = memo(function SocialsStarsCanvas() {
         phase: Math.random() * Math.PI * 2,
         speed: Math.random() * 0.0015 + 0.0008,
       })),
-    []
+    [],
   );
 
   const drawStars = useCallback(
@@ -47,9 +47,10 @@ const SocialsStarsCanvas = memo(function SocialsStarsCanvas() {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#ffffff';
       stars.forEach((star) => {
-        const flicker = isStatic || reduceMotion
-          ? 1
-          : 0.72 + Math.sin(timestamp * star.speed + star.phase) * 0.16;
+        const flicker =
+          isStatic || reduceMotion
+            ? 1
+            : 0.72 + Math.sin(timestamp * star.speed + star.phase) * 0.16;
         ctx.globalAlpha = Math.min(1, Math.max(0, star.alpha * flicker));
         ctx.beginPath();
         ctx.arc(star.x * width, star.y * height, star.radius, 0, Math.PI * 2);
@@ -57,7 +58,7 @@ const SocialsStarsCanvas = memo(function SocialsStarsCanvas() {
       });
       ctx.globalAlpha = 1;
     },
-    [reduceMotion, stars]
+    [reduceMotion, stars],
   );
 
   useCanvasAnimationLoop(canvasRef, {
@@ -111,11 +112,7 @@ const SilkSkyScene = memo(function SilkSkyScene() {
         position={[0, -2, 0]}
       />
       <group position={[0, -10, -10]}>
-        <Float
-          speed={reduceMotion ? 0 : 0.5}
-          rotationIntensity={0.1}
-          floatIntensity={0.2}
-        >
+        <Float speed={reduceMotion ? 0 : 0.5} rotationIntensity={0.1} floatIntensity={0.2}>
           {cloudPositions.map((cloud, i) => (
             <group key={i} scale={cloud.scale}>
               <CloudPuff
@@ -127,7 +124,7 @@ const SilkSkyScene = memo(function SilkSkyScene() {
           ))}
         </Float>
       </group>
-      <fog attach="fog" args={["#ffedd5", 5, 50]} />
+      <fog attach="fog" args={['#ffedd5', 5, 50]} />
     </>
   );
 });
@@ -142,7 +139,7 @@ const SocialCard = ({ icon: Icon, title, handle, link, delay, strokeWidth = 1.5 
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.8, delay: delay, ease: "easeOut" }}
+      transition={{ duration: 0.8, delay: delay, ease: 'easeOut' }}
       whileHover={{ y: -10, scale: 1.02 }}
     >
       <div className="card-glow"></div>
@@ -164,9 +161,9 @@ const SocialsSection = ({ id }) => {
   const containerRef = useRef(null);
 
   const handleFlyToCosmos = () => {
-    const home = document.getElementById("home-3d");
+    const home = document.getElementById('home-3d');
     if (home) {
-      home.scrollIntoView({ behavior: "smooth", block: "start" });
+      home.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
@@ -178,7 +175,7 @@ const SocialsSection = ({ id }) => {
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     observer.observe(element);
@@ -197,7 +194,7 @@ const SocialsSection = ({ id }) => {
           observer.disconnect();
         }
       },
-      { rootMargin: "100% 0px" }
+      { rootMargin: '100% 0px' },
     );
 
     observer.observe(element);
@@ -212,7 +209,7 @@ const SocialsSection = ({ id }) => {
         <SocialsStarsCanvas />
         {hasBeenVisible && (
           <Canvas
-            frameloop={isVisible ? "always" : "never"}
+            frameloop={isVisible ? 'always' : 'never'}
             camera={{ position: [0, 0, 14], fov: 45 }}
             resize={{ scroll: false }}
             dpr={[1, 1.5]}
@@ -222,7 +219,7 @@ const SocialsSection = ({ id }) => {
           </Canvas>
         )}
       </div>
-      
+
       <div className="content-overlay">
         <motion.div
           className="header-container"
@@ -235,7 +232,7 @@ const SocialsSection = ({ id }) => {
           <p className="section-subtitle">{t('socials.subtitle')}</p>
         </motion.div>
 
-        <div className="cards-grid">  
+        <div className="cards-grid">
           <SocialCard
             icon={Linkedin}
             title="LinkedIn"
@@ -247,10 +244,10 @@ const SocialsSection = ({ id }) => {
           <SocialCard
             icon={Github}
             title="GitHub"
-            handle={t('socials.github_handle')} 
+            handle={t('socials.github_handle')}
             link="https://github.com/victoriaghoos"
             delay={0.4}
-            strokeWidth={1.7} 
+            strokeWidth={1.7}
           />
           <SocialCard
             icon={Mail}
@@ -258,7 +255,7 @@ const SocialsSection = ({ id }) => {
             handle={t('socials.email_handle')}
             link="mailto:ghoosvictoria@gmail.com"
             delay={0.6}
-            strokeWidth={1.2} 
+            strokeWidth={1.2}
           />
         </div>
 
@@ -269,9 +266,9 @@ const SocialsSection = ({ id }) => {
           viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 1 }}
         >
-          <motion.button 
+          <motion.button
             onClick={handleFlyToCosmos}
-            onTap={handleFlyToCosmos} 
+            onTap={handleFlyToCosmos}
             className="return-orb"
             whileHover={{ y: -5 }}
             whileTap={{ scale: 0.95 }}

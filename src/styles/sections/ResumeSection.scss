@@ -3,1179 +3,1221 @@ $cover-color: #080a1a;
 $page-color: #0d0d2b;
 
 .resume-section {
-    scroll-snap-align: start;
+  scroll-snap-align: start;
+  height: 100vh;
+  width: 100%;
+  background: #010208;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 1000px) {
     height: 100vh;
+    height: 100dvh;
     width: 100%;
-    background: #010208;
+    overflow: hidden;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    box-sizing: border-box;
+  }
+
+  .cosmic-background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
     overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, #040924 0%, #010208 100%);
+
+    .nebula-transition-top {
+      position: absolute;
+      top: -20%;
+      left: 0;
+      width: 100%;
+      height: 50vh;
+      background: radial-gradient(ellipse at 50% 0%, rgba(181, 131, 141, 0.25), transparent 70%);
+      filter: blur(100px);
+      z-index: 1;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .cosmic-noise {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      opacity: 0.03;
+      pointer-events: none;
+      background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+      mix-blend-mode: overlay;
+    }
+
+    .nebula-layer {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: cloudFloat 25s ease-in-out infinite alternate;
+    }
+
+    .cloud-1 {
+      width: 150vw;
+      height: 100vh;
+      top: -10%;
+      left: -25%;
+      background: radial-gradient(circle, rgba(0, 30, 120, 0.4), transparent 75%);
+      opacity: 0.6;
+    }
+
+    .cloud-2 {
+      width: 120vw;
+      height: 120vh;
+      bottom: -20%;
+      right: -20%;
+      background: radial-gradient(circle, rgba(0, 60, 180, 0.35), transparent 70%);
+      opacity: 0.5;
+      animation-delay: -5s;
+    }
+
+    .cloud-3 {
+      width: 70vw;
+      height: 70vh;
+      top: 15%;
+      left: 25%;
+      background: radial-gradient(circle, rgba(0, 212, 255, 0.2), transparent 50%);
+      opacity: 0.5;
+      animation-delay: -10s;
+    }
+
+    .electric-glow {
+      position: absolute;
+      pointer-events: none;
+      mix-blend-mode: color-dodge;
+      border-radius: 50%;
+      filter: blur(110px);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .spot-main {
+      width: 120vw;
+      height: 50vh;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse at center, rgba(0, 100, 255, 0.3), transparent 75%);
+      opacity: 0.7;
+    }
+
+    .spot-core {
+      width: 35vw;
+      height: 35vw;
+      opacity: 0.5;
+      filter: blur(80px);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .resume-stars-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: auto;
+    }
+
+    .core-1 {
+      top: 25%;
+      left: 15%;
+      background: #0033ff;
+      animation: pulseGlow 7s infinite alternate;
+    }
+
+    .core-2 {
+      bottom: 20%;
+      left: 55%;
+      background: #00bfff;
+      animation: pulseGlow 10s infinite alternate-reverse;
+    }
+  }
+
+  @keyframes cloudFloat {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+
+    to {
+      transform: translate(30px, 20px) scale(1.05);
+    }
+  }
+
+  .book-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    height: 600px;
+    z-index: 2;
 
     @media (max-width: 1000px) {
-        height: 100vh;
-        height: 100dvh; 
-        width: 100%;
-        overflow: hidden; 
-        padding: 20px;   
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-sizing: border-box;
+      display: none !important;
     }
 
-    .cosmic-background {
+    @media (max-width: 1200px) {
+      transform: scale(0.95) !important;
+      gap: 2rem;
+    }
+
+    @media (max-width: 1100px), (max-height: 720px) {
+      transform: scale(0.95) !important;
+      gap: 1.5rem;
+    }
+  }
+
+  .mobile-resume-view {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    box-sizing: border-box;
+
+    .mobile-card {
+      background: linear-gradient(145deg, rgba(13, 13, 43, 0.9), rgba(5, 5, 20, 0.95));
+      border: 1px solid rgba($book-gold, 0.3);
+      border-radius: 16px;
+      padding: 25px;
+      width: 100%;
+      max-width: 600px;
+      box-sizing: border-box;
+      height: auto;
+      max-height: 100%;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      position: relative;
+
+      &::before {
+        content: '✦';
         position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 1;
-        overflow: hidden;
-        background: radial-gradient(circle at 50% 50%, #040924 0%, #010208 100%);
+        top: 15px;
+        left: 15px;
+        color: $book-gold;
+        opacity: 0.5;
+        font-size: 1.2rem;
+      }
+      &::after {
+        content: '✦';
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        color: $book-gold;
+        opacity: 0.5;
+        font-size: 1.2rem;
+      }
 
-        .nebula-transition-top {
-            position: absolute;
-            top: -20%;
-            left: 0;
-            width: 100%;
-            height: 50vh;
-            background: radial-gradient(ellipse at 50% 0%, rgba(181, 131, 141, 0.25), transparent 70%);
-            filter: blur(100px);
-            z-index: 1;
-            pointer-events: none;
-            mix-blend-mode: screen;
+      @media (max-height: 700px) {
+        padding: 25px 30px;
+
+        .icon-circle {
+          width: 60px;
+          height: 60px;
+          margin-bottom: 15px;
+          svg {
+            width: 30px;
+            height: 30px;
+          }
         }
 
-        .cosmic-noise {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            opacity: 0.03;
-            pointer-events: none;
-            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
-            mix-blend-mode: overlay;
+        .mobile-divider {
+          margin: 15px 0;
         }
-
-        .nebula-layer {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(140px);
-            pointer-events: none;
-            mix-blend-mode: screen;
-            transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
-            animation: cloudFloat 25s ease-in-out infinite alternate;
+        .mobile-desc {
+          margin-bottom: 20px;
+          line-height: 1.5;
         }
-
-        .cloud-1 {
-            width: 150vw;
-            height: 100vh;
-            top: -10%;
-            left: -25%;
-            background: radial-gradient(circle, rgba(0, 30, 120, 0.4), transparent 75%);
-            opacity: 0.6;
+        .mobile-title {
+          margin-bottom: 5px;
         }
+      }
 
-        .cloud-2 {
-            width: 120vw;
-            height: 120vh;
-            bottom: -20%;
-            right: -20%;
-            background: radial-gradient(circle, rgba(0, 60, 180, 0.35), transparent 70%);
-            opacity: 0.5;
-            animation-delay: -5s;
-        }
-
-        .cloud-3 {
-            width: 70vw;
-            height: 70vh;
-            top: 15%;
-            left: 25%;
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.2), transparent 50%);
-            opacity: 0.5;
-            animation-delay: -10s;
-        }
-
-        .electric-glow {
-            position: absolute;
-            pointer-events: none;
-            mix-blend-mode: color-dodge;
-            border-radius: 50%;
-            filter: blur(110px);
-            transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
-        }
-
-        .spot-main {
-            width: 120vw;
-            height: 50vh;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(ellipse at center, rgba(0, 100, 255, 0.3), transparent 75%);
-            opacity: 0.7;
-        }
-
-        .spot-core {
-            width: 35vw;
-            height: 35vw;
-            opacity: 0.5;
-            filter: blur(80px);
-            transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
-        }
-
-        .resume-stars-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: auto;
-        }
-
-        .core-1 {
-            top: 25%;
-            left: 15%;
-            background: #0033ff;
-            animation: pulseGlow 7s infinite alternate;
-        }
-
-        .core-2 {
-            bottom: 20%;
-            left: 55%;
-            background: #00bfff;
-            animation: pulseGlow 10s infinite alternate-reverse;
-        }
-    }
-
-    @keyframes cloudFloat {
-        from {
-            transform: translate(0, 0) scale(1);
-        }
-
-        to {
-            transform: translate(30px, 20px) scale(1.05);
-        }
-    }
-
-    .book-wrapper {
+      .icon-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 1px solid rgba($book-gold, 0.4);
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 3rem;
-        height: 600px;
-        z-index: 2;
-
-        @media (max-width: 1000px) {
-        display: none !important;
+        background: radial-gradient(circle, rgba($book-gold, 0.1) 0%, transparent 70%);
+        margin-bottom: 30px;
+        color: $book-gold;
+        flex-shrink: 0;
+        svg {
+          width: 45px;
+          height: 45px;
         }
+      }
 
-        @media (max-width: 1200px) {
-            transform: scale(0.95) !important; 
-            gap: 2rem;
-        }
+      .mobile-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        background: linear-gradient(135deg, #8a6d3b 0%, #c5a059 50%, #f1d399 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0 0 10px 0;
+        line-height: 1.1;
+      }
 
-        @media (max-width: 1100px), (max-height: 720px) {
-            transform: scale(0.95) !important; 
-            gap: 1.5rem;
-        }
-    }
+      .mobile-subtitle {
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        font-size: clamp(0.8rem, 2vw, 1.1rem);
+        color: #f1d399;
+        margin: 0;
+        opacity: 0.9;
+      }
 
-    .mobile-resume-view {
-        position: relative;
-        z-index: 10;
+      .mobile-divider {
+        width: 80px;
+        height: 2px;
+        background: $book-gold;
+        opacity: 0.4;
+        margin: 30px 0;
+      }
+
+      .mobile-desc {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: clamp(0.85rem, 2vh, 1.1rem);
+        line-height: 1.6;
+        margin-bottom: 15px;
+        font-family: 'Montserrat', sans-serif;
+        text-align: left;
         width: 100%;
-        height: 100%;
+
+        flex: 1 1 auto;
+        overflow-y: auto;
+        min-height: 0;
+
+        padding-right: 10px;
+
+        scrollbar-width: thin;
+        scrollbar-color: rgba($book-gold, 0.8) rgba(255, 255, 255, 0.05);
+
+        &::-webkit-scrollbar {
+          width: 5px;
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba($book-gold, 0.8);
+          border-radius: 10px;
+
+          &:hover {
+            background: $book-gold;
+          }
+        }
+      }
+
+      .mobile-download-btn {
+        background: rgba($book-gold, 0.1);
+        border: 1px solid $book-gold;
+        color: #fff;
+        font-family: 'VT323', monospace;
+        font-size: 1.3rem;
+        padding: 15px 35px;
+        border-radius: 6px;
         display: flex;
-        justify-content: center;
         align-items: center;
-        padding: 0; 
-        box-sizing: border-box;
-
-        .mobile-card {
-            background: linear-gradient(145deg, rgba(13, 13, 43, 0.9), rgba(5, 5, 20, 0.95));
-            border: 1px solid rgba($book-gold, 0.3);
-            border-radius: 16px; 
-            padding: 25px; 
-            width: 100%;           
-            max-width: 600px;     
-            box-sizing: border-box; 
-            height: auto;
-            max-height: 100%;      
-            
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            align-items: center;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-            position: relative;
-
-            &::before { content: '✦'; position: absolute; top: 15px; left: 15px; color: $book-gold; opacity: 0.5; font-size: 1.2rem; }
-            &::after { content: '✦'; position: absolute; bottom: 15px; right: 15px; color: $book-gold; opacity: 0.5; font-size: 1.2rem; }
-
-             @media (max-height: 700px) {
-                padding: 25px 30px;
-                
-                .icon-circle {
-                    width: 60px; height: 60px;
-                    margin-bottom: 15px;
-                    svg { width: 30px; height: 30px; }
-                }
-
-                .mobile-divider { margin: 15px 0; }
-                .mobile-desc { margin-bottom: 20px; line-height: 1.5; }
-                .mobile-title { margin-bottom: 5px; }
-            }
-
-            .icon-circle {
-                width: 100px; height: 100px;
-                border-radius: 50%;
-                border: 1px solid rgba($book-gold, 0.4);
-                display: flex; align-items: center; justify-content: center;
-                background: radial-gradient(circle, rgba($book-gold, 0.1) 0%, transparent 70%);
-                margin-bottom: 30px;
-                color: $book-gold;
-                flex-shrink : 0;
-                svg { width: 45px; height: 45px; } 
-            }
-
-            .mobile-title {
-                font-family: 'Playfair Display', serif;
-                font-size: clamp(2.5rem, 5vw, 4rem); 
-                background: linear-gradient(135deg, #8a6d3b 0%, #c5a059 50%, #f1d399 100%);
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-                margin: 0 0 10px 0;
-                line-height: 1.1;
-            }
-
-            .mobile-subtitle {
-                font-family: 'Montserrat', sans-serif;
-                text-transform: uppercase;
-                letter-spacing: 5px;
-                font-size: clamp(0.8rem, 2vw, 1.1rem);
-                color: #f1d399;
-                margin: 0;
-                opacity: 0.9;
-            }
-
-            .mobile-divider {
-                width: 80px; 
-                height: 2px;
-                background: $book-gold;
-                opacity: 0.4;
-                margin: 30px 0;
-            }
-
-            .mobile-desc {
-                color: rgba(255,255,255,0.9);
-                font-size: clamp(0.85rem, 2vh, 1.1rem); 
-                line-height: 1.6;
-                margin-bottom: 15px;
-                font-family: 'Montserrat', sans-serif;
-                text-align: left;
-                width: 100%;
-                
-                flex: 1 1 auto; 
-                overflow-y: auto; 
-                min-height: 0; 
-
-                padding-right: 10px;
-
-                scrollbar-width: thin;
-                scrollbar-color: rgba($book-gold, 0.8) rgba(255, 255, 255, 0.05);
-
-                &::-webkit-scrollbar { 
-                    width: 5px; 
-                    background: rgba(0, 0, 0, 0.2); 
-                    border-radius: 10px;
-                }
-
-                &::-webkit-scrollbar-thumb { 
-                    background: rgba($book-gold, 0.8); 
-                    border-radius: 10px;
-                    
-                    &:hover {
-                        background: $book-gold;
-                    }
-                }
-            }
-
-            .mobile-download-btn {
-                background: rgba($book-gold, 0.1);
-                border: 1px solid $book-gold;
-                color: #fff;
-                font-family: 'VT323', monospace;
-                font-size: 1.3rem;
-                padding: 15px 35px;
-                border-radius: 6px;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                letter-spacing: 1.5px;
-
-                &:hover {
-                    background: $book-gold;
-                    color: #000;
-                    transform: translateY(-3px);
-                    box-shadow: 0 8px 25px rgba($book-gold, 0.4);
-                }
-            }
-        }
-    }
-
-    .book-container {
-        position: relative;
-        width: 900px;
-        height: 600px;
-        perspective: 2500px;
-        display: block;
-
-        .stellar-book.portrait {
-            width: 450px !important;
-        }
+        gap: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        letter-spacing: 1.5px;
 
         &:hover {
-            cursor: grab;
+          background: $book-gold;
+          color: #000;
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba($book-gold, 0.4);
         }
+      }
+    }
+  }
 
-        &:active {
-            cursor: grabbing;
-        }
+  .book-container {
+    position: relative;
+    width: 900px;
+    height: 600px;
+    perspective: 2500px;
+    display: block;
 
-        &::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 12px;
-            transform: translateX(-50%);
-            background: linear-gradient(to right,
-                    rgba(0, 0, 0, 0.4) 0%,
-                    rgba(255, 255, 255, 0.1) 50%,
-                    rgba(0, 0, 0, 0.4) 100%);
-            z-index: 10;
-            pointer-events: none;
-        }
+    .stellar-book.portrait {
+      width: 450px !important;
     }
 
-    .stellar-book {
-        border-radius: 4px;
-
-        .page {
-            background-color: #05071a;
-            cursor: grab;
-            
-            &:active {
-                cursor: grabbing;
-            }
-
-            &::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png"); 
-                opacity: 0.05;
-                pointer-events: none;
-                z-index: 10;
-            }
-        }
+    &:hover {
+      cursor: grab;
     }
 
-    .is-cover {
-        &[data-density="hard"] {
-        background-color: #080a1a;
-        
-        .page-content {
-            border: 2px solid rgba($book-gold, 0.2);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-        }
-        }
-        .page-content {
-            background:
-                radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 70%),
-                linear-gradient(90deg,
-                    rgba(255, 255, 255, 0.12) 0%,
-                    rgba(0, 0, 0, 0.6) 1.5%,
-                    transparent 10%),
-                linear-gradient(rgba(8, 10, 26, 0.88), rgba(5, 6, 20, 0.92)),
-                url("https://www.transparenttextures.com/patterns/leather.png") !important;
-
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 40px !important;
-            width: 100%;
-            .seal-container {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            $gold-gradient: linear-gradient(135deg,
-                    #8a6d3b 0%,
-                    #c5a059 25%,
-                    #f1d399 50%,
-                    #c5a059 75%,
-                    #8a6d3b 100%);
-
-            .corner-ornament {
-                position: absolute;
-                width: 40px;
-                height: 40px;
-                pointer-events: none;
-                opacity: 0.8;
-
-                &::before {
-                    content: '✦';
-                    position: absolute;
-                    color: $book-gold;
-                    font-size: 10px;
-                    filter: blur(0.3px) drop-shadow(0 0 3px rgba($book-gold, 0.8));
-                    text-shadow: 0 0 10px rgba($book-gold, 0.5);
-                }
-
-                &.top-left {
-                    top: 30px;
-                    left: 30px;
-                    border-left: 1px solid $book-gold;
-                    border-top: 1px solid $book-gold;
-
-                    &::before {
-                        top: -7px;
-                        left: -5px;
-                    }
-                }
-
-                &.top-right {
-                    top: 30px;
-                    right: 30px;
-                    border-right: 1px solid $book-gold;
-                    border-top: 1px solid $book-gold;
-
-                    &::before {
-                        top: -7px;
-                        right: -5px;
-                    }
-                }
-
-                &.bottom-left {
-                    bottom: 30px;
-                    left: 30px;
-                    border-left: 1px solid $book-gold;
-                    border-bottom: 1px solid $book-gold;
-
-                    &::before {
-                        bottom: -7px;
-                        left: -5px;
-                    }
-                }
-
-                &.bottom-right {
-                    bottom: 30px;
-                    right: 30px;
-                    border-right: 1px solid $book-gold;
-                    border-bottom: 1px solid $book-gold;
-
-                    &::before {
-                        bottom: -7px;
-                        right: -5px;
-                    }
-                }
-            }
-
-            .seal-container {
-                width: 100px;
-                height: 100px;
-                border: 1px solid rgba($book-gold, 0.4);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-bottom: 40px;
-                background: radial-gradient(circle, rgba($book-gold, 0.1) 0%, transparent 70%);
-                box-shadow:
-                    inset 0 0 10px rgba(0, 0, 0, 0.5),
-                    0 0 20px rgba($book-gold, 0.1);
-                overflow: hidden; 
-                .seal-icon {
-                    color: $book-gold;
-                    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
-                    display: block;
-                    margin: 0 auto; 
-                }
-            }
-
-            .book-title {
-                font-size: 4.8rem;
-                font-family: 'Playfair Display', serif;
-                font-weight: 700;
-                margin-bottom: 0px;
-                background: $gold-gradient;
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 1px rgba($book-gold, 0.3));
-                letter-spacing: -1px;
-            }
-
-            .title-separator {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 15px;
-                width: 200px;
-                margin: 0px auto 30px auto;
-
-                .line {
-                    height: 1px;
-                    flex: 1;
-                    background: $gold-gradient;
-                    opacity: 0.6;
-                }
-
-                .dot {
-                    width: 6px;
-                    height: 6px;
-                    background: #f1d399;
-                    transform: rotate(45deg);
-                    filter: blur(0.3px);
-                    box-shadow: 0 0 12px rgba($book-gold, 0.9);
-                }
-            }
-
-            .book-subtitle {
-                font-family: 'Montserrat', sans-serif;
-                text-transform: uppercase;
-                letter-spacing: 8px;
-                font-size: 0.85rem !important;
-                color: #f1d399;
-                font-weight: 600;
-                opacity: 1;
-                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-                margin-bottom: 0;
-            }
-
-            .edition-badge {
-                margin-top: 25px;
-                font-family: 'VT323', monospace;
-                font-size: 1rem;
-                letter-spacing: 1px;
-                border: 1px solid rgba(241, 211, 153, 0.4);
-                padding: 5px 22px;
-                border-radius: 30px;
-                color: #f1d399;
-                background: rgba(0, 0, 0, 0.3);
-                box-shadow:
-                    0 0 15px rgba(0, 0, 0, 0.5),
-                    inset 0 0 5px rgba($book-gold, 0.1);
-
-                text-shadow: 0 0 5px rgba($book-gold, 0.3);
-            }
-        }
+    &:active {
+      cursor: grabbing;
     }
 
-    .is-back-cover {
-        .page-content {
-            background:
-                linear-gradient(-90deg,
-                    rgba(255, 255, 255, 0.1) 0%,
-                    rgba(0, 0, 0, 0.6) 1.5%,
-                    rgba(255, 255, 255, 0.03) 3%,
-                    transparent 12%),
-                linear-gradient(rgba(8, 10, 26, 0.92), rgba(5, 6, 20, 0.96)),
-                url("https://www.transparenttextures.com/patterns/leather.png") !important;
-
-            .corner-ornament {
-                opacity: 0.4;
-            }
-
-            .back-cover-content {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 100%;
-                gap: 60px;
-            }
-
-            .back-seal {
-                filter: drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.1)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.8));
-                opacity: 0.7;
-
-                .back-logo-icon {
-                    color: $book-gold;
-                }
-            }
-
-            .back-text-group {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 25px;
-
-                .title-separator.small {
-                    width: 100px;
-                    opacity: 0.4;
-
-                    .dot {
-                        width: 4px;
-                        height: 4px;
-                        filter: blur(0.3px);
-                        box-shadow: 0 0 10px rgba($book-gold, 0.8);
-                    }
-                }
-
-                .copyright {
-                    font-family: 'Montserrat', sans-serif;
-                    text-transform: uppercase;
-                    letter-spacing: 5px;
-                    font-size: 0.75rem;
-                    color: #f1d399;
-                    font-weight: 500;
-                }
-
-                .tech-badge {
-                    font-family: 'VT323', monospace;
-                    font-size: 0.9rem;
-                    color: #f1d399;
-                    padding: 4px 16px;
-                    border: 1px solid rgba($book-gold, 0.3);
-                    border-radius: 20px;
-                    background: rgba(0, 0, 0, 0.2);
-                    opacity: 0.8;
-                    letter-spacing: 1px;
-                }
-            }
-
-            .back-credits {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
-
-                .gold-line-h {
-                    width: 30px;
-                    height: 1px;
-                    background: $book-gold;
-                    opacity: 0.3;
-                    margin-bottom: 10px;
-                }
-
-                .tech-stack {
-                    font-family: 'VT323', monospace;
-                    font-size: 0.85rem;
-                    color: rgba($book-gold, 0.4);
-                    letter-spacing: 1px;
-                }
-            }
-        }
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 12px;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(0, 0, 0, 0.4) 100%
+      );
+      z-index: 10;
+      pointer-events: none;
     }
+  }
+
+  .stellar-book {
+    border-radius: 4px;
 
     .page {
-        background-color: #05071a;
-        overflow: hidden;
+      background-color: #05071a;
+      cursor: grab;
 
-        .page-inner-centered {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+      &:active {
+        cursor: grabbing;
+      }
 
-        .page-inner-back {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-
-            .closing-content {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-
-                .faded-icon {
-                    color: #fff;
-                    opacity: 0.8;
-                    margin-bottom: 10px;
-                }
-
-                h3 {
-                    font-family: 'Playfair Display', serif;
-                    font-size: 1.6rem;
-                    font-weight: 700;
-                    color: #fff;
-                    margin: 0;
-                }
-
-                .divider-small {
-                    width: 50px;
-                    height: 1px;
-                    background: $book-gold;
-                    opacity: 0.5;
-                }
-
-                .sub-text {
-                    font-size: 0.95rem;
-                    color: rgba(255, 255, 255, 0.85);
-                    line-height: 1.6;
-                    max-width: 350px;
-                    margin: 0;
-
-                    strong {
-                        color: #fff;
-                        font-weight: 700;
-                    }
-                }
-
-                .download-btn-styled {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 10px;
-                    padding: 10px 20px;
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 6px;
-                    color: #fff;
-                    font-family: 'Montserrat', sans-serif;
-                    font-size: 0.9rem;
-                    transition: background 0.3s ease;
-                    cursor: pointer;
-
-                    &:hover {
-                        background: rgba(255, 255, 255, 0.2);
-                    }
-                }
-
-                .scroll-hint {
-                    font-family: 'VT323', monospace;
-                    font-size: 1rem;
-                    color: rgba($book-gold, 0.6);
-                    margin-top: 10px;
-                    background: none;
-                    border: none;
-                    padding: 0;
-                    cursor: pointer;
-                }
-            }
-        }
-
-        .page-left {
-            .page-content {
-            background: linear-gradient(to right, 
-                rgba(0,0,0,0) 90%, 
-                rgba(0,0,0,0.2) 96%, 
-                rgba(0,0,0,0.4) 100%
-            );
-            border-right: 1px solid rgba(0,0,0,0.5);
-            }
-        }
-
-        .page-right {
-            .page-content {
-            background: linear-gradient(to left, 
-                rgba(0,0,0,0) 90%, 
-                rgba(0,0,0,0.15) 96%, 
-                rgba(0,0,0,0.35) 100%
-            );
-            border-left: 1px solid rgba(0,0,0,0.5);
-            }
-        }
-
-        .page-content {
-            margin: 0;
-            padding: 40px 45px !important;
-            height: 100%;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-sizing: border-box;
-            position: relative;
-            background: linear-gradient(145deg, rgba(13, 13, 43, 0.9), rgba(5, 5, 20, 0.95));
-            border: 1px solid rgba(197, 160, 89, 0.3);
-            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
-            color: #e0e0e0;
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
-
-            &::before {
-                content: '✦';
-                position: absolute;
-                top: 10px;
-                left: 10px;
-                color: #c5a059;
-                font-size: 0.7rem;
-                opacity: 0.4;
-            }
-
-            &::after {
-                content: "";
-                position: absolute;
-                top: 0;
-                width: 50px;
-                height: 100%;
-                pointer-events: none;
-            }
-
-            .distinction-badge {
-                display: block;
-                text-align: center;
-                box-sizing: border-box;
-                width: 100%;
-                font-family: 'Montserrat', sans-serif;
-                font-weight: 600;
-                font-size: 0.9rem;
-                letter-spacing: 1.5px;
-                text-transform: uppercase;
-                color: #f1d399;
-                border: 1px solid rgba($book-gold, 0.35);
-                padding: 10px 15px;
-                border-radius: 30px;
-                margin: 15px 0 25px 0;
-                background: rgba(0, 0, 0, 0.2);
-            }
-
-            h2.page-header {
-                font-family: 'Playfair Display', serif;
-                font-size: 1.5rem;
-                font-weight: 700;
-                color: $book-gold;
-                margin-bottom: 20px;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                border-bottom: 1px solid rgba($book-gold, 0.2);
-                padding-bottom: 12px;
-                width: 100%;
-
-                svg {
-                    color: $book-gold;
-                    opacity: 0.9;
-                    filter: drop-shadow(0 0 5px rgba($book-gold, 0.3));
-                }
-            }
-
-            .section-content {
-                margin-top: 10px;
-                flex: 1;
-                text-align: left;
-
-                h3 {
-                    font-family: 'Playfair Display', serif;
-                    font-size: 1.25rem;
-                    color: #fff;
-                    margin: 0 0 5px 0;
-                    line-height: 1.3;
-                }
-
-                .location-sub {
-                    font-size: 0.85rem;
-                    opacity: 0.6;
-                    margin-bottom: 20px;
-                    font-style: italic;
-                }
-            }
-
-            h3 {
-                font-family: 'Playfair Display', serif;
-                font-size: 1.3rem;
-                color: #fff;
-                margin-bottom: 10px;
-            }
-
-            .year-label {
-                font-family: 'VT323', monospace;
-                color: $book-gold;
-                font-size: 1.1rem;
-                letter-spacing: 2px;
-                margin-bottom: 8px;
-                display: block;
-            }
-
-            ul {
-                list-style: none;
-                padding: 0;
-                margin: 15px 0;
-
-                li {
-                    position: relative;
-                    padding-left: 25px;
-                    margin-bottom: 10px;
-                    font-size: 0.88rem;
-                    line-height: 1.45;
-                    color: rgba(255, 255, 255, 0.85);
-
-                    &::before {
-                        content: '✦';
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        color: $book-gold;
-                        font-size: 0.75rem;
-                        filter: blur(0.2px) drop-shadow(0 0 2px $book-gold);
-                    }
-
-                    strong {
-                        color: #f1d399;
-                        font-weight: 600;
-                    }
-                }
-            }
-
-            .subtitle-text {
-                font-size: 0.85rem;
-                opacity: 0.7;
-                margin-bottom: 15px;
-                font-style: italic;
-                display: block;
-            }
-
-            .subtitle-gold {
-                color: $book-gold;
-                font-family: 'Playfair Display', serif;
-                font-size: 1.15rem;
-                margin: 25px 0 10px 0;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .summary-text {
-                font-size: 1.05rem;
-                line-height: 1.8;
-                color: rgba(255, 255, 255, 0.85);
-            }
-
-
-            .highlight-box {
-                background: rgba(0, 0, 0, 0.2);
-                border: 1px solid rgba($book-gold, 0.2);
-                padding: 12px 18px;
-                border-radius: 4px;
-                margin: 15px 0;
-                position: relative;
-                overflow: hidden;
-                font-size: 0.85rem;
-                line-height: 1.4;
-
-                &::before {
-                    content: "";
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    bottom: 0;
-                    width: 3px;
-                    background: $book-gold;
-                    box-shadow: 2px 0 10px rgba($book-gold, 0.5);
-                }
-
-                strong {
-                    color: $book-gold;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    font-size: 0.75rem;
-                    letter-spacing: 0.5px;
-                }
-            }
-
-            .tech-tags-container {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                margin-top: 30px;
-
-                span {
-                    font-family: 'VT323', monospace;
-                    font-size: 0.85rem;
-                    padding: 4px 12px;
-                    background: rgba(0, 0, 0, 0.3);
-                    border: 1px solid rgba($book-gold, 0.3);
-                    border-radius: 4px;
-                    color: $book-gold;
-                    transition: all 0.3s ease;
-
-                    &:hover {
-                        background: rgba($book-gold, 0.1);
-                        border-color: $book-gold;
-                    }
-                }
-            }
-
-            .icon-separator {
-                text-align: center;
-                color: $book-gold;
-                opacity: 0.4;
-                margin: 20px 0;
-                letter-spacing: 10px;
-            }
-        }
-    }
-
-    .page-left .page-content::after {
-        right: 0;
-        background: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent);
-    }
-
-    .page-right .page-content::after {
-        left: 0;
-        background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
-    }
-
-    .nav-arrow {
-        touch-action: none;
-        user-select: none;
-        -webkit-user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        z-index: 100;
-        background: rgba(197, 160, 89, 0.05);
-        border: 1px solid rgba(197, 160, 89, 0.2);
-        border-radius: 50%;
-        color: #c5a059;
-        padding: 12px;
-        cursor: pointer;
-        transition: 0.3s;
-        flex-shrink: 0;
-
-        @media (max-width: 1100px), (max-height: 720px) {
-            padding: 8px;
-            
-            svg {
-                width: 32px !important; 
-                height: 32px !important;
-            }
-        }
-
-        &:hover {
-            background: rgba(197, 160, 89, 0.2);
-            transform: scale(1.1);
-        }
-    }
-
-    .bookmark-tab {
+      &::before {
+        content: '';
         position: absolute;
-        top: 40px;
-        background: #c5a059;
-        border: none;
-        font: inherit;
-        text-align: inherit;
-        color: #000;
-        cursor: pointer;
-        z-index: 100;
-        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://www.transparenttextures.com/patterns/pinstriped-suit.png');
+        opacity: 0.05;
+        pointer-events: none;
+        z-index: 10;
+      }
+    }
+  }
+
+  .is-cover {
+    &[data-density='hard'] {
+      background-color: #080a1a;
+
+      .page-content {
+        border: 2px solid rgba($book-gold, 0.2);
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+      }
+    }
+    .page-content {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 70%),
+        linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.12) 0%,
+          rgba(0, 0, 0, 0.6) 1.5%,
+          transparent 10%
+        ),
+        linear-gradient(rgba(8, 10, 26, 0.88), rgba(5, 6, 20, 0.92)),
+        url('https://www.transparenttextures.com/patterns/leather.png') !important;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px !important;
+      width: 100%;
+      .seal-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      $gold-gradient: linear-gradient(
+        135deg,
+        #8a6d3b 0%,
+        #c5a059 25%,
+        #f1d399 50%,
+        #c5a059 75%,
+        #8a6d3b 100%
+      );
+
+      .corner-ornament {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        pointer-events: none;
+        opacity: 0.8;
+
+        &::before {
+          content: '✦';
+          position: absolute;
+          color: $book-gold;
+          font-size: 10px;
+          filter: blur(0.3px) drop-shadow(0 0 3px rgba($book-gold, 0.8));
+          text-shadow: 0 0 10px rgba($book-gold, 0.5);
+        }
+
+        &.top-left {
+          top: 30px;
+          left: 30px;
+          border-left: 1px solid $book-gold;
+          border-top: 1px solid $book-gold;
+
+          &::before {
+            top: -7px;
+            left: -5px;
+          }
+        }
+
+        &.top-right {
+          top: 30px;
+          right: 30px;
+          border-right: 1px solid $book-gold;
+          border-top: 1px solid $book-gold;
+
+          &::before {
+            top: -7px;
+            right: -5px;
+          }
+        }
+
+        &.bottom-left {
+          bottom: 30px;
+          left: 30px;
+          border-left: 1px solid $book-gold;
+          border-bottom: 1px solid $book-gold;
+
+          &::before {
+            bottom: -7px;
+            left: -5px;
+          }
+        }
+
+        &.bottom-right {
+          bottom: 30px;
+          right: 30px;
+          border-right: 1px solid $book-gold;
+          border-bottom: 1px solid $book-gold;
+
+          &::before {
+            bottom: -7px;
+            right: -5px;
+          }
+        }
+      }
+
+      .seal-container {
+        width: 100px;
+        height: 100px;
+        border: 1px solid rgba($book-gold, 0.4);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 40px;
+        background: radial-gradient(circle, rgba($book-gold, 0.1) 0%, transparent 70%);
+        box-shadow:
+          inset 0 0 10px rgba(0, 0, 0, 0.5),
+          0 0 20px rgba($book-gold, 0.1);
+        overflow: hidden;
+        .seal-icon {
+          color: $book-gold;
+          filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+          display: block;
+          margin: 0 auto;
+        }
+      }
+
+      .book-title {
+        font-size: 4.8rem;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        margin-bottom: 0px;
+        background: $gold-gradient;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 1px rgba($book-gold, 0.3));
+        letter-spacing: -1px;
+      }
+
+      .title-separator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        width: 200px;
+        margin: 0px auto 30px auto;
+
+        .line {
+          height: 1px;
+          flex: 1;
+          background: $gold-gradient;
+          opacity: 0.6;
+        }
+
+        .dot {
+          width: 6px;
+          height: 6px;
+          background: #f1d399;
+          transform: rotate(45deg);
+          filter: blur(0.3px);
+          box-shadow: 0 0 12px rgba($book-gold, 0.9);
+        }
+      }
+
+      .book-subtitle {
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 8px;
+        font-size: 0.85rem !important;
+        color: #f1d399;
+        font-weight: 600;
+        opacity: 1;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        margin-bottom: 0;
+      }
+
+      .edition-badge {
+        margin-top: 25px;
+        font-family: 'VT323', monospace;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        border: 1px solid rgba(241, 211, 153, 0.4);
+        padding: 5px 22px;
+        border-radius: 30px;
+        color: #f1d399;
+        background: rgba(0, 0, 0, 0.3);
+        box-shadow:
+          0 0 15px rgba(0, 0, 0, 0.5),
+          inset 0 0 5px rgba($book-gold, 0.1);
+
+        text-shadow: 0 0 5px rgba($book-gold, 0.3);
+      }
+    }
+  }
+
+  .is-back-cover {
+    .page-content {
+      background:
+        linear-gradient(
+          -90deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(0, 0, 0, 0.6) 1.5%,
+          rgba(255, 255, 255, 0.03) 3%,
+          transparent 12%
+        ),
+        linear-gradient(rgba(8, 10, 26, 0.92), rgba(5, 6, 20, 0.96)),
+        url('https://www.transparenttextures.com/patterns/leather.png') !important;
+
+      .corner-ornament {
+        opacity: 0.4;
+      }
+
+      .back-cover-content {
         display: flex;
         flex-direction: column;
         align-items: center;
-        overflow: hidden;
+        justify-content: center;
+        height: 100%;
+        gap: 60px;
+      }
 
-        &.is-mobile-hidden {
-            display: none; 
+      .back-seal {
+        filter: drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.1))
+          drop-shadow(0 2px 2px rgba(0, 0, 0, 0.8));
+        opacity: 0.7;
+
+        .back-logo-icon {
+          color: $book-gold;
+        }
+      }
+
+      .back-text-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+
+        .title-separator.small {
+          width: 100px;
+          opacity: 0.4;
+
+          .dot {
+            width: 4px;
+            height: 4px;
+            filter: blur(0.3px);
+            box-shadow: 0 0 10px rgba($book-gold, 0.8);
+          }
         }
 
-        .bookmark-text {
-            writing-mode: vertical-rl;
-            -webkit-text-orientation: mixed;
-            text-orientation: mixed;
-            font-family: 'VT323', monospace;
-            font-weight: bold;
-            margin-top: 8px;
-            white-space: nowrap;
+        .copyright {
+          font-family: 'Montserrat', sans-serif;
+          text-transform: uppercase;
+          letter-spacing: 5px;
+          font-size: 0.75rem;
+          color: #f1d399;
+          font-weight: 500;
         }
 
-        .bookmark-icon {
-            flex-shrink: 0;
+        .tech-badge {
+          font-family: 'VT323', monospace;
+          font-size: 0.9rem;
+          color: #f1d399;
+          padding: 4px 16px;
+          border: 1px solid rgba($book-gold, 0.3);
+          border-radius: 20px;
+          background: rgba(0, 0, 0, 0.2);
+          opacity: 0.8;
+          letter-spacing: 1px;
+        }
+      }
+
+      .back-credits {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+
+        .gold-line-h {
+          width: 30px;
+          height: 1px;
+          background: $book-gold;
+          opacity: 0.3;
+          margin-bottom: 10px;
         }
 
-        &.is-open {
-            left: 870px;
-            width: 32px;
-            padding: 12px 8px;
-            border-radius: 0 4px 4px 0;
-
-            .bookmark-text {
-                opacity: 1;
-            }
-
-            &:hover {
-                transform: translateX(5px);
-                transition: transform 0.3s ease;
-            }
+        .tech-stack {
+          font-family: 'VT323', monospace;
+          font-size: 0.85rem;
+          color: rgba($book-gold, 0.4);
+          letter-spacing: 1px;
         }
+      }
+    }
+  }
 
-        &.is-front {
-            left: 900px;
-            width: 20px;
-            padding: 10px 0;
-            border-radius: 0 2px 2px 0;
+  .page {
+    background-color: #05071a;
+    overflow: hidden;
 
-            .bookmark-text {
-                opacity: 0;
-                pointer-events: none;
-            }
-
-            .bookmark-icon {
-                transform: scale(0.8);
-            }
-
-            &:hover {
-                left: 675px;
-                width: 25px;
-                transition: transform 0.3s ease;
-            }
-        }
-
-        &.is-back {
-            left: -20px;
-            width: 20px;
-            padding: 10px 0;
-            border-radius: 2px 0 0 2px;
-
-            .bookmark-text {
-                opacity: 0;
-                pointer-events: none;
-            }
-
-            .bookmark-icon {
-                transform: scale(0.8);
-            }
-
-            &:hover {
-                left: 205px;
-                width: 25px;
-                transition: transform 0.3s ease;
-            }
-        }
+    .page-inner-centered {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .page-footer {
+    .page-inner-back {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+
+      .closing-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+
+        .faded-icon {
+          color: #fff;
+          opacity: 0.8;
+          margin-bottom: 10px;
+        }
+
+        h3 {
+          font-family: 'Playfair Display', serif;
+          font-size: 1.6rem;
+          font-weight: 700;
+          color: #fff;
+          margin: 0;
+        }
+
+        .divider-small {
+          width: 50px;
+          height: 1px;
+          background: $book-gold;
+          opacity: 0.5;
+        }
+
+        .sub-text {
+          font-size: 0.95rem;
+          color: rgba(255, 255, 255, 0.85);
+          line-height: 1.6;
+          max-width: 350px;
+          margin: 0;
+
+          strong {
+            color: #fff;
+            font-weight: 700;
+          }
+        }
+
+        .download-btn-styled {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 20px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 6px;
+          color: #fff;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 0.9rem;
+          transition: background 0.3s ease;
+          cursor: pointer;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.2);
+          }
+        }
+
+        .scroll-hint {
+          font-family: 'VT323', monospace;
+          font-size: 1rem;
+          color: rgba($book-gold, 0.6);
+          margin-top: 10px;
+          background: none;
+          border: none;
+          padding: 0;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .page-left {
+      .page-content {
+        background: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0) 90%,
+          rgba(0, 0, 0, 0.2) 96%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
+        border-right: 1px solid rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    .page-right {
+      .page-content {
+        background: linear-gradient(
+          to left,
+          rgba(0, 0, 0, 0) 90%,
+          rgba(0, 0, 0, 0.15) 96%,
+          rgba(0, 0, 0, 0.35) 100%
+        );
+        border-left: 1px solid rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    .page-content {
+      margin: 0;
+      padding: 40px 45px !important;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+      position: relative;
+      background: linear-gradient(145deg, rgba(13, 13, 43, 0.9), rgba(5, 5, 20, 0.95));
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+      color: #e0e0e0;
+      font-family: 'Montserrat', sans-serif;
+      line-height: 1.6;
+
+      &::before {
+        content: '✦';
         position: absolute;
-        bottom: 20px;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-family: 'VT323', monospace;
-        font-size: 0.9rem;
-        color: rgba($book-gold, 0.4);
+        top: 10px;
+        left: 10px;
+        color: #c5a059;
+        font-size: 0.7rem;
+        opacity: 0.4;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 50px;
+        height: 100%;
         pointer-events: none;
+      }
+
+      .distinction-badge {
+        display: block;
+        text-align: center;
+        box-sizing: border-box;
+        width: 100%;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #f1d399;
+        border: 1px solid rgba($book-gold, 0.35);
+        padding: 10px 15px;
+        border-radius: 30px;
+        margin: 15px 0 25px 0;
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      h2.page-header {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $book-gold;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid rgba($book-gold, 0.2);
+        padding-bottom: 12px;
+        width: 100%;
+
+        svg {
+          color: $book-gold;
+          opacity: 0.9;
+          filter: drop-shadow(0 0 5px rgba($book-gold, 0.3));
+        }
+      }
+
+      .section-content {
+        margin-top: 10px;
+        flex: 1;
+        text-align: left;
+
+        h3 {
+          font-family: 'Playfair Display', serif;
+          font-size: 1.25rem;
+          color: #fff;
+          margin: 0 0 5px 0;
+          line-height: 1.3;
+        }
+
+        .location-sub {
+          font-size: 0.85rem;
+          opacity: 0.6;
+          margin-bottom: 20px;
+          font-style: italic;
+        }
+      }
+
+      h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.3rem;
+        color: #fff;
+        margin-bottom: 10px;
+      }
+
+      .year-label {
+        font-family: 'VT323', monospace;
+        color: $book-gold;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 15px 0;
+
+        li {
+          position: relative;
+          padding-left: 25px;
+          margin-bottom: 10px;
+          font-size: 0.88rem;
+          line-height: 1.45;
+          color: rgba(255, 255, 255, 0.85);
+
+          &::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: $book-gold;
+            font-size: 0.75rem;
+            filter: blur(0.2px) drop-shadow(0 0 2px $book-gold);
+          }
+
+          strong {
+            color: #f1d399;
+            font-weight: 600;
+          }
+        }
+      }
+
+      .subtitle-text {
+        font-size: 0.85rem;
+        opacity: 0.7;
+        margin-bottom: 15px;
+        font-style: italic;
+        display: block;
+      }
+
+      .subtitle-gold {
+        color: $book-gold;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        margin: 25px 0 10px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .summary-text {
+        font-size: 1.05rem;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .highlight-box {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba($book-gold, 0.2);
+        padding: 12px 18px;
+        border-radius: 4px;
+        margin: 15px 0;
+        position: relative;
+        overflow: hidden;
+        font-size: 0.85rem;
+        line-height: 1.4;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background: $book-gold;
+          box-shadow: 2px 0 10px rgba($book-gold, 0.5);
+        }
+
+        strong {
+          color: $book-gold;
+          font-weight: 700;
+          text-transform: uppercase;
+          font-size: 0.75rem;
+          letter-spacing: 0.5px;
+        }
+      }
+
+      .tech-tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 30px;
+
+        span {
+          font-family: 'VT323', monospace;
+          font-size: 0.85rem;
+          padding: 4px 12px;
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba($book-gold, 0.3);
+          border-radius: 4px;
+          color: $book-gold;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: rgba($book-gold, 0.1);
+            border-color: $book-gold;
+          }
+        }
+      }
+
+      .icon-separator {
+        text-align: center;
+        color: $book-gold;
+        opacity: 0.4;
+        margin: 20px 0;
+        letter-spacing: 10px;
+      }
     }
+  }
+
+  .page-left .page-content::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent);
+  }
+
+  .page-right .page-content::after {
+    left: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
+  }
+
+  .nav-arrow {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 100;
+    background: rgba(197, 160, 89, 0.05);
+    border: 1px solid rgba(197, 160, 89, 0.2);
+    border-radius: 50%;
+    color: #c5a059;
+    padding: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    flex-shrink: 0;
+
+    @media (max-width: 1100px), (max-height: 720px) {
+      padding: 8px;
+
+      svg {
+        width: 32px !important;
+        height: 32px !important;
+      }
+    }
+
+    &:hover {
+      background: rgba(197, 160, 89, 0.2);
+      transform: scale(1.1);
+    }
+  }
+
+  .bookmark-tab {
+    position: absolute;
+    top: 40px;
+    background: #c5a059;
+    border: none;
+    font: inherit;
+    text-align: inherit;
+    color: #000;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+
+    &.is-mobile-hidden {
+      display: none;
+    }
+
+    .bookmark-text {
+      writing-mode: vertical-rl;
+      -webkit-text-orientation: mixed;
+      text-orientation: mixed;
+      font-family: 'VT323', monospace;
+      font-weight: bold;
+      margin-top: 8px;
+      white-space: nowrap;
+    }
+
+    .bookmark-icon {
+      flex-shrink: 0;
+    }
+
+    &.is-open {
+      left: 870px;
+      width: 32px;
+      padding: 12px 8px;
+      border-radius: 0 4px 4px 0;
+
+      .bookmark-text {
+        opacity: 1;
+      }
+
+      &:hover {
+        transform: translateX(5px);
+        transition: transform 0.3s ease;
+      }
+    }
+
+    &.is-front {
+      left: 900px;
+      width: 20px;
+      padding: 10px 0;
+      border-radius: 0 2px 2px 0;
+
+      .bookmark-text {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .bookmark-icon {
+        transform: scale(0.8);
+      }
+
+      &:hover {
+        left: 675px;
+        width: 25px;
+        transition: transform 0.3s ease;
+      }
+    }
+
+    &.is-back {
+      left: -20px;
+      width: 20px;
+      padding: 10px 0;
+      border-radius: 2px 0 0 2px;
+
+      .bookmark-text {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .bookmark-icon {
+        transform: scale(0.8);
+      }
+
+      &:hover {
+        left: 205px;
+        width: 25px;
+        transition: transform 0.3s ease;
+      }
+    }
+  }
+
+  .page-footer {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'VT323', monospace;
+    font-size: 0.9rem;
+    color: rgba($book-gold, 0.4);
+    pointer-events: none;
+  }
 }

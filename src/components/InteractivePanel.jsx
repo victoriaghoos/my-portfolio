@@ -1,52 +1,43 @@
-import { useState, useRef, useEffect } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import { Html, useTexture, Float, useCursor } from "@react-three/drei";
-import * as THREE from "three";
+import { useState, useRef, useEffect } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import { Html, useTexture, Float, useCursor } from '@react-three/drei';
+import * as THREE from 'three';
 
-const PanelLabel = ({
-  color,
-  hovered,
-  isParentVisible,
-  label,
-  labelMargin,
-  visible,
-}) => (
+const PanelLabel = ({ color, hovered, isParentVisible, label, labelMargin, visible }) => (
   <Html
     center
     style={{
-      width: "100%",
-      display: isParentVisible ? "flex" : "none",
-      justifyContent: "center",
+      width: '100%',
+      display: isParentVisible ? 'flex' : 'none',
+      justifyContent: 'center',
       marginTop: `${labelMargin}px`,
-      pointerEvents: "none",
-      transition: "none",
+      pointerEvents: 'none',
+      transition: 'none',
     }}
     transform
   >
     <div
       style={{
-        color: "#2c3e50",
+        color: '#2c3e50',
         fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
-        fontSize: "0.65rem",
-        fontWeight: "600",
-        textAlign: "center",
-        padding: "6px 12px",
-        borderRadius: "4px",
-        background: "rgba(255, 255, 255, 0.85)",
-        border: "1px solid rgba(200, 220, 240, 0.6)",
+        fontSize: '0.65rem',
+        fontWeight: '600',
+        textAlign: 'center',
+        padding: '6px 12px',
+        borderRadius: '4px',
+        background: 'rgba(255, 255, 255, 0.85)',
+        border: '1px solid rgba(200, 220, 240, 0.6)',
         boxShadow: `
             0 4px 12px rgba(0, 0, 0, 0.1),
             0 0 15px ${color.getStyle()}40
           `,
         opacity: visible ? (hovered ? 1 : 0.9) : 0,
-        visibility: visible ? "visible" : "hidden",
-        transition: "none",
-        transform: hovered
-          ? "translateY(-2px) scale(1.05)"
-          : "translateY(0) scale(1)",
-        letterSpacing: "1px",
-        textTransform: "uppercase",
-        userSelect: "none",
+        visibility: visible ? 'visible' : 'hidden',
+        transition: 'none',
+        transform: hovered ? 'translateY(-2px) scale(1.05)' : 'translateY(0) scale(1)',
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        userSelect: 'none',
       }}
     >
       {label}
@@ -59,13 +50,10 @@ const usePanelVideoTexture = (videoSrc) => {
   const videoTextureRef = useRef();
   const [videoTexture, setVideoTexture] = useState(null);
 
-  const disposeVideoResources = (
-    video = videoRef.current,
-    texture = videoTextureRef.current,
-  ) => {
+  const disposeVideoResources = (video = videoRef.current, texture = videoTextureRef.current) => {
     if (video) {
       video.pause();
-      video.removeAttribute("src");
+      video.removeAttribute('src');
       video.load();
     }
 
@@ -81,9 +69,7 @@ const usePanelVideoTexture = (videoSrc) => {
       videoTextureRef.current = null;
     }
 
-    setVideoTexture((currentTexture) =>
-      currentTexture === texture ? null : currentTexture,
-    );
+    setVideoTexture((currentTexture) => (currentTexture === texture ? null : currentTexture));
   };
 
   useEffect(() => {
@@ -93,12 +79,12 @@ const usePanelVideoTexture = (videoSrc) => {
       return undefined;
     }
 
-    const video = document.createElement("video");
+    const video = document.createElement('video');
     video.src = videoSrc;
     video.loop = true;
     video.muted = true;
     video.playsInline = true;
-    video.preload = "none";
+    video.preload = 'none';
     videoRef.current = video;
 
     const texture = new THREE.VideoTexture(video);
@@ -155,19 +141,14 @@ const useLabelVisibility = (camera) => {
   const directionRef = useRef(new THREE.Vector3());
   const intersectionPointRef = useRef(new THREE.Vector3());
   const raycasterRef = useRef(new THREE.Raycaster());
-  const hologramPlaneRef = useRef(
-    new THREE.Plane(new THREE.Vector3(0, 0, 1), 0),
-  );
+  const hologramPlaneRef = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0));
 
   const updateLabelVisibility = (panelPosition) => {
     if (!panelPosition) {
       return;
     }
 
-    const direction = directionRef.current
-      .copy(panelPosition)
-      .sub(camera.position)
-      .normalize();
+    const direction = directionRef.current.copy(panelPosition).sub(camera.position).normalize();
 
     raycasterRef.current.set(camera.position, direction);
     const intersectionPoint = intersectionPointRef.current;
@@ -180,8 +161,7 @@ const useLabelVisibility = (camera) => {
 
     if (intersects) {
       const distToPanel = camera.position.distanceTo(panelPosition);
-      const distToIntersection =
-        camera.position.distanceTo(intersectionPoint);
+      const distToIntersection = camera.position.distanceTo(intersectionPoint);
       nextLabelVisible = distToPanel < distToIntersection;
     }
 
@@ -197,7 +177,21 @@ const useLabelVisibility = (camera) => {
   };
 };
 
-const InteractivePanel = ({ icon, setActive, index, position, orbitRotationYRef, isParentVisible, onIconClick, onPanelPointerUp, iconScale = 0.7, iconPlaneSize = 1.6, ringInner = 0.9, ringOuter = 1.0, labelMargin = 70 }) => {
+const InteractivePanel = ({
+  icon,
+  setActive,
+  index,
+  position,
+  orbitRotationYRef,
+  isParentVisible,
+  onIconClick,
+  onPanelPointerUp,
+  iconScale = 0.7,
+  iconPlaneSize = 1.6,
+  ringInner = 0.9,
+  ringOuter = 1.0,
+  labelMargin = 70,
+}) => {
   const ref = useRef();
   const ringRef = useRef();
   const panelPositionRef = useRef(new THREE.Vector3());
@@ -205,18 +199,18 @@ const InteractivePanel = ({ icon, setActive, index, position, orbitRotationYRef,
   const [hovered, setHovered] = useState(false);
   const { camera } = useThree();
   const { labelVisible, updateLabelVisibility } = useLabelVisibility(camera);
-  const { playVideo, resetVideo, updateVideoTexture, videoTexture } =
-    usePanelVideoTexture(icon.video);
+  const { playVideo, resetVideo, updateVideoTexture, videoTexture } = usePanelVideoTexture(
+    icon.video,
+  );
 
-  useCursor(hovered, "pointer", "auto");
+  useCursor(hovered, 'pointer', 'auto');
 
   const updatePanelTransform = (elapsedTime) => {
     if (!ref.current) {
       return null;
     }
 
-    ref.current.position.y =
-      position[1] + Math.sin(elapsedTime * 0.5 + index) * 0.1;
+    ref.current.position.y = position[1] + Math.sin(elapsedTime * 0.5 + index) * 0.1;
     const localWobbleY = Math.sin(elapsedTime * 0.3 + index) * 0.05;
     const orbitRotationY = orbitRotationYRef?.current ?? 0;
     ref.current.rotation.y = localWobbleY - orbitRotationY;
@@ -228,9 +222,7 @@ const InteractivePanel = ({ icon, setActive, index, position, orbitRotationYRef,
     if (ringRef.current) {
       ringRef.current.rotation.z = elapsedTime * 0.3;
       if (hovered) {
-        ringRef.current.scale.setScalar(
-          1.1 + Math.sin(elapsedTime * 7) * 0.05,
-        );
+        ringRef.current.scale.setScalar(1.1 + Math.sin(elapsedTime * 7) * 0.05);
       } else {
         ringRef.current.scale.setScalar(1);
       }
@@ -300,11 +292,7 @@ const InteractivePanel = ({ icon, setActive, index, position, orbitRotationYRef,
           >
             <planeGeometry args={[iconPlaneSize, iconPlaneSize]} />
             <meshStandardMaterial
-              map={
-                hovered && videoTexture
-                  ? videoTexture
-                  : pngTexture
-              }
+              map={hovered && videoTexture ? videoTexture : pngTexture}
               transparent={true}
               opacity={hovered ? 1 : 0.9}
               emissive={icon.color}

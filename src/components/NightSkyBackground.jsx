@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useCallback, forwardRef, useImperativeHandle } from "react";
+import { useRef, useEffect, useMemo, useCallback, forwardRef, useImperativeHandle } from 'react';
 
 const fbm = (noiseFn, x, y, z, octaves = 5, lacunarity = 2.0, gain = 0.5) => {
   let amplitude = 0.5;
@@ -17,12 +17,12 @@ const fbm = (noiseFn, x, y, z, octaves = 5, lacunarity = 2.0, gain = 0.5) => {
 };
 
 const NEBULA_RAMP = [
-  { t: 0.00, c: [4, 3, 14] },
+  { t: 0.0, c: [4, 3, 14] },
   { t: 0.35, c: [10, 10, 35] },
   { t: 0.48, c: [30, 25, 75] },
   { t: 0.62, c: [80, 40, 120] },
-  { t: 0.80, c: [160, 70, 145] },
-  { t: 1.00, c: [220, 130, 110] },
+  { t: 0.8, c: [160, 70, 145] },
+  { t: 1.0, c: [220, 130, 110] },
 ];
 
 const sampleRamp = (t) => {
@@ -66,10 +66,28 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
 
   const perlinNoise = useMemo(() => {
     const p = new Uint8Array(512);
-    const perm = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+    const perm = [
+      151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69,
+      142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219,
+      203, 117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175,
+      74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122, 60, 211, 133, 230,
+      220, 105, 92, 41, 55, 46, 245, 40, 244, 102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209,
+      76, 132, 187, 208, 89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198,
+      173, 186, 3, 64, 52, 217, 226, 250, 124, 123, 5, 202, 38, 147, 118, 126, 255, 82, 85, 212,
+      207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170, 213, 119, 248, 152, 2, 44,
+      154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9, 129, 22, 39, 253, 19, 98, 108, 110, 79,
+      113, 224, 232, 178, 185, 112, 104, 218, 246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12,
+      191, 179, 162, 241, 81, 51, 145, 235, 249, 14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157,
+      184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29,
+      24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180,
+    ];
     for (let i = 0; i < 256; ++i) p[256 + i] = p[i] = perm[i];
-    function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
-    function lerp(t, a, b) { return a + t * (b - a); }
+    function fade(t) {
+      return t * t * t * (t * (t * 6 - 15) + 10);
+    }
+    function lerp(t, a, b) {
+      return a + t * (b - a);
+    }
     function grad(hash, x, y, z) {
       const h = hash & 15;
       const u = h < 8 ? x : y;
@@ -78,11 +96,34 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
     }
     return {
       noise: (x, y = 0, z = 0) => {
-        const X = Math.floor(x) & 255, Y = Math.floor(y) & 255, Z = Math.floor(z) & 255;
-        x -= Math.floor(x); y -= Math.floor(y); z -= Math.floor(z);
-        const u = fade(x), v = fade(y), w = fade(z);
-        const A = p[X] + Y, AA = p[A] + Z, AB = p[A + 1] + Z, B = p[X + 1] + Y, BA = p[B] + Z, BB = p[B + 1] + Z;
-        return lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z), grad(p[BA], x - 1, y, z)), lerp(u, grad(p[AB], x, y - 1, z), grad(p[BB], x - 1, y - 1, z))), lerp(v, lerp(u, grad(p[AA + 1], x, y, z - 1), grad(p[BA + 1], x - 1, y, z - 1)), lerp(u, grad(p[AB + 1], x, y - 1, z - 1), grad(p[BB + 1], x - 1, y - 1, z - 1))));
+        const X = Math.floor(x) & 255,
+          Y = Math.floor(y) & 255,
+          Z = Math.floor(z) & 255;
+        x -= Math.floor(x);
+        y -= Math.floor(y);
+        z -= Math.floor(z);
+        const u = fade(x),
+          v = fade(y),
+          w = fade(z);
+        const A = p[X] + Y,
+          AA = p[A] + Z,
+          AB = p[A + 1] + Z,
+          B = p[X + 1] + Y,
+          BA = p[B] + Z,
+          BB = p[B + 1] + Z;
+        return lerp(
+          w,
+          lerp(
+            v,
+            lerp(u, grad(p[AA], x, y, z), grad(p[BA], x - 1, y, z)),
+            lerp(u, grad(p[AB], x, y - 1, z), grad(p[BB], x - 1, y - 1, z)),
+          ),
+          lerp(
+            v,
+            lerp(u, grad(p[AA + 1], x, y, z - 1), grad(p[BA + 1], x - 1, y, z - 1)),
+            lerp(u, grad(p[AB + 1], x, y - 1, z - 1), grad(p[BB + 1], x - 1, y - 1, z - 1)),
+          ),
+        );
       },
     };
   }, []);
@@ -103,7 +144,7 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
         const y = clientY - canvasBoundsRef.current.top;
         triggerShockwaveRef.current(x, y);
       }
-    }
+    },
   }));
 
   useEffect(() => {
@@ -121,19 +162,19 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
 
   useEffect(() => {
     const canvas = backgroundCanvasRef.current;
-    const ctx = canvas.getContext("2d", { alpha: false });
+    const ctx = canvas.getContext('2d', { alpha: false });
 
     const buildNebulaTexture = () => {
       const tw = Math.max(1, Math.floor(window.innerWidth / 2));
       const th = Math.max(1, Math.floor(window.innerHeight / 2));
-      const off = document.createElement("canvas");
+      const off = document.createElement('canvas');
       off.width = tw;
       off.height = th;
 
-      const octx = off.getContext("2d");
+      const octx = off.getContext('2d');
       const img = octx.createImageData(tw, th);
       const scale = 0.0022;
-      const CONTRAST = 2.2; 
+      const CONTRAST = 2.2;
       const FORCE_OPAQUE_DEBUG = false;
 
       for (let y = 0; y < th; y++) {
@@ -176,13 +217,13 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
       const r = canvas.getBoundingClientRect();
       canvasBoundsRef.current = { left: r.left, top: r.top };
       nebulaTexture = buildNebulaTexture();
-      bloomCanvas = document.createElement("canvas");
+      bloomCanvas = document.createElement('canvas');
       bloomCanvas.width = Math.floor(window.innerWidth / 3);
       bloomCanvas.height = Math.floor(window.innerHeight / 3);
-      bloomCtx = bloomCanvas.getContext("2d");
+      bloomCtx = bloomCanvas.getContext('2d');
     };
     resize();
-    window.addEventListener("resize", resize);
+    window.addEventListener('resize', resize);
 
     // Depth layers
     // Three layers with different size/brightness/parallax response.
@@ -195,10 +236,12 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
       return {
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
-        baseX: 0, baseY: 0,
+        baseX: 0,
+        baseY: 0,
         size: sizeMin + Math.random() * (sizeMax - sizeMin),
         brightness,
-        vx: 0, vy: 0,
+        vx: 0,
+        vy: 0,
         twinkleSpeed: 0.3 + Math.random() * 1.5,
         twinkleOffset: Math.random() * Math.PI * 2,
         color: pickStarColor(),
@@ -206,14 +249,20 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
     };
 
     const distantStars = new Array(Math.min(1600, Math.floor(280 * areaFactor) + 500))
-      .fill(0).map(() => makeStar(0.5, 1.0, 0.25, 0.55));
+      .fill(0)
+      .map(() => makeStar(0.5, 1.0, 0.25, 0.55));
     const midStars = new Array(Math.min(500, Math.floor(90 * areaFactor) + 150))
-      .fill(0).map(() => makeStar(1.0, 1.7, 0.5, 0.85));
+      .fill(0)
+      .map(() => makeStar(1.0, 1.7, 0.5, 0.85));
     const heroStars = new Array(Math.min(45, Math.floor(6 * areaFactor) + 18))
-      .fill(0).map(() => makeStar(1.9, 3.0, 0.8, 1.0));
+      .fill(0)
+      .map(() => makeStar(1.9, 3.0, 0.8, 1.0));
 
     [distantStars, midStars, heroStars].forEach((layer) =>
-      layer.forEach((s) => { s.baseX = s.x; s.baseY = s.y; })
+      layer.forEach((s) => {
+        s.baseX = s.x;
+        s.baseY = s.y;
+      }),
     );
 
     const layers = [
@@ -229,17 +278,23 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
     const bandLength = Math.max(window.innerWidth, window.innerHeight) * 1.7;
 
     const bandStars = new Array(Math.min(700, Math.floor(140 * areaFactor) + 200))
-      .fill(0).map(() => {
+      .fill(0)
+      .map(() => {
         const along = (Math.random() - 0.5) * bandLength;
         const across = (Math.random() - 0.5) * 140 * (0.3 + Math.random() * 0.7);
-        const cos = Math.cos(bandAngle), sin = Math.sin(bandAngle);
+        const cos = Math.cos(bandAngle),
+          sin = Math.sin(bandAngle);
         const x = bandCenter.x + along * cos - across * sin;
         const y = bandCenter.y + along * sin + across * cos;
         return {
-          x, y, baseX: x, baseY: y,
+          x,
+          y,
+          baseX: x,
+          baseY: y,
           size: 0.4 + Math.random() * 0.8,
           brightness: 0.2 + Math.random() * 0.4,
-          vx: 0, vy: 0,
+          vx: 0,
+          vy: 0,
           twinkleSpeed: 0.3 + Math.random() * 1.2,
           twinkleOffset: Math.random() * Math.PI * 2,
           color: pickStarColor(),
@@ -252,7 +307,7 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
       parallax.tx = (e.clientX / window.innerWidth - 0.5) * 2;
       parallax.ty = (e.clientY / window.innerHeight - 0.5) * 2;
     };
-    window.addEventListener("mousemove", onMouseMoveParallax, { passive: true });
+    window.addEventListener('mousemove', onMouseMoveParallax, { passive: true });
 
     const shooting = [];
     const maxShooting = 4;
@@ -263,7 +318,8 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
       const speed = 30 + Math.random() * 25;
       const length = 80 + Math.random() * 150;
       shooting.push({
-        x: startX, y: startY,
+        x: startX,
+        y: startY,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         life: Math.floor(length / speed) + 8,
@@ -281,7 +337,9 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
 
     const spawnShock = (x, y) => {
       shockwaves.push({
-        x, y, r: 0,
+        x,
+        y,
+        r: 0,
         maxR: Math.max(window.innerWidth, window.innerHeight) * 0.9,
         strength: 1 + Math.random() * 1.2,
         life: 1.0,
@@ -362,7 +420,7 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
       const H = window.innerHeight;
 
       const bg = ctx.createLinearGradient(0, 0, 0, H);
-      const colors = ["#020112", "#050c22", "#08173f", "#0f2050", "#1a2870"];
+      const colors = ['#020112', '#050c22', '#08173f', '#0f2050', '#1a2870'];
       colors.forEach((c, i) => bg.addColorStop(i / (colors.length - 1), c));
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, W, H);
@@ -372,13 +430,13 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
       const driftY = Math.cos(t * 0.012) * 25;
       if (nebulaTexture) {
         ctx.save();
-        ctx.globalCompositeOperation = "lighter";
+        ctx.globalCompositeOperation = 'lighter';
         ctx.globalAlpha = 1;
         ctx.drawImage(nebulaTexture, -20 + driftX, -20 + driftY, W + 40, H + 40);
         ctx.restore();
       }
 
-      ctx.globalCompositeOperation = "lighter";
+      ctx.globalCompositeOperation = 'lighter';
 
       // Galactic band glow, drawn before stars so the band starfield sits on top of it
       const bandNoiseScale = 0.006;
@@ -387,25 +445,25 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
       const sin = Math.sin(bandAngle);
 
       for (let i = 0; i < bandPuffCount; i++) {
-  const alongPos = -bandLength / 2 + (i / bandPuffCount) * bandLength;
-  const n = perlinNoise.noise(alongPos * bandNoiseScale, 0.5, 2.1);
-  const density = Math.max(0, (n + 1) * 0.5 - 0.3) * 1.5;
-  if (density <= 0) continue;
+        const alongPos = -bandLength / 2 + (i / bandPuffCount) * bandLength;
+        const n = perlinNoise.noise(alongPos * bandNoiseScale, 0.5, 2.1);
+        const density = Math.max(0, (n + 1) * 0.5 - 0.3) * 1.5;
+        if (density <= 0) continue;
 
-  const px = bandCenter.x + alongPos * cos;
-  const py = bandCenter.y + alongPos * sin;
-  const puffRadius = 130;
+        const px = bandCenter.x + alongPos * cos;
+        const py = bandCenter.y + alongPos * sin;
+        const puffRadius = 130;
 
-  const grd = ctx.createRadialGradient(px, py, 0, px, py, puffRadius);
-  grd.addColorStop(0, `rgba(210, 215, 255, ${0.22 * density})`);
-  grd.addColorStop(1, "rgba(210, 215, 255, 0)");
-  ctx.fillStyle = grd;
-  ctx.fillRect(px - puffRadius, py - puffRadius, puffRadius * 2, puffRadius * 2);
-}
+        const grd = ctx.createRadialGradient(px, py, 0, px, py, puffRadius);
+        grd.addColorStop(0, `rgba(210, 215, 255, ${0.22 * density})`);
+        grd.addColorStop(1, 'rgba(210, 215, 255, 0)');
+        ctx.fillStyle = grd;
+        ctx.fillRect(px - puffRadius, py - puffRadius, puffRadius * 2, puffRadius * 2);
+      }
 
       auroraParams.forEach((ap, idx) => {
         ctx.save();
-        ctx.globalCompositeOperation = "lighter";
+        ctx.globalCompositeOperation = 'lighter';
         ctx.globalAlpha = ap.alpha;
         ctx.beginPath();
         const baseY = H * (0.12 + idx * 0.05) + Math.sin(t * 0.5 + idx) * 12;
@@ -413,7 +471,10 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
         const segments = 6;
         for (let i = 0; i <= segments; i++) {
           const sx = (i / segments) * W;
-          const sy = baseY + Math.sin((i / segments) * Math.PI * 2 + t * ap.speed * 4) * (ap.amp + Math.sin(t * 0.7) * 12);
+          const sy =
+            baseY +
+            Math.sin((i / segments) * Math.PI * 2 + t * ap.speed * 4) *
+              (ap.amp + Math.sin(t * 0.7) * 12);
           ctx.lineTo(sx, sy);
         }
         ctx.lineTo(W, H);
@@ -442,13 +503,14 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
         const hue = (200 + sw.strength * 80) % 360;
         grd.addColorStop(0, `hsla(${hue},80%,60%,${0.12 * sw.life})`);
         grd.addColorStop(1, `rgba(0,0,0,0)`);
-        ctx.globalCompositeOperation = "overlay";
+        ctx.globalCompositeOperation = 'overlay';
         ctx.fillStyle = grd;
         ctx.fillRect(0, 0, W, H);
-        ctx.globalCompositeOperation = "lighter";
+        ctx.globalCompositeOperation = 'lighter';
       }
 
-      const px0 = parallax.x, py0 = parallax.y;
+      const px0 = parallax.x,
+        py0 = parallax.y;
       layers.forEach((layer) => {
         drawStarLayer(layer, t, dt, px0 * layer.parallax * 180, py0 * layer.parallax * 150);
       });
@@ -463,7 +525,10 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
         const trailLength = Math.max(25, st.maxLife * 4 * lifeRatio);
         ctx.beginPath();
         ctx.moveTo(st.x, st.y);
-        ctx.lineTo(st.x - st.vx * (trailLength / st.maxLife), st.y - st.vy * (trailLength / st.maxLife));
+        ctx.lineTo(
+          st.x - st.vx * (trailLength / st.maxLife),
+          st.y - st.vy * (trailLength / st.maxLife),
+        );
         ctx.lineWidth = st.size;
         ctx.strokeStyle = `rgba(255,255,255,${0.7 * lifeRatio})`;
         ctx.stroke();
@@ -471,34 +536,39 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
         ctx.arc(st.x, st.y, st.size * 0.7, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255,255,255,${lifeRatio})`;
         ctx.fill();
-        if (st.life <= 0 || st.x > W + 100 || st.y > H + 100)
-          shooting.splice(i, 1);
+        if (st.life <= 0 || st.x > W + 100 || st.y > H + 100) shooting.splice(i, 1);
       }
 
-      if (Math.random() < 0.025 && shooting.length < maxShooting)
-        spawnShootingStar();
+      if (Math.random() < 0.025 && shooting.length < maxShooting) spawnShootingStar();
 
       // Subtle vignette
-      ctx.globalCompositeOperation = "source-over";
-      const vignette = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.3, W / 2, H / 2, Math.max(W, H) * 0.75);
-      vignette.addColorStop(0, "rgba(0,0,0,0)");
-      vignette.addColorStop(1, "rgba(0,0,0,0.35)");
+      ctx.globalCompositeOperation = 'source-over';
+      const vignette = ctx.createRadialGradient(
+        W / 2,
+        H / 2,
+        Math.min(W, H) * 0.3,
+        W / 2,
+        H / 2,
+        Math.max(W, H) * 0.75,
+      );
+      vignette.addColorStop(0, 'rgba(0,0,0,0)');
+      vignette.addColorStop(1, 'rgba(0,0,0,0.35)');
       ctx.fillStyle = vignette;
       ctx.fillRect(0, 0, W, H);
 
       // Cheap bloom
       if (bloomCanvas && bloomCtx) {
-      bloomCtx.clearRect(0, 0, bloomCanvas.width, bloomCanvas.height);
-      bloomCtx.filter = "brightness(0.4) contrast(2.2) blur(3px)";
-      bloomCtx.drawImage(canvas, 0, 0, bloomCanvas.width, bloomCanvas.height);
-      bloomCtx.filter = "none";
+        bloomCtx.clearRect(0, 0, bloomCanvas.width, bloomCanvas.height);
+        bloomCtx.filter = 'brightness(0.4) contrast(2.2) blur(3px)';
+        bloomCtx.drawImage(canvas, 0, 0, bloomCanvas.width, bloomCanvas.height);
+        bloomCtx.filter = 'none';
 
-      ctx.save();
-      ctx.globalCompositeOperation = "lighter";
-      ctx.globalAlpha = 0.28;
-      ctx.drawImage(bloomCanvas, 0, 0, W, H);  
-      ctx.restore();
-    }
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.globalAlpha = 0.28;
+        ctx.drawImage(bloomCanvas, 0, 0, W, H);
+        ctx.restore();
+      }
 
       animationFrameRef.current = requestAnimationFrame(draw);
     };
@@ -510,20 +580,15 @@ const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = 
     }
 
     return () => {
-      window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", onMouseMoveParallax);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMouseMoveParallax);
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
       animationFrameRef.current = null;
       drawFrameRef.current = null;
     };
   }, [perlinNoise, pickStarColor]);
 
-  return (
-    <canvas
-      ref={backgroundCanvasRef}
-      className="night-sky-canvas"
-    />
-  );
+  return <canvas ref={backgroundCanvasRef} className="night-sky-canvas" />;
 });
 
 export default NightSkyBackground;

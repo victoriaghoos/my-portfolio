@@ -1,19 +1,39 @@
-import { useMemo, memo, useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useMemo, memo, useRef } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import "../../styles/sections/SkillsSection.scss";
-import sakuraTree from "../../assets/images/sakura2.webp";
-import petalImg from "../../assets/images/petal.png";
+import '../../styles/sections/SkillsSection.scss';
+import sakuraTree from '../../assets/images/sakura2.webp';
+import petalImg from '../../assets/images/petal.png';
 import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import {
-  SiPython, SiJavascript, SiTypescript, SiPhp,
-  SiDotnet, SiNodedotjs, SiOpensearch, SiBlazor, SiLaravel,
-  SiReact, SiThreedotjs, SiHtml5, SiCss3, SiTailwindcss, SiVuedotjs, SiSass,
-  SiDocker, SiLinux, SiKubernetes, SiTerraform,
-  SiGit, SiGithub, SiGitlab, SiPostman, SiSwagger,
-} from "react-icons/si";
-import { BsDatabase } from "react-icons/bs";
-import { TbApi, TbBrandAzure } from "react-icons/tb";
+  SiPython,
+  SiJavascript,
+  SiTypescript,
+  SiPhp,
+  SiDotnet,
+  SiNodedotjs,
+  SiOpensearch,
+  SiBlazor,
+  SiLaravel,
+  SiReact,
+  SiThreedotjs,
+  SiHtml5,
+  SiCss3,
+  SiTailwindcss,
+  SiVuedotjs,
+  SiSass,
+  SiDocker,
+  SiLinux,
+  SiKubernetes,
+  SiTerraform,
+  SiGit,
+  SiGithub,
+  SiGitlab,
+  SiPostman,
+  SiSwagger,
+} from 'react-icons/si';
+import { BsDatabase } from 'react-icons/bs';
+import { TbApi, TbBrandAzure } from 'react-icons/tb';
 
 const SkillsStarsCanvas = memo(function SkillsStarsCanvas() {
   const canvasRef = useRef(null);
@@ -28,7 +48,7 @@ const SkillsStarsCanvas = memo(function SkillsStarsCanvas() {
         phase: Math.random() * Math.PI * 2,
         speed: Math.random() * 0.002 + 0.001,
       })),
-    []
+    [],
   );
 
   useCanvasAnimationLoop(canvasRef, {
@@ -37,9 +57,7 @@ const SkillsStarsCanvas = memo(function SkillsStarsCanvas() {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#ffffff';
       stars.forEach((star) => {
-        const twinkle = isStatic
-          ? 1
-          : 0.75 + Math.sin(timestamp * star.speed + star.phase) * 0.15;
+        const twinkle = isStatic ? 1 : 0.75 + Math.sin(timestamp * star.speed + star.phase) * 0.15;
         ctx.globalAlpha = Math.min(1, Math.max(0, star.opacity * twinkle));
         ctx.beginPath();
         ctx.arc(star.x * width, star.y * height, star.radius, 0, Math.PI * 2);
@@ -57,28 +75,31 @@ const SkillsStarsCanvas = memo(function SkillsStarsCanvas() {
 });
 
 const FallingPetal = memo(function FallingPetal() {
-  const settings = useMemo(() => ({
-    left: Math.random() * 100,
-    duration: 10 + Math.random() * 15,
-    delay: Math.random() * 20,
-    scale: 0.3 + Math.random() * 0.7,
-    drift: (Math.random() - 0.5) * 100,
-    brightness: 0.7 + Math.random() * 0.5,
-    rotate: 360 + Math.random() * 180,
-  }), []);
+  const settings = useMemo(
+    () => ({
+      left: Math.random() * 100,
+      duration: 10 + Math.random() * 15,
+      delay: Math.random() * 20,
+      scale: 0.3 + Math.random() * 0.7,
+      drift: (Math.random() - 0.5) * 100,
+      brightness: 0.7 + Math.random() * 0.5,
+      rotate: 360 + Math.random() * 180,
+    }),
+    [],
+  );
 
   return (
     <motion.img
       src={petalImg}
       className="sakura-petal-real"
-      style={{ 
-        left: `${settings.left}%`, 
+      style={{
+        left: `${settings.left}%`,
         scale: settings.scale,
-        filter: `brightness(${settings.brightness})`
+        filter: `brightness(${settings.brightness})`,
       }}
       initial={{ y: -50, opacity: 0, rotate: 0, rotateX: 0, rotateY: 0 }}
       animate={{
-        y: "110vh",
+        y: '110vh',
         opacity: [0, 1, 1, 0],
         x: [0, settings.drift, -settings.drift / 2, settings.drift, 0],
         rotate: [0, settings.rotate],
@@ -89,7 +110,7 @@ const FallingPetal = memo(function FallingPetal() {
         duration: settings.duration,
         repeat: Infinity,
         delay: settings.delay,
-        ease: "linear",
+        ease: 'linear',
       }}
     />
   );
@@ -108,7 +129,7 @@ const itemVariants = {
   visible: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.45, ease: "easeOut" },
+    transition: { duration: 0.45, ease: 'easeOut' },
   },
 };
 
@@ -117,85 +138,88 @@ const SkillsSection = ({ id }) => {
   const reduceMotion = useReducedMotion();
   const petalsRef = useRef(null);
   const isPetalsInView = useInView(petalsRef, { once: false, amount: 0.1 });
-  
+
   const petals = useMemo(() => Array.from({ length: 12 }), []);
 
-  const skillGroups = useMemo(() => [
-    {
-      id: "languages",
-      title: t('skills_categories.languages'),
-      featured: true,
-      accent: "#f0a8d0",
-      skills: [
-        { name: "C#",          icon: null },
-        { name: "Python",      icon: SiPython },
-        { name: "JavaScript",  icon: SiJavascript },
-        { name: "TypeScript",  icon: SiTypescript },
-        { name: "SQL",         icon: BsDatabase },
-        { name: "PHP",         icon: SiPhp },
-      ],
-    },
-    {
-      id: "backend",
-      title: t('skills_categories.backend'),
-      featured: true,
-      accent: "#d295d6",
-      skills: [
-        { name: ".NET",        icon: SiDotnet },
-        { name: "ASP.NET MVC", icon: null },
-        { name: "Laravel",     icon: SiLaravel },
-        { name: "REST APIs",   icon: TbApi },
-        { name: "SignalR",     icon: null },
-        { name: "OpenSearch",  icon: SiOpensearch },
-        { name: "Node.js",     icon: SiNodedotjs },
-        { name: "EF Core",     icon: null },
-        { name: "JWT",         icon: null },
-      ],
-    },
-    {
-      id: "frontend",
-      title: t('skills_categories.frontend'),
-      accent: "#bb95e0",
-      skills: [
-        { name: "React",        icon: SiReact },
-        { name: "Three.js",     icon: SiThreedotjs },
-        { name: "HTML",         icon: SiHtml5 },
-        { name: "CSS",          icon: SiCss3 },
-        { name: "Tailwind CSS", icon: SiTailwindcss },
-        { name: "Vue.js",       icon: SiVuedotjs },
-        { name: "SCSS",         icon: SiSass },
-        { name: "Blazor",       icon: SiBlazor },
-        { name: ".NET MAUI",    icon: null },
-        { name: "WPF",          icon: null },
-      ],
-    },
-    {
-      id: "devops",
-      title: t('skills_categories.devops'),
-      accent: "#a68ee6",
-      skills: [
-        { name: "Docker",           icon: SiDocker },
-        { name: "Kubernetes",       icon: SiKubernetes },
-        { name: "Linux",            icon: SiLinux },
-        { name: "Virtual Machines", icon: null },
-        { name: "CI/CD",            icon: null },
-        { name: "Terraform",        icon: SiTerraform },
-        { name: "Azure",            icon: TbBrandAzure },
-      ],
-    },
-    {
-      id: "tooling",
-      title: t('skills_categories.tooling'),
-      accent: "#9490ea",
-      skills: [
-        { name: "Git",     icon: SiGit },
-        { name: "GitHub",  icon: SiGithub },
-        { name: "GitLab",  icon: SiGitlab },
-        { name: "Postman", icon: SiPostman },
-        { name: "Swagger", icon: SiSwagger },
-      ],
-    },
-  ], [t]);
+  const skillGroups = useMemo(
+    () => [
+      {
+        id: 'languages',
+        title: t('skills_categories.languages'),
+        featured: true,
+        accent: '#f0a8d0',
+        skills: [
+          { name: 'C#', icon: null },
+          { name: 'Python', icon: SiPython },
+          { name: 'JavaScript', icon: SiJavascript },
+          { name: 'TypeScript', icon: SiTypescript },
+          { name: 'SQL', icon: BsDatabase },
+          { name: 'PHP', icon: SiPhp },
+        ],
+      },
+      {
+        id: 'backend',
+        title: t('skills_categories.backend'),
+        featured: true,
+        accent: '#d295d6',
+        skills: [
+          { name: '.NET', icon: SiDotnet },
+          { name: 'ASP.NET MVC', icon: null },
+          { name: 'Laravel', icon: SiLaravel },
+          { name: 'REST APIs', icon: TbApi },
+          { name: 'SignalR', icon: null },
+          { name: 'OpenSearch', icon: SiOpensearch },
+          { name: 'Node.js', icon: SiNodedotjs },
+          { name: 'EF Core', icon: null },
+          { name: 'JWT', icon: null },
+        ],
+      },
+      {
+        id: 'frontend',
+        title: t('skills_categories.frontend'),
+        accent: '#bb95e0',
+        skills: [
+          { name: 'React', icon: SiReact },
+          { name: 'Three.js', icon: SiThreedotjs },
+          { name: 'HTML', icon: SiHtml5 },
+          { name: 'CSS', icon: SiCss3 },
+          { name: 'Tailwind CSS', icon: SiTailwindcss },
+          { name: 'Vue.js', icon: SiVuedotjs },
+          { name: 'SCSS', icon: SiSass },
+          { name: 'Blazor', icon: SiBlazor },
+          { name: '.NET MAUI', icon: null },
+          { name: 'WPF', icon: null },
+        ],
+      },
+      {
+        id: 'devops',
+        title: t('skills_categories.devops'),
+        accent: '#a68ee6',
+        skills: [
+          { name: 'Docker', icon: SiDocker },
+          { name: 'Kubernetes', icon: SiKubernetes },
+          { name: 'Linux', icon: SiLinux },
+          { name: 'Virtual Machines', icon: null },
+          { name: 'CI/CD', icon: null },
+          { name: 'Terraform', icon: SiTerraform },
+          { name: 'Azure', icon: TbBrandAzure },
+        ],
+      },
+      {
+        id: 'tooling',
+        title: t('skills_categories.tooling'),
+        accent: '#9490ea',
+        skills: [
+          { name: 'Git', icon: SiGit },
+          { name: 'GitHub', icon: SiGithub },
+          { name: 'GitLab', icon: SiGitlab },
+          { name: 'Postman', icon: SiPostman },
+          { name: 'Swagger', icon: SiSwagger },
+        ],
+      },
+    ],
+    [t],
+  );
 
   return (
     <section id={id} className="skills-section" aria-labelledby={`${id}-title`}>
@@ -216,7 +240,9 @@ const SkillsSection = ({ id }) => {
       </div>
 
       <div className="petals-layer" ref={petalsRef}>
-        {isPetalsInView && !reduceMotion && petals.map((_, i) => <FallingPetal key={`petal-${i}`} />)}
+        {isPetalsInView &&
+          !reduceMotion &&
+          petals.map((_, i) => <FallingPetal key={`petal-${i}`} />)}
       </div>
 
       {/* 3. CONTENT */}

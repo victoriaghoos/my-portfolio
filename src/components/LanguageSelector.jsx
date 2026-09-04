@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import '../styles/home.scss'; 
+import '../styles/home.scss';
 
 const languages = [
   { code: 'en', label: 'English', flag: 'US' },
@@ -33,8 +33,8 @@ const LanguageSelector = () => {
 
   return (
     <div className="language-selector-container" ref={containerRef}>
-      <button 
-        className={`lang-pill ${isOpen ? 'active' : ''}`} 
+      <button
+        className={`lang-pill ${isOpen ? 'active' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Select Language"
       >

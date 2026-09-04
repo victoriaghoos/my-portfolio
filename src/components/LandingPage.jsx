@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { Typewriter } from "react-simple-typewriter";
-import videoWebm from "../assets/videos/intro.webm";
-import videoMp4 from "../assets/videos/intro.mp4";
-import posterSrc from "../assets/images/intro.png"; 
-import "../styles/landingPage.scss";
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Typewriter } from 'react-simple-typewriter';
+import videoWebm from '../assets/videos/intro.webm';
+import videoMp4 from '../assets/videos/intro.mp4';
+import posterSrc from '../assets/images/intro.png';
+import '../styles/landingPage.scss';
 
 const SKIP_BUTTON_DELAY_MS = 500;
 // Safety net only. The typewriter's onLoopDone is the primary exit trigger.
@@ -14,12 +14,11 @@ const REDUCED_MOTION_EXIT_MS = 2500;
 const TRANSITION_DURATION_MS = 1500;
 const TRANSITION_FAILSAFE_MS = TRANSITION_DURATION_MS + 500;
 const REDUCED_MOTION_FAILSAFE_MS = 300;
-const INTRO_SEEN_KEY = "intro-seen";
+const INTRO_SEEN_KEY = 'intro-seen';
 const prefersReducedMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const TYPEWRITER_WORDS = ["Hi", "My name is Victoria", "Welcome to my world"];
-const HEADING_LABEL = `${TYPEWRITER_WORDS.join(". ")}.`;
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TYPEWRITER_WORDS = ['Hi', 'My name is Victoria', 'Welcome to my world'];
+const HEADING_LABEL = `${TYPEWRITER_WORDS.join('. ')}.`;
 
 const LandingPage = () => {
   const [transitionActive, setTransitionActive] = useState(false);
@@ -34,13 +33,14 @@ const LandingPage = () => {
   // Keep a synchronous guard separate from render state so the exit callback can stay stable and avoid rescheduling the effect while still reflecting whether the transition has already begun.
   const transitionActiveRef = useRef(false);
   const particles = useMemo(
-    () => Array.from({ length: 15 }, (_, index) => ({
-      id: index,
-      delay: `${index * 0.2}s`,
-      size: `${Math.random() * 4 + 2}px`,
-      x: `${Math.random() * 100}%`,
-      y: `${Math.random() * 100}%`,
-    })),
+    () =>
+      Array.from({ length: 15 }, (_, index) => ({
+        id: index,
+        delay: `${index * 0.2}s`,
+        size: `${Math.random() * 4 + 2}px`,
+        x: `${Math.random() * 100}%`,
+        y: `${Math.random() * 100}%`,
+      })),
     [],
   );
 
@@ -51,7 +51,9 @@ const LandingPage = () => {
   }, []);
 
   const handleVideoError = useCallback(() => {
-    console.error("LandingPage background video failed to load; poster fallback will remain visible.");
+    console.error(
+      'LandingPage background video failed to load; poster fallback will remain visible.',
+    );
   }, []);
 
   const startExitAndNavigate = useCallback(() => {
@@ -70,24 +72,27 @@ const LandingPage = () => {
     idleTimerRef.current = setTimeout(() => setCursorIdle(true), 400);
   }, []);
 
-  const handleTransitionComplete = useCallback((event) => {
-    if (event && event.target !== event.currentTarget) {
-      return;
-    }
+  const handleTransitionComplete = useCallback(
+    (event) => {
+      if (event && event.target !== event.currentTarget) {
+        return;
+      }
 
-    if (hasNavigatedRef.current) {
-      return;
-    }
+      if (hasNavigatedRef.current) {
+        return;
+      }
 
-    try {
-      sessionStorage.setItem(INTRO_SEEN_KEY, "1");
-    } catch {
-      // ignore
-    }
+      try {
+        sessionStorage.setItem(INTRO_SEEN_KEY, '1');
+      } catch {
+        // ignore
+      }
 
-    hasNavigatedRef.current = true;
-    navigate("/home", { replace: true });
-  }, [navigate]);
+      hasNavigatedRef.current = true;
+      navigate('/home', { replace: true });
+    },
+    [navigate],
+  );
 
   const completeRef = useRef(handleTransitionComplete);
 
@@ -100,9 +105,7 @@ const LandingPage = () => {
       return undefined;
     }
 
-    const delay = reducedMotion
-      ? REDUCED_MOTION_FAILSAFE_MS
-      : TRANSITION_FAILSAFE_MS;
+    const delay = reducedMotion ? REDUCED_MOTION_FAILSAFE_MS : TRANSITION_FAILSAFE_MS;
 
     const failsafeTimer = setTimeout(() => completeRef.current(), delay);
 
@@ -113,30 +116,27 @@ const LandingPage = () => {
 
   useEffect(() => {
     const onKeyDown = (event) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         startExitAndNavigate();
       }
     };
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [startExitAndNavigate]);
 
   useEffect(() => {
     try {
       if (sessionStorage.getItem(INTRO_SEEN_KEY)) {
         hasNavigatedRef.current = true;
-        navigate("/home", { replace: true });
+        navigate('/home', { replace: true });
         return undefined;
       }
     } catch {
       // sessionStorage can throw in privacy mode
     }
 
-    skipButtonTimerRef.current = setTimeout(
-      () => setShowSkipButton(true),
-      SKIP_BUTTON_DELAY_MS,
-    );
+    skipButtonTimerRef.current = setTimeout(() => setShowSkipButton(true), SKIP_BUTTON_DELAY_MS);
 
     autoExitTimerRef.current = setTimeout(
       startExitAndNavigate,
@@ -149,18 +149,16 @@ const LandingPage = () => {
   }, [clearTimers, reducedMotion, startExitAndNavigate, navigate]);
 
   return (
-    <div className={`landing-page ${transitionActive ? "page-exit" : ""}`}>
+    <div className={`landing-page ${transitionActive ? 'page-exit' : ''}`}>
       {reducedMotion ? (
-        <img
-          src={posterSrc}
-          alt=""
-          aria-hidden="true"
-          className="background-media"
-        />
+        <img src={posterSrc} alt="" aria-hidden="true" className="background-media" />
       ) : (
         <video
           poster={posterSrc}
-          autoPlay loop muted playsInline
+          autoPlay
+          loop
+          muted
+          playsInline
           className="background-media"
           aria-hidden="true"
           onError={handleVideoError}
@@ -174,17 +172,21 @@ const LandingPage = () => {
 
       <div className="particles" aria-hidden="true">
         {particles.map((particle) => (
-          <div key={particle.id} className="particle" style={{
-            "--delay": particle.delay,
-            "--size": particle.size,
-            "--x": particle.x,
-            "--y": particle.y,
-          }} />
+          <div
+            key={particle.id}
+            className="particle"
+            style={{
+              '--delay': particle.delay,
+              '--size': particle.size,
+              '--x': particle.x,
+              '--y': particle.y,
+            }}
+          />
         ))}
       </div>
 
       <button
-        className={`skip-intro-button ${showSkipButton ? "is-visible" : ""}`}
+        className={`skip-intro-button ${showSkipButton ? 'is-visible' : ''}`}
         onClick={startExitAndNavigate}
         disabled={transitionActive}
         title="Skip intro (Esc)"
@@ -213,7 +215,10 @@ const LandingPage = () => {
                   onLoopDone={startExitAndNavigate}
                 />
               </span>
-              <span className={`typewriter-cursor ${cursorIdle ? "is-blinking" : ""}`} aria-hidden="true">
+              <span
+                className={`typewriter-cursor ${cursorIdle ? 'is-blinking' : ''}`}
+                aria-hidden="true"
+              >
                 |
               </span>
             </>
@@ -222,10 +227,7 @@ const LandingPage = () => {
       </div>
 
       {transitionActive && (
-        <div
-          className="transition-overlay"
-          onAnimationEnd={handleTransitionComplete}
-        />
+        <div className="transition-overlay" onAnimationEnd={handleTransitionComplete} />
       )}
     </div>
   );

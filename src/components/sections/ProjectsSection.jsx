@@ -1,5 +1,5 @@
-import { useMemo, memo, useRef, useEffect, useState, useCallback } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useMemo, memo, useRef, useEffect, useState, useCallback } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
 import {
@@ -12,10 +12,10 @@ import {
   Play,
   SkipForward,
   SkipBack,
-} from "lucide-react";
-import "../../styles/sections/ProjectsSection.scss";
-import baseballImg from "../../assets/images/BaseballLive.webp";
-import flutterImg from "../../assets/images/VrijeTeid.png";
+} from 'lucide-react';
+import '../../styles/sections/ProjectsSection.scss';
+import baseballImg from '../../assets/images/BaseballLive.webp';
+import flutterImg from '../../assets/images/VrijeTeid.png';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -39,7 +39,7 @@ const cardVariants = {
     y: 0,
     scale: 1,
     transition: {
-      type: "spring",
+      type: 'spring',
       stiffness: 100,
       damping: 12,
     },
@@ -58,21 +58,20 @@ const ProjectsStarsCanvas = memo(function ProjectsStarsCanvas() {
         phase: Math.random() * Math.PI * 2,
         speed: Math.random() * 0.002 + 0.0015,
       })),
-    []
+    [],
   );
   const reduceMotion = useReducedMotion();
 
   const drawStars = useCallback(
     ({ ctx, width, height, timestamp, isStatic }) => {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = "#ffffff";
-      ctx.shadowColor = "rgba(255,255,255,0.15)";
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = 'rgba(255,255,255,0.15)';
       ctx.shadowBlur = 0;
 
       starConfig.forEach((star) => {
-        const glow = isStatic || reduceMotion
-          ? 1
-          : 0.6 + Math.sin(timestamp * star.speed + star.phase) * 0.25;
+        const glow =
+          isStatic || reduceMotion ? 1 : 0.6 + Math.sin(timestamp * star.speed + star.phase) * 0.25;
 
         ctx.globalAlpha = Math.min(1, Math.max(0, star.alpha * glow));
         ctx.beginPath();
@@ -81,7 +80,7 @@ const ProjectsStarsCanvas = memo(function ProjectsStarsCanvas() {
       });
       ctx.globalAlpha = 1;
     },
-    [reduceMotion, starConfig]
+    [reduceMotion, starConfig],
   );
 
   useCanvasAnimationLoop(canvasRef, {
@@ -98,56 +97,59 @@ const ProjectsStarsCanvas = memo(function ProjectsStarsCanvas() {
 const ProjectsSection = ({ id }) => {
   const { t } = useTranslation();
   const [showDoodles, setShowDoodles] = useState(() =>
-    typeof window !== "undefined" ? window.innerWidth > 768 : true
+    typeof window !== 'undefined' ? window.innerWidth > 768 : true,
   );
-  const projects = useMemo(() => [
-    {
-      id: 1,
-      title: "BaseballLive", 
-      subtitle: "Blazor • SignalR • C#",
-      description: t('project_items.p1.desc'),
-      image: baseballImg,
-      color: "#ffbd7a",
-      year: "2024",
-      context: t('project_items.p1.context'), 
-    },
-    {
-      id: 2,
-      title: "Vrije Teid!", 
-      subtitle: "Flutter • Dart • Firebase",
-      description: t('project_items.p2.desc'), 
-      image: flutterImg,
-      color: "#a5f3fc",
-      year: "2024",
-      context: t('project_items.p2.context'), 
-    },
-    {
-      id: 3,
-      title: t('project_items.p3.title'), 
-      subtitle: "OpenSearch • Docker • Vue • .NET",
-      description: t('project_items.p3.desc'),
-      isClassified: true,
-      color: "#e9d5ff",
-      year: "2025",
-      context: t('project_items.p3.context'), 
-    },
-  ], [t]);
+  const projects = useMemo(
+    () => [
+      {
+        id: 1,
+        title: 'BaseballLive',
+        subtitle: 'Blazor • SignalR • C#',
+        description: t('project_items.p1.desc'),
+        image: baseballImg,
+        color: '#ffbd7a',
+        year: '2024',
+        context: t('project_items.p1.context'),
+      },
+      {
+        id: 2,
+        title: 'Vrije Teid!',
+        subtitle: 'Flutter • Dart • Firebase',
+        description: t('project_items.p2.desc'),
+        image: flutterImg,
+        color: '#a5f3fc',
+        year: '2024',
+        context: t('project_items.p2.context'),
+      },
+      {
+        id: 3,
+        title: t('project_items.p3.title'),
+        subtitle: 'OpenSearch • Docker • Vue • .NET',
+        description: t('project_items.p3.desc'),
+        isClassified: true,
+        color: '#e9d5ff',
+        year: '2025',
+        context: t('project_items.p3.context'),
+      },
+    ],
+    [t],
+  );
   useEffect(() => {
-    if (typeof window === "undefined") return undefined;
+    if (typeof window === 'undefined') return undefined;
 
-    const mediaQuery = window.matchMedia("(min-width: 769px)");
+    const mediaQuery = window.matchMedia('(min-width: 769px)');
     const updateDoodleVisibility = () => setShowDoodles(mediaQuery.matches);
 
     updateDoodleVisibility();
-    mediaQuery.addEventListener?.("change", updateDoodleVisibility);
+    mediaQuery.addEventListener?.('change', updateDoodleVisibility);
 
-    return () => mediaQuery.removeEventListener?.("change", updateDoodleVisibility);
+    return () => mediaQuery.removeEventListener?.('change', updateDoodleVisibility);
   }, []);
 
   const doodleRef = useRef();
   if (!doodleRef.current) {
     const icons = [Music, Star, Moon, Zap, Orbit, Component];
-    const colors = ["#a5f3fc", "#e9d5ff", "#ffbd7a"];
+    const colors = ['#a5f3fc', '#e9d5ff', '#ffbd7a'];
 
     doodleRef.current = [...Array(12)].map((_, i) => {
       const zones = [
@@ -190,42 +192,43 @@ const ProjectsSection = ({ id }) => {
     <section id={id} className="projects-section">
       <ProjectsStarsCanvas />
 
-      {showDoodles && doodleField.map((d) => (
-        <motion.div
-          key={d.id}
-          className="sparkle-doodle"
-          initial={reduceMotion ? { opacity: 0.18, scale: 1 } : { opacity: 0.18, scale: 0.7 }}
-          animate={
-            reduceMotion
-              ? { opacity: 0.18, scale: 1 }
-              : {
-                  opacity: [0.18, 0.6, 0.18],
-                  scale: [0.9, 1.1, 0.9],
-                }
-          }
-          transition={{
-            duration: d.duration,
-            repeat: reduceMotion ? 0 : Infinity,
-            delay: d.delay,
-            ease: "easeInOut",
-          }}
-          style={{
-            top: d.top,
-            left: d.left,
-            color: d.color,
-            filter: `drop-shadow(0 0 8px ${d.color})`,
-          }}
-        >
-          <d.Icon size={d.size} strokeWidth={2.1} />
-        </motion.div>
-      ))}
+      {showDoodles &&
+        doodleField.map((d) => (
+          <motion.div
+            key={d.id}
+            className="sparkle-doodle"
+            initial={reduceMotion ? { opacity: 0.18, scale: 1 } : { opacity: 0.18, scale: 0.7 }}
+            animate={
+              reduceMotion
+                ? { opacity: 0.18, scale: 1 }
+                : {
+                    opacity: [0.18, 0.6, 0.18],
+                    scale: [0.9, 1.1, 0.9],
+                  }
+            }
+            transition={{
+              duration: d.duration,
+              repeat: reduceMotion ? 0 : Infinity,
+              delay: d.delay,
+              ease: 'easeInOut',
+            }}
+            style={{
+              top: d.top,
+              left: d.left,
+              color: d.color,
+              filter: `drop-shadow(0 0 8px ${d.color})`,
+            }}
+          >
+            <d.Icon size={d.size} strokeWidth={2.1} />
+          </motion.div>
+        ))}
 
-      <motion.div 
+      <motion.div
         className="section-header"
         initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.3 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         <h2 className="section-title">
           <span className="title-glow">{t('projects')}</span>
@@ -234,22 +237,26 @@ const ProjectsSection = ({ id }) => {
       </motion.div>
 
       <div className="section-content">
-        <motion.div 
+        <motion.div
           className="projects-container"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }} 
+          viewport={{ once: false, amount: 0.2 }}
         >
           {projects.map((project) => (
-            <motion.div 
-              key={project.id} 
+            <motion.div
+              key={project.id}
               className="music-card"
               variants={cardVariants}
-              whileHover={reduceMotion ? undefined : { 
-                y: -12, 
-                transition: { duration: 0.3 } 
-              }}
+              whileHover={
+                reduceMotion
+                  ? undefined
+                  : {
+                      y: -12,
+                      transition: { duration: 0.3 },
+                    }
+              }
             >
               <div className="card-hardware">
                 <div className="album-art">
@@ -273,7 +280,7 @@ const ProjectsSection = ({ id }) => {
                   <h3 className="project-name">{project.title}</h3>
 
                   <div className="project-tech-stack">
-                    {project.subtitle.split(" • ").map((tech, idx) => (
+                    {project.subtitle.split(' • ').map((tech, idx) => (
                       <span
                         key={`${project.id}-${idx}-${tech}`}
                         className="tech-tag"
@@ -292,7 +299,7 @@ const ProjectsSection = ({ id }) => {
                       <div
                         className="progress-fill"
                         style={{
-                          "--accent-color": project.color,
+                          '--accent-color': project.color,
                         }}
                       />
                     </div>
@@ -311,11 +318,11 @@ const ProjectsSection = ({ id }) => {
                     >
                       <SkipBack size={18} />
                     </button>
-                    <motion.button 
+                    <motion.button
                       className="main-play-btn"
                       type="button"
                       whileTap={{ scale: 0.9 }}
-                      style={{ "--accent-color": project.color }}
+                      style={{ '--accent-color': project.color }}
                     >
                       <Play size={18} fill="#1a1a2e" color="#1a1a2e" />
                     </motion.button>
@@ -341,7 +348,7 @@ const ProjectsSection = ({ id }) => {
             key={bar.id}
             className="bar"
             style={{
-              "--duration": `${bar.duration}s`,
+              '--duration': `${bar.duration}s`,
               animationDelay: `${bar.delay}s`,
             }}
           />

@@ -13,11 +13,11 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route
             path="/home"
-            element={(
+            element={
               <Suspense fallback={<div className="section-placeholder" aria-hidden="true" />}>
                 <Home />
               </Suspense>
-            )}
+            }
           />
         </Routes>
       </div>

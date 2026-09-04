@@ -1,9 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
-const useCanvasAnimationLoop = (
-  canvasRef,
-  { onDraw, onResize, rootRef, threshold = 0.1 } = {}
-) => {
+const useCanvasAnimationLoop = (canvasRef, { onDraw, onResize, rootRef, threshold = 0.1 } = {}) => {
   const isVisibleRef = useRef(true);
   const syncRef = useRef(null);
   const onDrawRef = useRef(onDraw);
@@ -17,13 +14,13 @@ const useCanvasAnimationLoop = (
   useEffect(() => {
     const canvas = canvasRef.current;
     const root = rootRef?.current || canvas;
-    if (!canvas || !root || typeof window === "undefined") return;
+    if (!canvas || !root || typeof window === 'undefined') return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx || typeof requestAnimationFrame === "undefined") return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx || typeof requestAnimationFrame === 'undefined') return;
 
     let animationFrameId;
-    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const getSize = () => ({
@@ -71,7 +68,7 @@ const useCanvasAnimationLoop = (
           syncRef.current();
         }
       },
-      { threshold }
+      { threshold },
     );
 
     observer.observe(root);
@@ -87,15 +84,15 @@ const useCanvasAnimationLoop = (
 
     const handleMotionChange = () => syncLoop();
 
-    window.addEventListener("resize", handleResize);
-    reducedMotionQuery.addEventListener("change", handleMotionChange);
+    window.addEventListener('resize', handleResize);
+    reducedMotionQuery.addEventListener('change', handleMotionChange);
 
     resizeCanvas();
     syncLoop();
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-      reducedMotionQuery.removeEventListener("change", handleMotionChange);
+      window.removeEventListener('resize', handleResize);
+      reducedMotionQuery.removeEventListener('change', handleMotionChange);
       clearTimeout(resizeTimer);
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);

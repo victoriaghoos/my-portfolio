@@ -1,9 +1,8 @@
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useTexture } from "@react-three/drei";
-import * as THREE from "three";
-import circularImage from "../assets/images/me.png";
-
+import { useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei';
+import * as THREE from 'three';
+import circularImage from '../assets/images/me.png';
 
 const CentralHologram = ({ scale = 1, radius = 5, halo = [5.2, 5.4] }) => {
   const texture = useTexture(circularImage);

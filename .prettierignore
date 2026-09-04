@@ -1,0 +1,6 @@
+build
+node_modules
+package-lock.json
+
+# generated point-cloud data, one array entry per pixel; formatting would blow up the diff
+src/*Points.json
