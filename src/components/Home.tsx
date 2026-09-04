@@ -1,4 +1,15 @@
-import { useState, useRef, useEffect, useMemo, useCallback, memo, Suspense } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+  memo,
+  Suspense,
+  type RefObject,
+  type MutableRefObject,
+  type CSSProperties,
+} from 'react';
 import { suspend } from 'suspend-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useTranslation } from 'react-i18next';
@@ -20,8 +31,8 @@ import resumeVideo from '../assets/images/resume.webm';
 import resumePng from '../assets/images/resume.png';
 import socialsVideo from '../assets/images/social-media.webm';
 import socialsPng from '../assets/images/social-media.png';
-import NightSkyBackground from './NightSkyBackground';
-import InteractivePanel from './InteractivePanel';
+import NightSkyBackground, { type NightSkyHandle } from './NightSkyBackground';
+import InteractivePanel, { type PanelIcon } from './InteractivePanel';
 import CentralHologram from './CentralHologram';
 import OutlineStars from './OutlineStars';
 import SectionsContainer from './sections/SectionsContainer';
@@ -34,7 +45,33 @@ import headsetPoints from '../headsetPoints.json';
 
 const sunsetHdri = import('@pmndrs/assets/hdri/sunset.exr');
 
-const DragHint = ({ isVisible }) => {
+// framer-motion's DOM types don't model react-three-fiber's `group` primitive, but the
+// resulting element is interpreted by whichever reconciler renders it (r3f's, here), so this
+// animates the underlying THREE.Group exactly like motion.div animates a real DOM element.
+const MotionGroup = (motion as unknown as { group: typeof motion.div }).group;
+
+interface ScalingConfig {
+  radius: number;
+  iconScale: number;
+  iconPlaneSize: number;
+  ringInner: number;
+  ringOuter: number;
+  labelMargin: number;
+  hologramScale: number;
+  hologramRadius: number;
+  hologramHalo: [number, number];
+  hologramY: number;
+}
+
+interface ConstellationScales {
+  about: number;
+  socials: number;
+  resume: number;
+  skills: number;
+  projects: number;
+}
+
+const DragHint = ({ isVisible }: { isVisible: boolean }) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
   const { t } = useTranslation();
 
@@ -65,9 +102,22 @@ const RotatingPanels = memo(function RotatingPanels({
   onInitialRotationComplete,
   rotationYRef,
   targetRotationYRef,
+}: {
+  navEnabled: boolean;
+  icons: PanelIcon[];
+  scalingConfig: ScalingConfig;
+  setActive: (id: string | null) => void;
+  panelPositions: [number, number, number][];
+  handleIconClick: (id: string) => void;
+  onPanelPointerUp: () => void;
+  isInView: boolean;
+  initialRotationComplete: boolean;
+  onInitialRotationComplete: () => void;
+  rotationYRef: MutableRefObject<number>;
+  targetRotationYRef: MutableRefObject<number>;
 }) {
-  const panelsGroupRef = useRef(null);
-  const introStartTimeRef = useRef(null);
+  const panelsGroupRef = useRef<THREE.Group>(null);
+  const introStartTimeRef = useRef<number | null>(null);
   const introSpeedRef = useRef(0.6);
 
   useFrame(({ clock }, delta) => {
@@ -114,7 +164,7 @@ const RotatingPanels = memo(function RotatingPanels({
   return (
     <group ref={panelsGroupRef}>
       {icons.map((icon, i) => (
-        <motion.group
+        <MotionGroup
           key={i}
           initial={{ opacity: 0, scale: scalingConfig.iconScale, y: 1 }}
           animate={{ opacity: 1, scale: scalingConfig.iconScale, y: 0 }}
@@ -139,7 +189,7 @@ const RotatingPanels = memo(function RotatingPanels({
             ringOuter={scalingConfig.ringOuter}
             labelMargin={scalingConfig.labelMargin}
           />
-        </motion.group>
+        </MotionGroup>
       ))}
     </group>
   );
@@ -163,6 +213,24 @@ const SceneContent = memo(function SceneContent({
   onInitialRotationComplete,
   rotationYRef,
   targetRotationYRef,
+}: {
+  eventSource: RefObject<HTMLElement>;
+  nightSkyRef: RefObject<NightSkyHandle>;
+  show3DNav: boolean;
+  initialRotationComplete: boolean;
+  hasDragged: boolean;
+  icons: PanelIcon[];
+  scalingConfig: ScalingConfig;
+  active: string | null;
+  setActive: (id: string | null) => void;
+  panelPositions: [number, number, number][];
+  handleIconClick: (id: string) => void;
+  onPanelPointerUp: () => void;
+  isInView: boolean;
+  constellationScales: ConstellationScales;
+  onInitialRotationComplete: () => void;
+  rotationYRef: MutableRefObject<number>;
+  targetRotationYRef: MutableRefObject<number>;
 }) {
   const navEnabled = show3DNav && isInView;
 
@@ -175,7 +243,7 @@ const SceneContent = memo(function SceneContent({
       <Canvas
         frameloop={isInView ? 'always' : 'never'}
         camera={{ position: [0, 5, 20], fov: 45 }}
-        eventSource={eventSource}
+        eventSource={eventSource as MutableRefObject<HTMLElement>}
         eventPrefix="client"
         className="webgl-canvas"
         dpr={[1, 1.5]}
@@ -183,7 +251,7 @@ const SceneContent = memo(function SceneContent({
       >
         <Suspense fallback={null}>
           <group>
-            <Environment files={suspend(sunsetHdri).default} />
+            <Environment files={(suspend(sunsetHdri) as { default: string }).default} />
 
             <RotatingPanels
               navEnabled={navEnabled}
@@ -201,7 +269,7 @@ const SceneContent = memo(function SceneContent({
             />
           </group>
 
-          <motion.group
+          <MotionGroup
             initial={{ opacity: 0, scale: scalingConfig.hologramScale * 0.85, y: -0.5 }}
             animate={{ opacity: 1, scale: scalingConfig.hologramScale, y: scalingConfig.hologramY }}
             transition={{
@@ -215,7 +283,7 @@ const SceneContent = memo(function SceneContent({
               radius={scalingConfig.hologramRadius}
               halo={scalingConfig.hologramHalo}
             />
-          </motion.group>
+          </MotionGroup>
 
           {navEnabled && (
             <>
@@ -269,7 +337,7 @@ const SceneContent = memo(function SceneContent({
                 key={icon.id}
                 className="menu-item"
                 onClick={() => handleIconClick(icon.id)}
-                style={{ '--item-color': `#${icon.color.getHexString()}` }}
+                style={{ '--item-color': `#${icon.color.getHexString()}` } as CSSProperties}
               >
                 <div className="icon-wrapper">
                   <img src={icon.png} alt={icon.label} decoding="async" />
@@ -289,9 +357,9 @@ const SceneContent = memo(function SceneContent({
 const Home = () => {
   const { t } = useTranslation();
 
-  const nightSkyRef = useRef(null);
+  const nightSkyRef = useRef<NightSkyHandle>(null);
 
-  const icons = useMemo(
+  const icons: PanelIcon[] = useMemo(
     () => [
       {
         id: 'Socials',
@@ -332,8 +400,8 @@ const Home = () => {
     [t],
   );
 
-  const [active, setActive] = useState(null);
-  const homeRef = useRef(null);
+  const [active, setActive] = useState<string | null>(null);
+  const homeRef = useRef<HTMLElement>(null);
   const rotationYRef = useRef(0);
   const targetRotationYRef = useRef(0);
 
@@ -342,7 +410,7 @@ const Home = () => {
     height: window.innerHeight,
   });
   useEffect(() => {
-    let resizeTimeout;
+    let resizeTimeout: ReturnType<typeof setTimeout> | undefined;
 
     const handleResize = () => {
       clearTimeout(resizeTimeout);
@@ -380,7 +448,7 @@ const Home = () => {
   const isTablet = !isDesktop && dimensions.width < 1024 && dimensions.width >= 600;
   const show3DNav = isDesktop && isDragCapable;
 
-  const scalingConfig = useMemo(() => {
+  const scalingConfig: ScalingConfig = useMemo(() => {
     if (isDesktop) {
       return {
         radius: 10,
@@ -452,7 +520,7 @@ const Home = () => {
     setInitialRotationComplete((prev) => (prev ? prev : true));
   }, []);
 
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({
@@ -462,8 +530,8 @@ const Home = () => {
     }
   };
 
-  const handleIconClick = useCallback((iconId) => {
-    const sectionMap = {
+  const handleIconClick = useCallback((iconId: string) => {
+    const sectionMap: Record<string, string> = {
       About: 'about-section',
       Skills: 'skills-section',
       Projects: 'projects-section',
@@ -479,7 +547,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const onMouseMove = (e) => {
+    const onMouseMove = (e: MouseEvent) => {
       if (!dragRef.current.dragging || !initialRotationComplete || !show3DNav) return;
 
       const deltaX = e.clientX - dragRef.current.startX;
@@ -501,7 +569,7 @@ const Home = () => {
       }
     };
 
-    const onMouseUp = (e) => {
+    const onMouseUp = (e: MouseEvent) => {
       if (dragRef.current.dragging) {
         dragRef.current.hasInteracted = true;
         if (!dragRef.current.hasDraggedThisGesture && !dragRef.current.clickedPanel) {
@@ -524,9 +592,9 @@ const Home = () => {
     };
   }, [initialRotationComplete, hasDragged, show3DNav]);
 
-  const panelPositions = useMemo(
+  const panelPositions: [number, number, number][] = useMemo(
     () =>
-      icons.map((_, i) => {
+      icons.map((_, i): [number, number, number] => {
         const angle = (i / numberOfIcons) * 2 * Math.PI;
         const x = scalingConfig.radius * Math.cos(angle);
         const z = scalingConfig.radius * Math.sin(angle);

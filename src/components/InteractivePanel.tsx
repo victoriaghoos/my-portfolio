@@ -1,9 +1,33 @@
-import { useState, useRef, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useState, useRef, useEffect, type RefObject } from 'react';
+import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { Html, useTexture, Float, useCursor } from '@react-three/drei';
 import * as THREE from 'three';
 
-const PanelLabel = ({ color, hovered, isParentVisible, label, labelMargin, visible }) => (
+export interface PanelIcon {
+  id: string;
+  label: string;
+  png: string;
+  video: string;
+  color: THREE.Color;
+}
+
+interface PanelLabelProps {
+  color: THREE.Color;
+  hovered: boolean;
+  isParentVisible: boolean;
+  label: string;
+  labelMargin: number;
+  visible: boolean;
+}
+
+const PanelLabel = ({
+  color,
+  hovered,
+  isParentVisible,
+  label,
+  labelMargin,
+  visible,
+}: PanelLabelProps) => (
   <Html
     center
     style={{
@@ -45,12 +69,15 @@ const PanelLabel = ({ color, hovered, isParentVisible, label, labelMargin, visib
   </Html>
 );
 
-const usePanelVideoTexture = (videoSrc) => {
-  const videoRef = useRef();
-  const videoTextureRef = useRef();
-  const [videoTexture, setVideoTexture] = useState(null);
+const usePanelVideoTexture = (videoSrc: string | undefined) => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoTextureRef = useRef<THREE.VideoTexture | null>(null);
+  const [videoTexture, setVideoTexture] = useState<THREE.VideoTexture | null>(null);
 
-  const disposeVideoResources = (video = videoRef.current, texture = videoTextureRef.current) => {
+  const disposeVideoResources = (
+    video: HTMLVideoElement | null = videoRef.current,
+    texture: THREE.VideoTexture | null = videoTextureRef.current,
+  ) => {
     if (video) {
       video.pause();
       video.removeAttribute('src');
@@ -99,7 +126,7 @@ const usePanelVideoTexture = (videoSrc) => {
     };
   }, [videoSrc]);
 
-  const updateVideoTexture = (hovered) => {
+  const updateVideoTexture = (hovered: boolean) => {
     const video = videoRef.current;
 
     if (
@@ -135,7 +162,7 @@ const usePanelVideoTexture = (videoSrc) => {
   };
 };
 
-const useLabelVisibility = (camera) => {
+const useLabelVisibility = (camera: THREE.Camera) => {
   const [labelVisible, setLabelVisible] = useState(true);
   const labelVisibleRef = useRef(true);
   const directionRef = useRef(new THREE.Vector3());
@@ -143,7 +170,7 @@ const useLabelVisibility = (camera) => {
   const raycasterRef = useRef(new THREE.Raycaster());
   const hologramPlaneRef = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0));
 
-  const updateLabelVisibility = (panelPosition) => {
+  const updateLabelVisibility = (panelPosition: THREE.Vector3 | null) => {
     if (!panelPosition) {
       return;
     }
@@ -191,9 +218,23 @@ const InteractivePanel = ({
   ringInner = 0.9,
   ringOuter = 1.0,
   labelMargin = 70,
+}: {
+  icon: PanelIcon;
+  setActive: (id: string | null) => void;
+  index: number;
+  position: [number, number, number];
+  orbitRotationYRef?: RefObject<number>;
+  isParentVisible: boolean;
+  onIconClick: (id: string) => void;
+  onPanelPointerUp?: () => void;
+  iconScale?: number;
+  iconPlaneSize?: number;
+  ringInner?: number;
+  ringOuter?: number;
+  labelMargin?: number;
 }) => {
-  const ref = useRef();
-  const ringRef = useRef();
+  const ref = useRef<THREE.Group>(null);
+  const ringRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>>(null);
   const panelPositionRef = useRef(new THREE.Vector3());
   const pngTexture = useTexture(icon.png);
   const [hovered, setHovered] = useState(false);
@@ -205,7 +246,7 @@ const InteractivePanel = ({
 
   useCursor(hovered, 'pointer', 'auto');
 
-  const updatePanelTransform = (elapsedTime) => {
+  const updatePanelTransform = (elapsedTime: number) => {
     if (!ref.current) {
       return null;
     }
@@ -218,7 +259,7 @@ const InteractivePanel = ({
     return ref.current.getWorldPosition(panelPositionRef.current);
   };
 
-  const updateRingAnimation = (elapsedTime) => {
+  const updateRingAnimation = (elapsedTime: number) => {
     if (ringRef.current) {
       ringRef.current.rotation.z = elapsedTime * 0.3;
       if (hovered) {
@@ -246,7 +287,7 @@ const InteractivePanel = ({
     updateRingAnimation(t);
   });
 
-  const handlePointerOver = (e) => {
+  const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(true);
     setActive(icon.id);
@@ -256,7 +297,7 @@ const InteractivePanel = ({
     }
   };
 
-  const handlePointerOut = (e) => {
+  const handlePointerOut = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(false);
     setActive(null);

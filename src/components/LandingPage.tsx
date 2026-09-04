@@ -1,4 +1,12 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  type CSSProperties,
+  type SyntheticEvent,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Typewriter } from 'react-simple-typewriter';
 import videoWebm from '../assets/videos/intro.webm';
@@ -26,9 +34,9 @@ const LandingPage = () => {
   const [reducedMotion] = useState(prefersReducedMotion);
   const [cursorIdle, setCursorIdle] = useState(false);
   const navigate = useNavigate();
-  const skipButtonTimerRef = useRef(null);
-  const autoExitTimerRef = useRef(null);
-  const idleTimerRef = useRef(null);
+  const skipButtonTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoExitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasNavigatedRef = useRef(false);
   // Keep a synchronous guard separate from render state so the exit callback can stay stable and avoid rescheduling the effect while still reflecting whether the transition has already begun.
   const transitionActiveRef = useRef(false);
@@ -45,9 +53,9 @@ const LandingPage = () => {
   );
 
   const clearTimers = useCallback(() => {
-    clearTimeout(skipButtonTimerRef.current);
-    clearTimeout(autoExitTimerRef.current);
-    clearTimeout(idleTimerRef.current);
+    clearTimeout(skipButtonTimerRef.current ?? undefined);
+    clearTimeout(autoExitTimerRef.current ?? undefined);
+    clearTimeout(idleTimerRef.current ?? undefined);
   }, []);
 
   const handleVideoError = useCallback(() => {
@@ -62,18 +70,18 @@ const LandingPage = () => {
     }
 
     transitionActiveRef.current = true;
-    clearTimeout(autoExitTimerRef.current);
+    clearTimeout(autoExitTimerRef.current ?? undefined);
     setTransitionActive(true);
   }, []);
 
   const handleType = useCallback(() => {
     setCursorIdle(false);
-    clearTimeout(idleTimerRef.current);
+    clearTimeout(idleTimerRef.current ?? undefined);
     idleTimerRef.current = setTimeout(() => setCursorIdle(true), 400);
   }, []);
 
   const handleTransitionComplete = useCallback(
-    (event) => {
+    (event?: SyntheticEvent) => {
       if (event && event.target !== event.currentTarget) {
         return;
       }
@@ -115,7 +123,7 @@ const LandingPage = () => {
   }, [transitionActive, reducedMotion]);
 
   useEffect(() => {
-    const onKeyDown = (event) => {
+    const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         startExitAndNavigate();
       }
@@ -175,12 +183,14 @@ const LandingPage = () => {
           <div
             key={particle.id}
             className="particle"
-            style={{
-              '--delay': particle.delay,
-              '--size': particle.size,
-              '--x': particle.x,
-              '--y': particle.y,
-            }}
+            style={
+              {
+                '--delay': particle.delay,
+                '--size': particle.size,
+                '--x': particle.x,
+                '--y': particle.y,
+              } as CSSProperties
+            }
           />
         ))}
       </div>

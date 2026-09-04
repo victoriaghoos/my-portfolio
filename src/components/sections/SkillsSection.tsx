@@ -1,10 +1,10 @@
-import { useMemo, memo, useRef } from 'react';
-import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { useMemo, memo, useRef, type CSSProperties } from 'react';
+import { motion, useInView, useReducedMotion, type Variants } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import '../../styles/sections/SkillsSection.scss';
 import sakuraTree from '../../assets/images/sakura2.webp';
 import petalImg from '../../assets/images/petal.png';
-import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
+import useCanvasAnimationLoop, { type CanvasDrawArgs } from '../../hooks/useCanvasAnimationLoop';
 import {
   SiPython,
   SiJavascript,
@@ -36,8 +36,8 @@ import { BsDatabase } from 'react-icons/bs';
 import { TbApi, TbBrandAzure } from 'react-icons/tb';
 
 const SkillsStarsCanvas = memo(function SkillsStarsCanvas() {
-  const canvasRef = useRef(null);
-  const rootRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const stars = useMemo(
     () =>
       [...Array(250)].map(() => ({
@@ -53,7 +53,7 @@ const SkillsStarsCanvas = memo(function SkillsStarsCanvas() {
 
   useCanvasAnimationLoop(canvasRef, {
     rootRef,
-    onDraw: ({ ctx, width, height, timestamp, isStatic }) => {
+    onDraw: ({ ctx, width, height, timestamp, isStatic }: CanvasDrawArgs) => {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#ffffff';
       stars.forEach((star) => {
@@ -116,7 +116,7 @@ const FallingPetal = memo(function FallingPetal() {
   );
 });
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -124,7 +124,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { y: 40, opacity: 0 },
   visible: {
     y: 0,
@@ -133,10 +133,10 @@ const itemVariants = {
   },
 };
 
-const SkillsSection = ({ id }) => {
+const SkillsSection = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const reduceMotion = useReducedMotion();
-  const petalsRef = useRef(null);
+  const petalsRef = useRef<HTMLDivElement>(null);
   const isPetalsInView = useInView(petalsRef, { once: false, amount: 0.1 });
 
   const petals = useMemo(() => Array.from({ length: 12 }), []);
@@ -265,7 +265,7 @@ const SkillsSection = ({ id }) => {
             <motion.div
               key={group.id}
               className={`skill-category-card${group.featured ? ' featured' : ''}`}
-              style={{ '--accent': group.accent }}
+              style={{ '--accent': group.accent } as CSSProperties}
               variants={itemVariants}
             >
               <h3>{group.title}</h3>

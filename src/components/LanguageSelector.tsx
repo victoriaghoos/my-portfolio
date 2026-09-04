@@ -12,11 +12,11 @@ const languages = [
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (containerRef.current && !containerRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -24,7 +24,7 @@ const LanguageSelector = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const changeLanguage = (lngCode) => {
+  const changeLanguage = (lngCode: string) => {
     i18n.changeLanguage(lngCode);
     setIsOpen(false);
   };

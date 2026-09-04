@@ -16,11 +16,12 @@ const renderLandingPage = () =>
 describe('LandingPage (reduced motion)', () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    window.matchMedia = () => ({
-      matches: true,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-    });
+    window.matchMedia = () =>
+      ({
+        matches: true,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      }) as unknown as MediaQueryList;
     sessionStorage.clear();
   });
 

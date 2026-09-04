@@ -4,10 +4,16 @@ import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import circularImage from '../assets/images/me.png';
 
-const CentralHologram = ({ scale = 1, radius = 5, halo = [5.2, 5.4] }) => {
+interface CentralHologramProps {
+  scale?: number;
+  radius?: number;
+  halo?: [number, number];
+}
+
+const CentralHologram = ({ scale = 1, radius = 5, halo = [5.2, 5.4] }: CentralHologramProps) => {
   const texture = useTexture(circularImage);
-  const ref = useRef();
-  const haloRef = useRef();
+  const ref = useRef<THREE.Group>(null);
+  const haloRef = useRef<THREE.Mesh>(null);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();

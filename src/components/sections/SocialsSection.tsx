@@ -2,22 +2,24 @@ import { memo, useMemo, useRef, useEffect, useState, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Cloud, Sparkles, Float } from '@react-three/drei';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Github, Linkedin, Mail, ArrowUpCircle } from 'lucide-react';
+import { Github, Linkedin, Mail, ArrowUpCircle, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
+import useCanvasAnimationLoop, { type CanvasDrawArgs } from '../../hooks/useCanvasAnimationLoop';
 import '../../styles/sections/SocialsSection.scss';
-import cloudTexture from '../../assets/images/cloud.png';
 
-const CloudPuff = ({ position, speed, opacity }) => {
+interface CloudPuffProps {
+  position: [number, number, number];
+  speed: number;
+  opacity: number;
+}
+
+const CloudPuff = ({ position, speed, opacity }: CloudPuffProps) => {
   return (
     <Cloud
       position={position}
       opacity={opacity}
       speed={speed}
-      width={10}
-      depth={1.5}
       segments={20}
-      texture={cloudTexture}
       color="#fff0f5"
       bounds={[6, 2, 2]}
       volume={10}
@@ -26,8 +28,8 @@ const CloudPuff = ({ position, speed, opacity }) => {
 };
 
 const SocialsStarsCanvas = memo(function SocialsStarsCanvas() {
-  const canvasRef = useRef(null);
-  const rootRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const stars = useMemo(
     () =>
@@ -43,7 +45,7 @@ const SocialsStarsCanvas = memo(function SocialsStarsCanvas() {
   );
 
   const drawStars = useCallback(
-    ({ ctx, width, height, timestamp, isStatic }) => {
+    ({ ctx, width, height, timestamp, isStatic }: CanvasDrawArgs) => {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#ffffff';
       stars.forEach((star) => {
@@ -76,7 +78,14 @@ const SocialsStarsCanvas = memo(function SocialsStarsCanvas() {
 const SilkSkyScene = memo(function SilkSkyScene() {
   const reduceMotion = useReducedMotion();
   const cloudPositions = useMemo(() => {
-    const pos = [];
+    const pos: {
+      x: number;
+      y: number;
+      z: number;
+      scale: number;
+      speed: number;
+      opacity: number;
+    }[] = [];
     const cloudCount = 18;
     for (let i = 0; i < cloudCount; i++) {
       const xPos = (Math.random() - 0.5) * 90;
@@ -129,7 +138,21 @@ const SilkSkyScene = memo(function SilkSkyScene() {
   );
 });
 
-const SocialCard = ({ icon: Icon, title, handle, link, delay, strokeWidth = 1.5 }) => {
+const SocialCard = ({
+  icon: Icon,
+  title,
+  handle,
+  link,
+  delay,
+  strokeWidth = 1.5,
+}: {
+  icon: LucideIcon;
+  title: string;
+  handle: string;
+  link: string;
+  delay: number;
+  strokeWidth?: number;
+}) => {
   return (
     <motion.a
       href={link}
@@ -155,10 +178,10 @@ const SocialCard = ({ icon: Icon, title, handle, link, delay, strokeWidth = 1.5 
   );
 };
 
-const SocialsSection = ({ id }) => {
+const SocialsSection = ({ id }: { id: string }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleFlyToCosmos = () => {
     const home = document.getElementById('home-3d');

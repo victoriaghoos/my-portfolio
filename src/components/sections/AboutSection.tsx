@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect, useState, useMemo, useCallback, type RefObject } from 'react';
+import { motion, type Variants } from 'framer-motion';
 import { useTranslation, Trans } from 'react-i18next';
-import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
+import useCanvasAnimationLoop, { type CanvasDrawArgs } from '../../hooks/useCanvasAnimationLoop';
 import '../../styles/sections/AboutSection.scss';
 import foto1 from '../../assets/images/foto1.webp';
 
-const textVariants = {
+const textVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
@@ -14,7 +14,7 @@ const textVariants = {
   },
 };
 
-const staggerVariants = {
+const staggerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -30,7 +30,17 @@ const ORB_COLORS = {
   purple: 'rgba(192, 132, 252, 0.5)',
 };
 
-const useOrbCanvas = (canvasRef, rootRef) => {
+interface OrbDrawArgs {
+  ctx: CanvasRenderingContext2D;
+  width: number;
+  height: number;
+  timestamp?: number;
+}
+
+const useOrbCanvas = (
+  canvasRef: RefObject<HTMLCanvasElement | null>,
+  rootRef: RefObject<HTMLElement | null>,
+) => {
   const orbs = useMemo(
     () => [
       {
@@ -62,7 +72,7 @@ const useOrbCanvas = (canvasRef, rootRef) => {
   );
 
   const drawOrbs = useCallback(
-    ({ ctx, width, height }) => {
+    ({ ctx, width, height }: OrbDrawArgs) => {
       ctx.clearRect(0, 0, width, height);
 
       orbs.forEach((orb) => {
@@ -82,7 +92,7 @@ const useOrbCanvas = (canvasRef, rootRef) => {
   );
 
   const onDraw = useCallback(
-    ({ ctx, width, height, timestamp }) => {
+    ({ ctx, width, height, timestamp }: CanvasDrawArgs) => {
       orbs.forEach((orb) => {
         orb.x += orb.vx / width;
         orb.y += orb.vy / height;
@@ -97,14 +107,17 @@ const useOrbCanvas = (canvasRef, rootRef) => {
   );
 
   const onResize = useCallback(
-    ({ ctx, width, height }) => drawOrbs({ ctx, width, height }),
+    ({ ctx, width, height }: OrbDrawArgs) => drawOrbs({ ctx, width, height }),
     [drawOrbs],
   );
 
   useCanvasAnimationLoop(canvasRef, { rootRef, onResize, onDraw });
 };
 
-const useStarfieldCanvas = (canvasRef, rootRef) => {
+const useStarfieldCanvas = (
+  canvasRef: RefObject<HTMLCanvasElement | null>,
+  rootRef: RefObject<HTMLElement | null>,
+) => {
   const stars = useMemo(
     () =>
       [...Array(300)].map(() => ({
@@ -119,7 +132,7 @@ const useStarfieldCanvas = (canvasRef, rootRef) => {
   );
 
   const drawStars = useCallback(
-    ({ ctx, width, height, timestamp, isStatic }) => {
+    ({ ctx, width, height, timestamp, isStatic }: CanvasDrawArgs) => {
       ctx.clearRect(0, 0, width, height);
 
       stars.forEach((star) => {
@@ -134,18 +147,18 @@ const useStarfieldCanvas = (canvasRef, rootRef) => {
     [stars],
   );
 
-  const onDraw = useCallback(
-    ({ ctx, width, height, timestamp, isStatic }) =>
-      drawStars({ ctx, width, height, timestamp, isStatic }),
-    [drawStars],
-  );
+  const onDraw = drawStars;
 
   useCanvasAnimationLoop(canvasRef, { rootRef, onDraw });
 };
 
-const OrbBackground = React.memo(function OrbBackground({ rootRef }) {
-  const canvasRef = useRef(null);
-  const starFieldRef = useRef(null);
+const OrbBackground = React.memo(function OrbBackground({
+  rootRef,
+}: {
+  rootRef: RefObject<HTMLElement | null>;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const starFieldRef = useRef<HTMLCanvasElement>(null);
 
   useOrbCanvas(canvasRef, rootRef);
   useStarfieldCanvas(starFieldRef, rootRef);
@@ -158,9 +171,9 @@ const OrbBackground = React.memo(function OrbBackground({ rootRef }) {
   );
 });
 
-const AboutSection = ({ id }) => {
+const AboutSection = ({ id }: { id: string }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const { t } = useTranslation();
 
   useEffect(() => {

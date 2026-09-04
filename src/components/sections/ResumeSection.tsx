@@ -1,8 +1,16 @@
-import { forwardRef, useRef, useMemo, useState, useEffect, useCallback } from 'react';
+import {
+  forwardRef,
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import { useTranslation, Trans } from 'react-i18next';
-import { useReducedMotion } from 'framer-motion';
-import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
+import { useReducedMotion, type Variants } from 'framer-motion';
+import useCanvasAnimationLoop, { type CanvasDrawArgs } from '../../hooks/useCanvasAnimationLoop';
 import {
   Code,
   GraduationCap,
@@ -20,8 +28,8 @@ import '../../styles/sections/ResumeSection.scss';
 import resumePDF from '../../assets/files/Resume2026.pdf';
 
 const ResumeStarsCanvas = () => {
-  const canvasRef = useRef(null);
-  const rootRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const stars = useMemo(
     () =>
@@ -53,7 +61,7 @@ const ResumeStarsCanvas = () => {
   );
 
   const drawStars = useCallback(
-    ({ ctx, width, height, timestamp, isStatic }) => {
+    ({ ctx, width, height, timestamp, isStatic }: CanvasDrawArgs) => {
       ctx.clearRect(0, 0, width, height);
 
       stars.forEach((star) => {
@@ -121,7 +129,14 @@ const StarBackground = () => {
   );
 };
 
-const Page = forwardRef(function Page(props, ref) {
+interface PageProps {
+  className?: string;
+  density?: string;
+  number?: string | number;
+  children?: ReactNode;
+}
+
+const Page = forwardRef<HTMLDivElement, PageProps>(function Page(props, ref) {
   return (
     <div
       className={`page ${props.className || ''}`}
@@ -136,7 +151,7 @@ const Page = forwardRef(function Page(props, ref) {
   );
 });
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
@@ -150,7 +165,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, scale: 0.9 },
   visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
 };
@@ -162,7 +177,7 @@ const useWindowSize = () => {
   });
 
   useEffect(() => {
-    let resizeTimeout;
+    let resizeTimeout: ReturnType<typeof setTimeout> | undefined;
 
     function handleResize() {
       clearTimeout(resizeTimeout);
@@ -185,14 +200,14 @@ const useWindowSize = () => {
   return windowSize;
 };
 
-const ResumeSection = ({ id }) => {
-  const bookRef = useRef(null);
+const ResumeSection = ({ id }: { id: string }) => {
+  const bookRef = useRef<HTMLFlipBook>(null);
   const { width: windowWidth } = useWindowSize();
   const isMobile = windowWidth < 1050;
   const [currentPage, setCurrentPage] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
-  const [nextPageDirection, setNextPageDirection] = useState(null);
-  const [flipStartData, setFlipStartData] = useState(null);
+  const [nextPageDirection, setNextPageDirection] = useState<'next' | 'prev' | null>(null);
+  const [flipStartData, setFlipStartData] = useState<number | null>(null);
   const totalPages = 8;
   const { t } = useTranslation();
 
@@ -201,14 +216,14 @@ const ResumeSection = ({ id }) => {
     import('./SocialsSection');
   }, []);
 
-  const onFlip = (e) => {
+  const onFlip = (e: { data: number }) => {
     setCurrentPage(e.data);
     setIsFlipping(false);
     setNextPageDirection(null);
     setFlipStartData(null);
   };
 
-  const onFlipStart = (e) => {
+  const onFlipStart = (e: { data: number }) => {
     setIsFlipping(true);
     setFlipStartData(e.data);
 
@@ -233,7 +248,7 @@ const ResumeSection = ({ id }) => {
   const getBookmarkState = () => {
     if (isMobile) return 'is-mobile-hidden';
     if (isFlipping && nextPageDirection && flipStartData !== null) {
-      let predictedPage;
+      let predictedPage: number;
 
       if (nextPageDirection === 'next') {
         predictedPage = flipStartData + 1;
@@ -255,7 +270,7 @@ const ResumeSection = ({ id }) => {
 
   const getInteractiveState = () => {
     if (isFlipping && nextPageDirection && flipStartData !== null) {
-      let predictedPage;
+      let predictedPage: number;
 
       if (nextPageDirection === 'next') {
         predictedPage = flipStartData + 1;
@@ -283,7 +298,7 @@ const ResumeSection = ({ id }) => {
   const { isFrontCover, isBackCover } = getInteractiveState();
   const bookmarkState = getBookmarkState();
 
-  const handlePrevClick = (e) => {
+  const handlePrevClick = (e?: { preventDefault: () => void; stopPropagation: () => void }) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -296,7 +311,7 @@ const ResumeSection = ({ id }) => {
     }
   };
 
-  const handleNextClick = (e) => {
+  const handleNextClick = (e?: { preventDefault: () => void; stopPropagation: () => void }) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -313,11 +328,12 @@ const ResumeSection = ({ id }) => {
     if (isMobile) return;
     // react-pageflip does not expose the internal page DOM nodes via its public ref,
     // so this class-based lookup is used to capture mousedown on rendered .page elements.
-    const bookElement = document.querySelector('.stellar-book');
+    const bookElement = document.querySelector<HTMLElement>('.stellar-book');
     if (!bookElement) return;
 
-    const handlePageMouseDown = (e) => {
-      const pageElement = e.target.closest('.page');
+    const handlePageMouseDown = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const pageElement = target.closest('.page');
       if (pageElement) {
         const pageIndex = Array.from(bookElement.querySelectorAll('.page')).indexOf(pageElement);
         if (pageIndex !== -1) {

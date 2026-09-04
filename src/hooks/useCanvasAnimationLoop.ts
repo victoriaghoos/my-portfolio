@@ -1,8 +1,35 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
 
-const useCanvasAnimationLoop = (canvasRef, { onDraw, onResize, rootRef, threshold = 0.1 } = {}) => {
+export interface CanvasDrawArgs {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  width: number;
+  height: number;
+  timestamp: number;
+  isStatic: boolean;
+}
+
+export interface CanvasResizeArgs {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  width: number;
+  height: number;
+  dpr: number;
+}
+
+interface UseCanvasAnimationLoopOptions {
+  onDraw?: (args: CanvasDrawArgs) => void;
+  onResize?: (args: CanvasResizeArgs) => void;
+  rootRef?: RefObject<HTMLElement | null>;
+  threshold?: number;
+}
+
+const useCanvasAnimationLoop = (
+  canvasRef: RefObject<HTMLCanvasElement | null>,
+  { onDraw, onResize, rootRef, threshold = 0.1 }: UseCanvasAnimationLoopOptions = {},
+) => {
   const isVisibleRef = useRef(true);
-  const syncRef = useRef(null);
+  const syncRef = useRef<(() => void) | null>(null);
   const onDrawRef = useRef(onDraw);
   const onResizeRef = useRef(onResize);
 
@@ -19,7 +46,7 @@ const useCanvasAnimationLoop = (canvasRef, { onDraw, onResize, rootRef, threshol
     const ctx = canvas.getContext('2d');
     if (!ctx || typeof requestAnimationFrame === 'undefined') return;
 
-    let animationFrameId;
+    let animationFrameId: number | undefined;
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
@@ -36,12 +63,12 @@ const useCanvasAnimationLoop = (canvasRef, { onDraw, onResize, rootRef, threshol
       onResizeRef.current?.({ canvas, ctx, width, height, dpr });
     };
 
-    const drawFrame = (timestamp, isStatic = false) => {
+    const drawFrame = (timestamp: number, isStatic = false) => {
       const { width, height } = getSize();
       onDrawRef.current?.({ canvas, ctx, width, height, timestamp, isStatic });
     };
 
-    const animate = (timestamp) => {
+    const animate = (timestamp: number) => {
       drawFrame(timestamp, false);
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -73,9 +100,9 @@ const useCanvasAnimationLoop = (canvasRef, { onDraw, onResize, rootRef, threshol
 
     observer.observe(root);
 
-    let resizeTimer;
+    let resizeTimer: number | undefined;
     const handleResize = () => {
-      clearTimeout(resizeTimer);
+      window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
         resizeCanvas();
         syncLoop();
@@ -93,7 +120,7 @@ const useCanvasAnimationLoop = (canvasRef, { onDraw, onResize, rootRef, threshol
     return () => {
       window.removeEventListener('resize', handleResize);
       reducedMotionQuery.removeEventListener('change', handleMotionChange);
-      clearTimeout(resizeTimer);
+      window.clearTimeout(resizeTimer);
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }

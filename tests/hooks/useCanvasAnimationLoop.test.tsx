@@ -1,24 +1,37 @@
 import { useRef } from 'react';
 import { render, cleanup, act } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import useCanvasAnimationLoop from '../../src/hooks/useCanvasAnimationLoop';
+import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
+import useCanvasAnimationLoop, {
+  type CanvasDrawArgs,
+  type CanvasResizeArgs,
+} from '../../src/hooks/useCanvasAnimationLoop';
 
-const TestHarness = ({ onDraw, onResize, threshold }) => {
-  const canvasRef = useRef(null);
+type ObserverCallback = (entries: { isIntersecting: boolean }[]) => void;
+
+const TestHarness = ({
+  onDraw,
+  onResize,
+  threshold,
+}: {
+  onDraw?: (args: CanvasDrawArgs) => void;
+  onResize?: (args: CanvasResizeArgs) => void;
+  threshold?: number;
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   useCanvasAnimationLoop(canvasRef, { onDraw, onResize, threshold });
   return <canvas ref={canvasRef} data-testid="canvas" />;
 };
 
 describe('useCanvasAnimationLoop', () => {
-  let observerCallback;
-  let rafSpy;
-  let cafSpy;
+  let observerCallback: ObserverCallback;
+  let rafSpy: MockInstance<typeof window.requestAnimationFrame>;
+  let cafSpy: MockInstance<typeof window.cancelAnimationFrame>;
 
   beforeEach(() => {
-    window.IntersectionObserver = vi.fn().mockImplementation(function (callback) {
+    window.IntersectionObserver = vi.fn().mockImplementation(function (callback: ObserverCallback) {
       observerCallback = callback;
       return { observe: vi.fn(), disconnect: vi.fn() };
-    });
+    }) as unknown as typeof IntersectionObserver;
     rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(1);
     cafSpy = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
   });
@@ -78,10 +91,10 @@ describe('useCanvasAnimationLoop', () => {
 
   it('disconnects the observer and cancels pending frames on unmount', () => {
     const disconnect = vi.fn();
-    window.IntersectionObserver = vi.fn().mockImplementation(function (callback) {
+    window.IntersectionObserver = vi.fn().mockImplementation(function (callback: ObserverCallback) {
       observerCallback = callback;
       return { observe: vi.fn(), disconnect };
-    });
+    }) as unknown as typeof IntersectionObserver;
 
     const { unmount } = render(<TestHarness onDraw={vi.fn()} />);
     unmount();

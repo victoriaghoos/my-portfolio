@@ -4,7 +4,7 @@ import { Volume2, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MusicPlayer = () => {
-  const audioRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -30,15 +30,16 @@ const MusicPlayer = () => {
 
     const events = ['click', 'mousedown', 'touchstart', 'pointerdown', 'keydown'];
 
-    const handleKeyDown = (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
+    const handleKeyDown = (event: Event) => {
+      const keyboardEvent = event as KeyboardEvent;
+      if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
         handleFirstInteraction();
       }
     };
 
-    const listeners = [];
+    const listeners: { type: string; handler: EventListener }[] = [];
 
-    const addListener = (type, handler) => {
+    const addListener = (type: string, handler: EventListener) => {
       document.addEventListener(type, handler, { passive: true });
       listeners.push({ type, handler });
     };
@@ -63,8 +64,9 @@ const MusicPlayer = () => {
     };
   }, []);
 
-  const togglePlay = (e) => {
+  const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!audioRef.current) return;
     if (isPlaying) {
       audioRef.current.pause();
     } else {

@@ -1,7 +1,7 @@
-import { useMemo, memo, useRef, useEffect, useState, useCallback } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useMemo, memo, useRef, useEffect, useState, useCallback, type CSSProperties } from 'react';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
+import useCanvasAnimationLoop, { type CanvasDrawArgs } from '../../hooks/useCanvasAnimationLoop';
 import {
   Music,
   Star,
@@ -12,12 +12,13 @@ import {
   Play,
   SkipForward,
   SkipBack,
+  type LucideIcon,
 } from 'lucide-react';
 import '../../styles/sections/ProjectsSection.scss';
 import baseballImg from '../../assets/images/BaseballLive.webp';
 import flutterImg from '../../assets/images/VrijeTeid.png';
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -28,7 +29,7 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: {
     opacity: 0,
     y: 40,
@@ -47,7 +48,7 @@ const cardVariants = {
 };
 
 const ProjectsStarsCanvas = memo(function ProjectsStarsCanvas() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const starConfig = useMemo(
     () =>
       [...Array(200)].map(() => ({
@@ -63,7 +64,7 @@ const ProjectsStarsCanvas = memo(function ProjectsStarsCanvas() {
   const reduceMotion = useReducedMotion();
 
   const drawStars = useCallback(
-    ({ ctx, width, height, timestamp, isStatic }) => {
+    ({ ctx, width, height, timestamp, isStatic }: CanvasDrawArgs) => {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#ffffff';
       ctx.shadowColor = 'rgba(255,255,255,0.15)';
@@ -94,7 +95,7 @@ const ProjectsStarsCanvas = memo(function ProjectsStarsCanvas() {
   );
 });
 
-const ProjectsSection = ({ id }) => {
+const ProjectsSection = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const [showDoodles, setShowDoodles] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth > 768 : true,
@@ -146,7 +147,19 @@ const ProjectsSection = ({ id }) => {
     return () => mediaQuery.removeEventListener?.('change', updateDoodleVisibility);
   }, []);
 
-  const doodleRef = useRef();
+  const doodleRef = useRef<
+    | {
+        id: number;
+        Icon: LucideIcon;
+        top: string;
+        left: string;
+        size: number;
+        color: string;
+        delay: number;
+        duration: number;
+      }[]
+    | null
+  >(null);
   if (!doodleRef.current) {
     const icons = [Music, Star, Moon, Zap, Orbit, Component];
     const colors = ['#a5f3fc', '#e9d5ff', '#ffbd7a'];
@@ -174,11 +187,11 @@ const ProjectsSection = ({ id }) => {
       };
     });
   }
-  const doodleField = doodleRef.current;
+  const doodleField = doodleRef.current ?? [];
 
   const reduceMotion = useReducedMotion();
 
-  const visualizerRef = useRef();
+  const visualizerRef = useRef<{ id: number; duration: number; delay: number }[] | null>(null);
   if (!visualizerRef.current) {
     visualizerRef.current = [...Array(20)].map((_, i) => ({
       id: i,
@@ -186,7 +199,7 @@ const ProjectsSection = ({ id }) => {
       delay: i * 0.05,
     }));
   }
-  const visualizerBars = visualizerRef.current;
+  const visualizerBars = visualizerRef.current ?? [];
 
   return (
     <section id={id} className="projects-section">
@@ -298,9 +311,11 @@ const ProjectsSection = ({ id }) => {
                     <div className="progress-bg">
                       <div
                         className="progress-fill"
-                        style={{
-                          '--accent-color': project.color,
-                        }}
+                        style={
+                          {
+                            '--accent-color': project.color,
+                          } as CSSProperties
+                        }
                       />
                     </div>
                     <div className="time-info">
@@ -322,7 +337,7 @@ const ProjectsSection = ({ id }) => {
                       className="main-play-btn"
                       type="button"
                       whileTap={{ scale: 0.9 }}
-                      style={{ '--accent-color': project.color }}
+                      style={{ '--accent-color': project.color } as CSSProperties}
                     >
                       <Play size={18} fill="#1a1a2e" color="#1a1a2e" />
                     </motion.button>
@@ -347,10 +362,12 @@ const ProjectsSection = ({ id }) => {
           <div
             key={bar.id}
             className="bar"
-            style={{
-              '--duration': `${bar.duration}s`,
-              animationDelay: `${bar.delay}s`,
-            }}
+            style={
+              {
+                '--duration': `${bar.duration}s`,
+                animationDelay: `${bar.delay}s`,
+              } as CSSProperties
+            }
           />
         ))}
       </div>

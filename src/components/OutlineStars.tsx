@@ -2,6 +2,18 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
+interface OutlineStarsProps {
+  active: boolean;
+  position?: [number, number, number];
+  pointsData: number[][];
+  scale?: number;
+  color?: string;
+  pointSize?: number;
+  samplingRate?: number;
+  animationSpeed?: number;
+  waveIntensity?: number;
+}
+
 const OutlineStars = ({
   active,
   position = [0, 0, 0],
@@ -12,12 +24,12 @@ const OutlineStars = ({
   samplingRate = 1,
   animationSpeed = 2,
   waveIntensity = 0.003,
-}) => {
-  const particlesRef = useRef();
+}: OutlineStarsProps) => {
+  const particlesRef = useRef<THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial>>(null);
   const opacityRef = useRef(0);
 
   const particlePositions = useMemo(() => {
-    const positions = [];
+    const positions: number[] = [];
     pointsData.forEach((point, i) => {
       if (i % samplingRate === 0) {
         const x = (point[0] / 100 - 5) * scale;
