@@ -15,9 +15,11 @@ Regardless of which name you come across, it's always **me** behind the work! �
 
 ## 🛠️ Technologies Used
 
-- **Frontend:** React.js, JavaScript, SCSS
+- **Frontend:** React.js, TypeScript, SCSS
 - **Animations:** Framer Motion
 - **3D & Graphics:** Three.js, @react-three/fiber, @react-three/drei
+- **Testing:** Vitest, React Testing Library
+- **Tooling:** Oxlint, Prettier, TypeScript (`tsc --noEmit`), GitHub Actions CI
 - **Hosting:** Netlify
 - **Version Control:** Git & GitHub
 
@@ -34,6 +36,16 @@ git clone https://github.com/victoriaghoos/my-portfolio.git
 cd my-portfolio
 npm install
 npm run dev
+```
+
+Other available scripts:
+
+```bash
+npm run build       
+npm run test    
+npm run lint    
+npm run typecheck   
+npm run format      
 ```
 
 ## 🌌 Main Features
