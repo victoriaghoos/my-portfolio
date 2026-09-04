@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useMemo, useState, useEffect, useCallback } from "react";
+import { forwardRef, useRef, useMemo, useState, useEffect, useCallback } from "react";
 import HTMLFlipBook from "react-pageflip";
 import { useTranslation, Trans } from "react-i18next";
 import { useReducedMotion } from "framer-motion";
@@ -120,7 +120,7 @@ const StarBackground = () => {
   );
 };
 
-const Page = forwardRef((props, ref) => {
+const Page = forwardRef(function Page(props, ref) {
   return (
     <div
       className={`page ${props.className || ""}`}

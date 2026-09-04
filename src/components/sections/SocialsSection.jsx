@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useEffect, useState, useCallback } from "react";
+import { memo, useMemo, useRef, useEffect, useState, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Cloud, Sparkles, Float } from "@react-three/drei";
 import { motion, useReducedMotion } from "framer-motion";
@@ -25,7 +25,7 @@ const CloudPuff = ({ position, speed, opacity }) => {
   );
 };
 
-const SocialsStarsCanvas = memo(() => {
+const SocialsStarsCanvas = memo(function SocialsStarsCanvas() {
   const canvasRef = useRef(null);
   const rootRef = useRef(null);
   const reduceMotion = useReducedMotion();
@@ -72,7 +72,7 @@ const SocialsStarsCanvas = memo(() => {
   );
 });
 
-const SilkSkyScene = memo(() => {
+const SilkSkyScene = memo(function SilkSkyScene() {
   const reduceMotion = useReducedMotion();
   const cloudPositions = useMemo(() => {
     const pos = [];

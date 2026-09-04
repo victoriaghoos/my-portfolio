@@ -1,5 +1,5 @@
 
-import React, { Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 
 const AboutSection = lazy(() => import('./AboutSection'));
 const ProjectsSection = lazy(() => import('./ProjectsSection'));

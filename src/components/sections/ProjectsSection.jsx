@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useRef, useEffect, useState, useCallback } from "react";
+import { useMemo, memo, useRef, useEffect, useState, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import useCanvasAnimationLoop from '../../hooks/useCanvasAnimationLoop';
@@ -46,7 +46,7 @@ const cardVariants = {
   },
 };
 
-const ProjectsStarsCanvas = memo(() => {
+const ProjectsStarsCanvas = memo(function ProjectsStarsCanvas() {
   const canvasRef = useRef(null);
   const starConfig = useMemo(
     () =>

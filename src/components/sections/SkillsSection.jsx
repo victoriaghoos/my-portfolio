@@ -15,7 +15,7 @@ import {
 import { BsDatabase } from "react-icons/bs";
 import { TbApi, TbBrandAzure } from "react-icons/tb";
 
-const SkillsStarsCanvas = memo(() => {
+const SkillsStarsCanvas = memo(function SkillsStarsCanvas() {
   const canvasRef = useRef(null);
   const rootRef = useRef(null);
   const stars = useMemo(
@@ -56,7 +56,7 @@ const SkillsStarsCanvas = memo(() => {
   );
 });
 
-const FallingPetal = memo(() => {
+const FallingPetal = memo(function FallingPetal() {
   const settings = useMemo(() => ({
     left: Math.random() * 100,
     duration: 10 + Math.random() * 15,

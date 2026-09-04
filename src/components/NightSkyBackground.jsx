@@ -56,7 +56,7 @@ const STAR_COLORS = [
 ];
 const STAR_COLOR_TOTAL = STAR_COLORS.reduce((sum, c) => sum + c.weight, 0);
 
-const NightSkyBackground = forwardRef(({ isVisible = true }, ref) => {
+const NightSkyBackground = forwardRef(function NightSkyBackground({ isVisible = true }, ref) {
   const backgroundCanvasRef = useRef(null);
   const animationFrameRef = useRef(null);
   const drawFrameRef = useRef(null);

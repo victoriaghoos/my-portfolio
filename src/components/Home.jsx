@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, memo, Suspense } from "react"; 
+import { useState, useRef, useEffect, useMemo, useCallback, memo, Suspense } from "react"; 
 import { suspend } from 'suspend-react';
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useTranslation } from "react-i18next";
@@ -56,7 +56,7 @@ const DragHint = ({ isVisible }) => {
   );
 };
 
-const RotatingPanels = memo(({
+const RotatingPanels = memo(function RotatingPanels({
   navEnabled,
   icons,
   scalingConfig,
@@ -69,7 +69,7 @@ const RotatingPanels = memo(({
   onInitialRotationComplete,
   rotationYRef,
   targetRotationYRef,
-}) => {
+}) {
   const panelsGroupRef = useRef(null);
   const introStartTimeRef = useRef(null);
   const introSpeedRef = useRef(0.6);
@@ -149,7 +149,7 @@ const RotatingPanels = memo(({
   );
 });
 
-const SceneContent = memo(({ 
+const SceneContent = memo(function SceneContent({ 
   eventSource,
   nightSkyRef, 
   show3DNav, 
@@ -167,7 +167,7 @@ const SceneContent = memo(({
   onInitialRotationComplete,
   rotationYRef,
   targetRotationYRef,
-}) => {
+}) {
   const navEnabled = show3DNav && isInView;
 
   return (
@@ -376,7 +376,6 @@ const Home = () => {
 
   const isDesktop = dimensions.width >= 1024;
   const isTablet = !isDesktop && dimensions.width < 1024 && dimensions.width >= 600;
-  const isMobile = !isDesktop && !isTablet;
   const show3DNav = isDesktop && isDragCapable;
 
   const scalingConfig = useMemo(() => {
