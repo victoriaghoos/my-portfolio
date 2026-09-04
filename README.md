@@ -33,7 +33,7 @@ To run this project locally:
 git clone https://github.com/victoriaghoos/my-portfolio.git
 cd my-portfolio
 npm install
-npm start
+npm run dev
 ```
 
 ## 🌌 Main Features
