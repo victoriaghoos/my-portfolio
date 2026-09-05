@@ -226,40 +226,29 @@ const AboutSection = ({ id }: { id: string }) => {
             <motion.div className="bio-container" variants={textVariants}>
               <div className="bio-content">
                 <h3 className="bio-greeting">
-                  <Trans i18nKey="about.greeting">
-                    Hello, I'm <span className="name-glow">Victoria</span> 👋
-                  </Trans>
+                  <Trans i18nKey="about.greeting" components={[<span className="name-glow" />]} />
                 </h3>
 
                 <div className="bio-text">
                   <p>
-                    <Trans i18nKey="about.bio_p1">
-                      I'm a <span className="highlight">Belgian software engineering student</span>{' '}
-                      with a passion that grew from hobbyist Python coding into a professional
-                      career path. What started as solving LeetCode problems for fun led me to
-                      pursue an associate's degree at Howest, where I graduated{' '}
-                      <span className="highlight">with high honors</span>.
-                    </Trans>
+                    <Trans
+                      i18nKey="about.bio_p1"
+                      components={[<span className="highlight" />, <span className="highlight" />]}
+                    />
                   </p>
 
                   <p>
-                    <Trans i18nKey="about.bio_p2">
-                      Currently further expanding my skills with a Bachelor of Applied Computer
-                      Science specializing in software engineering, I'm balancing academic projects
-                      with personal ventures like building this website. When I'm not coding, you'll
-                      find me <span className="highlight">learning Japanese N4</span>, hiking the
-                      Belgian countryside, or capturing moments through photography.
-                    </Trans>
+                    <Trans
+                      i18nKey="about.bio_p2"
+                      components={[<span className="highlight" />]}
+                    />
                   </p>
 
                   <p>
-                    <Trans i18nKey="about.bio_p3">
-                      I'm actively working toward my goal of a{' '}
-                      <span className="highlight">Tokyo internship in 2027</span>, with plans to
-                      relocate permanently to Chiba after graduation. I believe in blending
-                      technical precision with creative expression, whether I'm debugging code or
-                      composing the perfect picture.
-                    </Trans>
+                    <Trans
+                      i18nKey="about.bio_p3"
+                      components={[<span className="highlight" />]}
+                    />
                   </p>
                 </div>
               </div>

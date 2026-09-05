@@ -8,10 +8,10 @@
   },
   "about": {
     "title": "About Me",
-    "greeting": "Hello, I'm <1>Victoria</1> 👋",
-    "bio_p1": "I'm a <1>Belgian software engineering student</1> with a passion that grew from hobbyist Python coding into a professional career path. What started as solving LeetCode problems for fun led me to pursue an associate's degree at Howest, where I graduated <5>with high honors</5>.",
-    "bio_p2": "Currently further expanding my skills with a Bachelor of Applied Computer Science specializing in software engineering, I'm balancing academic projects with personal ventures like building this website. When I'm not coding, you'll find me <1>learning Japanese N4</1>, hiking the Belgian countryside, or capturing moments through photography.",
-    "bio_p3": "I'm actively working toward my goal of a <2>Tokyo internship in 2027</2>, with plans to relocate permanently to Chiba after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture."
+    "greeting": "Hello, I'm <0>Victoria</0> 👋",
+    "bio_p1": "I'm a <0>Belgian software engineering student</0> with a passion that grew from hobbyist Python coding into a professional career path. What started as solving LeetCode problems for fun led me to pursue an associate's degree at Howest, where I graduated <1>with high honors</1>.",
+    "bio_p2": "Currently further expanding my skills with a Bachelor of Applied Computer Science specializing in software engineering, I'm balancing academic projects with personal ventures like building this website. When I'm not coding, you'll find me <0>learning Japanese N4</0>, hiking the Belgian countryside, or capturing moments through photography.",
+    "bio_p3": "I'm actively working toward my goal of a <0>Tokyo internship in 2027</0>, with plans to relocate permanently to Chiba after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture."
   },
   "projects": "Projects",
   "classified": "CLASSIFIED",
