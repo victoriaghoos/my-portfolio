@@ -9,9 +9,9 @@
   "about": {
     "title": "À propos de moi",
     "greeting": "Salut, moi c’est <1>Victoria</1> 👋",
-    "bio_p1": "Je suis <1>étudiante belge en ingénierie logicielle</1>. À la base, je codais en Python par curiosité, puis c’est vite devenu plus sérieux. Résoudre des problèmes sur LeetCode « pour le fun » m’a finalement menée à obtenir mon graduat à Howest, que j’ai obtenu <3>avec grande distinction</3>.",
+    "bio_p1": "Je suis <1>étudiante belge en ingénierie logicielle</1>. À la base, je codais en Python par curiosité, puis c’est vite devenu plus sérieux. Résoudre des problèmes sur LeetCode « pour le fun » m’a finalement menée à obtenir mon graduat à Howest, que j’ai obtenu <5>avec grande distinction</5>.",
     "bio_p2": "Aujourd’hui, je poursuis un bachelier en Informatique appliquée, avec une spécialisation en ingénierie logicielle. Je jongle entre projets scolaires et projets perso, comme la création de ce site. En dehors du code, j’apprends le <1>japonais (JLPT N4)</1>, j’aime me balader dans la nature belge faire de la photographie.",
-    "bio_p3": "Mon objectif est de décrocher un <1>stage à Tokyo en 2027</1>, puis de m’installer à Chiba après mes études. J’aime mêler rigueur technique et créativité, que ce soit en corrigeant du code ou en cherchant la photo parfaite."
+    "bio_p3": "Mon objectif est de décrocher un <2>stage à Tokyo en 2027</2>, puis de m’installer à Chiba après mes études. J’aime mêler rigueur technique et créativité, que ce soit en corrigeant du code ou en cherchant la photo parfaite."
   },
   "projects": "Projets",
   "classified": "CLASSIFIÉ",
