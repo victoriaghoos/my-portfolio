@@ -223,13 +223,11 @@ const SkillsSection = ({ id }: { id: string }) => {
 
   return (
     <section id={id} className="skills-section" aria-labelledby={`${id}-title`}>
-      {/* 1. ACHTERGROND */}
       <div className="background-elements">
         <div className="nebula-bg" />
         <SkillsStarsCanvas />
       </div>
 
-      {/* 2. BOMEN & PETALS */}
       <div className="trees-layer">
         <div className="tree-wrapper left">
           <img src={sakuraTree} alt="" className="tree-img" />
@@ -245,7 +243,6 @@ const SkillsSection = ({ id }: { id: string }) => {
           petals.map((_, i) => <FallingPetal key={`petal-${i}`} />)}
       </div>
 
-      {/* 3. CONTENT */}
       <motion.div
         className="content-wrapper"
         variants={containerVariants}
