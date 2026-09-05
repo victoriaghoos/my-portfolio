@@ -17,7 +17,7 @@
   "classified": "CLASSIFIÉ",
   "project_items": {
     "p1": {
-      "desc": "Met à jour les scores en temps réel via SignalR WebSockets.",
+      "desc": "Moteur d'itinéraires pittoresques sur un graphe PostGIS de 20M nœuds et 44M arcs.",
       "context": "PROJET SOLO"
     },
     "p2": {

@@ -17,7 +17,7 @@
   "classified": "GECLASSIFICEERD",
   "project_items": {
     "p1": {
-      "desc": "Realtime wedstrijdupdates met SignalR-websockets.",
+      "desc": "Schilderachtige routeplanning-engine over een PostGIS-graaf met 20M knopen en 44M randen.",
       "context": "SOLO PROJECT"
     },
     "p2": {

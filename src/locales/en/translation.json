@@ -17,7 +17,7 @@
   "classified": "CLASSIFIED",
   "project_items": {
     "p1": {
-      "desc": "Real-time match updates using SignalR websockets.",
+      "desc": "Scenic route-planning engine over a 20M-node, 44M-edge PostGIS graph.",
       "context": "SOLO PROJECT"
     },
     "p2": {

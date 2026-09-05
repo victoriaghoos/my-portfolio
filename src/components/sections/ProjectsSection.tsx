@@ -15,7 +15,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import '../../styles/sections/ProjectsSection.scss';
-import baseballImg from '../../assets/images/BaseballLive.webp';
+import yorimichiImg from '../../assets/images/yorimichi.png';
 import flutterImg from '../../assets/images/VrijeTeid.png';
 
 const containerVariants: Variants = {
@@ -104,12 +104,12 @@ const ProjectsSection = ({ id }: { id: string }) => {
     () => [
       {
         id: 1,
-        title: 'BaseballLive',
-        subtitle: 'Blazor • SignalR • C#',
+        title: 'Yorimichi',
+        subtitle: 'PYTHON · POSTGIS · FASTAPI',
         description: t('project_items.p1.desc'),
-        image: baseballImg,
+        image: yorimichiImg,
         color: '#ffbd7a',
-        year: '2024',
+        year: '2026',
         context: t('project_items.p1.context'),
       },
       {
