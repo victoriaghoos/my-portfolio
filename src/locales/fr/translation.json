@@ -65,7 +65,7 @@
     },
     "p1": {
       "title": "Profil",
-      "text": "Je suis étudiante en informatique et me spécialise dans le développement back-end avec .NET. J’ai une solide expérience pratique en C# et je complète ma formation par des connaissances approfondies en architecture logicielle. J’ai également travaillé sur des systèmes de recherche complexes basés sur OpenSearch."
+      "text": "Étudiante en dernière année d'ingénierie logicielle, avec un graduat en programmation et un stage déjà à mon actif. Je développe des back-ends en Python et C# ainsi que des front-ends en React, Vue et TypeScript, et ce qui m'intéresse le plus, c'est la façon dont la structure d'un système détermine sa capacité à évoluer. Mon projet principal est un moteur de planification d'itinéraires sur 20 millions de nœuds cartographiques, construit selon une architecture hexagonale. J'ai récemment livré un site web bilingue en production pour un client à Tokyo. Disponible au Japon à partir de février 2027."
     },
     "p2": {
       "title": "Diplôme professionnel",
