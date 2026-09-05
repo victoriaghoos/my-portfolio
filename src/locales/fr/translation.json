@@ -65,7 +65,7 @@
     },
     "p1": {
       "title": "Profil",
-      "text": "Étudiante en dernière année d'ingénierie logicielle, avec un graduat en programmation et un stage déjà à mon actif. Je développe des back-ends en Python et C# ainsi que des front-ends en React, Vue et TypeScript, et ce qui m'intéresse le plus, c'est la façon dont la structure d'un système détermine sa capacité à évoluer. Mon projet principal est un moteur de planification d'itinéraires sur 20 millions de nœuds cartographiques, construit selon une architecture hexagonale. J'ai récemment livré un site web bilingue en production pour un client à Tokyo. Disponible au Japon à partir de février 2027."
+      "text": "Étudiante en dernière année d'ingénierie logicielle, diplômée en programmation et déjà passée par un stage. Je développe des back-ends en Python et C#, et des front-ends en React, Vue et TypeScript ; ce qui m'intéresse avant tout, c'est la structure d'un système et sa capacité à évoluer. Mon projet principal : un moteur de planification d'itinéraires sur 20 millions de nœuds, en architecture hexagonale. J'ai récemment livré un site bilingue en production pour un client à Tokyo. Disponible au Japon dès février 2027."
     },
     "p2": {
       "title": "Diplôme professionnel",
