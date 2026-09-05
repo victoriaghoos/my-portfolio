@@ -78,12 +78,13 @@
     },
     "p3": {
       "title": "Bachelor's Degree",
-      "program": "Applied Informatics",
+      "program": "Applied Computer Science",
       "specialization": "Software Engineering Specialization",
       "track_info": "<1>Accelerated Track:</1> Direct Year 2 entry based on prior Associate Degree qualifications.",
-      "list_arch": "<1>Architecture:</1> DDD, Design Patterns & Enterprise Systems",
-      "list_eng": "<1>Engineering:</1> Data Structures, Algorithms & QA",
-      "list_cloud": "<1>Cloud & .NET:</1> Advanced ecosystems & Cloud-native deployment"
+      "list_arch_design": "<0>Architecture & Design:</0> Hexagonal Architecture, Software Design, DDD",
+      "list_engineering": "<0>Engineering:</0> Data Structures & Algorithms, Software Engineering Project, Bachelor Thesis",
+      "list_systems_data": "<0>Systems & Data:</0> System Architecture & Deployment, Operating Systems",
+      "list_web_security": "<0>Web & Security:</0> Web Technology, UX Engineering, Web Pentesting"
     },
     "p4": {
       "title": "Experience",

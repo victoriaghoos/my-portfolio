@@ -81,9 +81,10 @@
       "program": "Toegepaste Informatica",
       "specialization": "Afstudeerrichting Software Engineering",
       "track_info": "<1>Verkort traject:</1> Instroom in jaar 2 op basis van mijn behaalde graduaat.",
-      "list_arch": "<1>Architectuur:</1> DDD, Design Patterns & Enterprise-systemen",
-      "list_eng": "<1>Engineering:</1> Datastructuren, algoritmes & QA",
-      "list_cloud": "<1>Cloud & .NET:</1> Geavanceerde ecosystemen & cloud-native deployment"
+      "list_arch_design": "<0>Architectuur & Design:</0> Hexagonale architectuur, Software Design, DDD",
+      "list_engineering": "<0>Engineering:</0> Datastructuren & algoritmes, Software Engineering Project, Bachelor thesis",
+      "list_systems_data": "<0>Systemen & Data:</0> Systeemarchitectuur & deployment, Besturingssystemen",
+      "list_web_security": "<0>Web & Security:</0> Webtechnologie, UX Engineering, Web pentesting"
     },
     "p4": {
       "title": "Ervaring",

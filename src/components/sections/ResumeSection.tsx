@@ -557,19 +557,28 @@ const ResumeSection = ({ id }: { id: string }) => {
                     </div>
                     <ul>
                       <li>
-                        <Trans i18nKey="resume_content.p3.list_arch">
-                          <strong>Architecture:</strong>
-                        </Trans>
+                        <Trans
+                          i18nKey="resume_content.p3.list_arch_design"
+                          components={[<strong />]}
+                        />
                       </li>
                       <li>
-                        <Trans i18nKey="resume_content.p3.list_eng">
-                          <strong>Engineering:</strong>
-                        </Trans>
+                        <Trans
+                          i18nKey="resume_content.p3.list_engineering"
+                          components={[<strong />]}
+                        />
                       </li>
                       <li>
-                        <Trans i18nKey="resume_content.p3.list_cloud">
-                          <strong>Cloud & .NET:</strong>
-                        </Trans>
+                        <Trans
+                          i18nKey="resume_content.p3.list_systems_data"
+                          components={[<strong />]}
+                        />
+                      </li>
+                      <li>
+                        <Trans
+                          i18nKey="resume_content.p3.list_web_security"
+                          components={[<strong />]}
+                        />
                       </li>
                     </ul>
                   </div>

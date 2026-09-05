@@ -81,9 +81,10 @@
       "program": "Informatique appliquée",
       "specialization": "Orientation ingénierie logicielle",
       "track_info": "<1>Parcours accéléré :</1> Accès direct en 2e année sur base du diplôme professionnel.",
-      "list_arch": "<1>Architecture :</1> DDD, Design Patterns & systèmes d’entreprise",
-      "list_eng": "<1>Ingénierie :</1> Structures de données, algorithmes & qualité logicielle",
-      "list_cloud": "<1>Cloud & .NET :</1> Écosystèmes avancés & déploiement cloud-native"
+      "list_arch_design": "<0>Architecture & Design :</0> Architecture hexagonale, Software Design, DDD",
+      "list_engineering": "<0>Ingénierie :</0> Structures de données & algorithmes, Projet d'ingénierie logicielle, Mémoire de fin d'études",
+      "list_systems_data": "<0>Systèmes & Données :</0> Architecture système & déploiement, Systèmes d'exploitation",
+      "list_web_security": "<0>Web & Sécurité :</0> Technologies web, UX Engineering, Pentesting web"
     },
     "p4": {
       "title": "Expérience",
