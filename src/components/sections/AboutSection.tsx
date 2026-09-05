@@ -238,17 +238,11 @@ const AboutSection = ({ id }: { id: string }) => {
                   </p>
 
                   <p>
-                    <Trans
-                      i18nKey="about.bio_p2"
-                      components={[<span className="highlight" />]}
-                    />
+                    <Trans i18nKey="about.bio_p2" components={[<span className="highlight" />]} />
                   </p>
 
                   <p>
-                    <Trans
-                      i18nKey="about.bio_p3"
-                      components={[<span className="highlight" />]}
-                    />
+                    <Trans i18nKey="about.bio_p3" components={[<span className="highlight" />]} />
                   </p>
                 </div>
               </div>
