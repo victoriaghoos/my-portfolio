@@ -68,7 +68,7 @@ npm run format
 
 ## 🏆 Sample Projects
 
-- **BaseballLive** (Blazor, SignalR, C#): Real-time match updates using websockets. _(Solo project, 2024)_
+- **Yorimichi** (Python, FastAPI, PostGIS, NetworkX, osmnx, postgresql, REACT) ): Scenic route optimization engine. _(Solo project, 2026)_
 - **Vrije Teid!** (Flutter, Dart, Firebase): Mobile app for community activity management. _(Group effort, 2024)_
 - **Search Infrastructure** (OpenSearch, Docker): Large-scale data retrieval optimization. _(Internship, 2025, classified)_
 
