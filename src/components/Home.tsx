@@ -35,6 +35,9 @@ import socialsPng from '../assets/images/social-media.png';
 import NightSkyBackground, { type NightSkyHandle } from './NightSkyBackground';
 import InteractivePanel, { type PanelIcon } from './InteractivePanel';
 import CentralHologram from './CentralHologram';
+import CanvasErrorBoundary from './webgl/CanvasErrorBoundary';
+import { isWebGLAvailable, useContextLossHandler } from './webgl/webgl';
+import hologramImage from '../assets/images/hologram.png';
 import OutlineStars from './OutlineStars';
 import SectionsContainer from './sections/SectionsContainer';
 
@@ -214,6 +217,8 @@ const SceneContent = memo(function SceneContent({
   onInitialRotationComplete,
   rotationYRef,
   targetRotationYRef,
+  webglFailed,
+  onWebglFailure,
 }: {
   eventSource: RefObject<HTMLElement>;
   nightSkyRef: RefObject<NightSkyHandle>;
@@ -232,8 +237,11 @@ const SceneContent = memo(function SceneContent({
   onInitialRotationComplete: () => void;
   rotationYRef: MutableRefObject<number>;
   targetRotationYRef: MutableRefObject<number>;
+  webglFailed: boolean;
+  onWebglFailure: () => void;
 }) {
   const navEnabled = show3DNav && isInView;
+  const handleCanvasCreated = useContextLossHandler(onWebglFailure);
 
   return (
     <div id="home-3d" className="home-3d-content">
@@ -241,89 +249,100 @@ const SceneContent = memo(function SceneContent({
 
       {navEnabled && initialRotationComplete && !hasDragged && <DragHint isVisible={!hasDragged} />}
 
-      <Canvas
-        frameloop={isInView ? 'always' : 'never'}
-        camera={{ position: [0, 5, 20], fov: 45 }}
-        eventSource={eventSource as MutableRefObject<HTMLElement>}
-        eventPrefix="client"
-        className="webgl-canvas"
-        dpr={[1, 1.5]}
-        style={{ pointerEvents: navEnabled ? 'auto' : 'none' }}
-      >
-        <Suspense fallback={null}>
-          <group>
-            <Environment files={(suspend(sunsetHdri) as { default: string }).default} />
-
-            <RotatingPanels
-              navEnabled={navEnabled}
-              icons={icons}
-              scalingConfig={scalingConfig}
-              setActive={setActive}
-              panelPositions={panelPositions}
-              handleIconClick={handleIconClick}
-              onPanelPointerUp={onPanelPointerUp}
-              isInView={isInView}
-              initialRotationComplete={initialRotationComplete}
-              onInitialRotationComplete={onInitialRotationComplete}
-              rotationYRef={rotationYRef}
-              targetRotationYRef={targetRotationYRef}
-            />
-          </group>
-
-          <MotionGroup
-            initial={{ opacity: 0, scale: scalingConfig.hologramScale * 0.85, y: -0.5 }}
-            animate={{ opacity: 1, scale: scalingConfig.hologramScale, y: scalingConfig.hologramY }}
-            transition={{
-              duration: 1.5,
-              delay: 1.2,
-              ease: [0.6, 0.01, 0.05, 0.95],
-            }}
+      {webglFailed ? (
+        <img className="hub-fallback-hologram" src={hologramImage} alt="" aria-hidden="true" />
+      ) : (
+        <CanvasErrorBoundary onError={onWebglFailure}>
+          <Canvas
+            frameloop={isInView ? 'always' : 'never'}
+            camera={{ position: [0, 5, 20], fov: 45 }}
+            eventSource={eventSource as MutableRefObject<HTMLElement>}
+            eventPrefix="client"
+            className="webgl-canvas"
+            dpr={[1, 1.5]}
+            style={{ pointerEvents: navEnabled ? 'auto' : 'none' }}
+            onCreated={handleCanvasCreated}
           >
-            <CentralHologram
-              scale={scalingConfig.hologramScale}
-              radius={scalingConfig.hologramRadius}
-              halo={scalingConfig.hologramHalo}
-            />
-          </MotionGroup>
+            <Suspense fallback={null}>
+              <group>
+                <Environment files={(suspend(sunsetHdri) as { default: string }).default} />
 
-          {navEnabled && (
-            <>
-              <OutlineStars
-                active={active === 'About'}
-                position={[-scalingConfig.radius + 1, 0, 0]}
-                pointsData={catPoints}
-                scale={constellationScales.about}
-              />
-              <OutlineStars
-                active={active === 'Socials'}
-                position={[-scalingConfig.radius - 3, -scalingConfig.radius * 0.6, 0]}
-                pointsData={cameraPoints}
-                scale={constellationScales.socials}
-              />
-              <OutlineStars
-                active={active === 'Resume'}
-                position={[-scalingConfig.radius - 2, scalingConfig.radius * 0.4, 0]}
-                pointsData={bookPoints}
-                scale={constellationScales.resume}
-              />
-              <OutlineStars
-                active={active === 'Skills'}
-                position={[scalingConfig.radius + 2, scalingConfig.radius * 0.4, 0]}
-                pointsData={flowerPoints}
-                scale={constellationScales.skills}
-              />
-              <OutlineStars
-                active={active === 'Projects'}
-                position={[scalingConfig.radius - 1, -scalingConfig.radius * 0.6, 0]}
-                pointsData={headsetPoints}
-                scale={constellationScales.projects}
-              />
-            </>
-          )}
+                <RotatingPanels
+                  navEnabled={navEnabled}
+                  icons={icons}
+                  scalingConfig={scalingConfig}
+                  setActive={setActive}
+                  panelPositions={panelPositions}
+                  handleIconClick={handleIconClick}
+                  onPanelPointerUp={onPanelPointerUp}
+                  isInView={isInView}
+                  initialRotationComplete={initialRotationComplete}
+                  onInitialRotationComplete={onInitialRotationComplete}
+                  rotationYRef={rotationYRef}
+                  targetRotationYRef={targetRotationYRef}
+                />
+              </group>
 
-          <Preload all />
-        </Suspense>
-      </Canvas>
+              <MotionGroup
+                initial={{ opacity: 0, scale: scalingConfig.hologramScale * 0.85, y: -0.5 }}
+                animate={{
+                  opacity: 1,
+                  scale: scalingConfig.hologramScale,
+                  y: scalingConfig.hologramY,
+                }}
+                transition={{
+                  duration: 1.5,
+                  delay: 1.2,
+                  ease: [0.6, 0.01, 0.05, 0.95],
+                }}
+              >
+                <CentralHologram
+                  scale={scalingConfig.hologramScale}
+                  radius={scalingConfig.hologramRadius}
+                  halo={scalingConfig.hologramHalo}
+                />
+              </MotionGroup>
+
+              {navEnabled && (
+                <>
+                  <OutlineStars
+                    active={active === 'About'}
+                    position={[-scalingConfig.radius + 1, 0, 0]}
+                    pointsData={catPoints}
+                    scale={constellationScales.about}
+                  />
+                  <OutlineStars
+                    active={active === 'Socials'}
+                    position={[-scalingConfig.radius - 3, -scalingConfig.radius * 0.6, 0]}
+                    pointsData={cameraPoints}
+                    scale={constellationScales.socials}
+                  />
+                  <OutlineStars
+                    active={active === 'Resume'}
+                    position={[-scalingConfig.radius - 2, scalingConfig.radius * 0.4, 0]}
+                    pointsData={bookPoints}
+                    scale={constellationScales.resume}
+                  />
+                  <OutlineStars
+                    active={active === 'Skills'}
+                    position={[scalingConfig.radius + 2, scalingConfig.radius * 0.4, 0]}
+                    pointsData={flowerPoints}
+                    scale={constellationScales.skills}
+                  />
+                  <OutlineStars
+                    active={active === 'Projects'}
+                    position={[scalingConfig.radius - 1, -scalingConfig.radius * 0.6, 0]}
+                    pointsData={headsetPoints}
+                    scale={constellationScales.projects}
+                  />
+                </>
+              )}
+
+              <Preload all />
+            </Suspense>
+          </Canvas>
+        </CanvasErrorBoundary>
+      )}
 
       {!show3DNav && (
         <motion.div
@@ -471,9 +490,13 @@ const Home = () => {
     }
   }, []);
 
+  // Without WebGL (unsupported, crashed or lost context) the hub switches to the static menu.
+  const [webglFailed, setWebglFailed] = useState(() => !isWebGLAvailable());
+  const handleWebglFailure = useCallback(() => setWebglFailed(true), []);
+
   const isDesktop = dimensions.width >= 1024;
   const isTablet = !isDesktop && dimensions.width < 1024 && dimensions.width >= 600;
-  const show3DNav = isDesktop && isDragCapable;
+  const show3DNav = isDesktop && isDragCapable && !webglFailed;
 
   const scalingConfig: ScalingConfig = useMemo(() => {
     if (isDesktop) {
@@ -687,6 +710,8 @@ const Home = () => {
             onInitialRotationComplete={markInitialRotationComplete}
             rotationYRef={rotationYRef}
             targetRotationYRef={targetRotationYRef}
+            webglFailed={webglFailed}
+            onWebglFailure={handleWebglFailure}
           />
         </section>
 

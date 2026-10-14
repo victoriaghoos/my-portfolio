@@ -661,3 +661,18 @@ body {
     display: none !important;
   }
 }
+
+// Shown in place of the 3D hologram when WebGL is unavailable, so the hub never looks empty.
+.hub-fallback-hologram {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: min(42vh, 70vw);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 60px rgba(124, 158, 255, 0.25);
+  pointer-events: none;
+  z-index: 1;
+}

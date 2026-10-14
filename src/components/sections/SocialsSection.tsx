@@ -5,6 +5,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Github, Linkedin, Mail, ArrowUpCircle, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import useCanvasAnimationLoop, { type CanvasDrawArgs } from '../../hooks/useCanvasAnimationLoop';
+import CanvasErrorBoundary from '../webgl/CanvasErrorBoundary';
+import { isWebGLAvailable, useContextLossHandler } from '../webgl/webgl';
 import '../../styles/sections/SocialsSection.scss';
 // Self-hosted copy of drei's default cloud sprite (drei otherwise fetches it from rawcdn.githack.com)
 import cloudTexture from '../../assets/images/cloud.png';
@@ -188,6 +190,10 @@ const SocialCard = ({
 const SocialsSection = ({ id }: { id: string }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
+  // The clouds are decoration: without WebGL the section keeps its gradient and stars.
+  const [webglFailed, setWebglFailed] = useState(() => !isWebGLAvailable());
+  const handleWebglFailure = useCallback(() => setWebglFailed(true), []);
+  const handleCanvasCreated = useContextLossHandler(handleWebglFailure);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleFlyToCosmos = () => {
@@ -237,16 +243,19 @@ const SocialsSection = ({ id }: { id: string }) => {
       <div className="transition-gradient-top"></div>
       <div className="canvas-container" ref={containerRef}>
         <SocialsStarsCanvas />
-        {hasBeenVisible && (
-          <Canvas
-            frameloop={isVisible ? 'always' : 'never'}
-            camera={{ position: [0, 0, 14], fov: 45 }}
-            resize={{ scroll: false }}
-            dpr={[1, 1.5]}
-            performance={{ min: 0.5, max: 1 }}
-          >
-            <SilkSkyScene />
-          </Canvas>
+        {hasBeenVisible && !webglFailed && (
+          <CanvasErrorBoundary onError={handleWebglFailure}>
+            <Canvas
+              frameloop={isVisible ? 'always' : 'never'}
+              camera={{ position: [0, 0, 14], fov: 45 }}
+              resize={{ scroll: false }}
+              dpr={[1, 1.5]}
+              performance={{ min: 0.5, max: 1 }}
+              onCreated={handleCanvasCreated}
+            >
+              <SilkSkyScene />
+            </Canvas>
+          </CanvasErrorBoundary>
         )}
       </div>
 
