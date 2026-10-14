@@ -2,7 +2,7 @@ import {
   parseFileName,
   parseNote,
   pickTranslation,
-  sortNewestFirst,
+  sortNotes,
   type Note,
   type NoteLanguage,
 } from './parseNote';
@@ -27,7 +27,7 @@ for (const [path, raw] of Object.entries(files)) {
 
 // One entry per note, in the visitor's language when a translation exists (English otherwise).
 export const getNotes = (language: string | undefined): Note[] =>
-  sortNewestFirst(
+  sortNotes(
     [...translationsBySlug.values()]
       .map((translations) => pickTranslation(translations, language))
       .filter((note): note is Note => Boolean(note)),

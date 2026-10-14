@@ -15,7 +15,7 @@ const NotesIndexPage = () => {
         <h1 className="notes-page-title">{t('notes.title')}</h1>
         <div className="notes-underline" />
         <p className="notes-intro">{t('notes.intro')}</p>
-        <Link to="/home" className="notes-about-link">
+        <Link to="/home#about-section" className="notes-about-link">
           {t('notes.about_link')} <ArrowRight size={16} strokeWidth={1.8} />
         </Link>
       </section>

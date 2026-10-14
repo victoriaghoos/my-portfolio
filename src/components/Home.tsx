@@ -15,6 +15,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useTranslation } from 'react-i18next';
 import { Environment, Preload } from '@react-three/drei';
 import { motion, useInView } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import * as THREE from 'three';
 import '../styles/home.scss';
 
@@ -354,8 +355,34 @@ const SceneContent = memo(function SceneContent({
   );
 });
 
+// Lets other pages link straight to a section, e.g. /home#about-section. The sections are
+// lazy-loaded, so wait (up to a few seconds) for the target to exist before scrolling to it.
+const useScrollToHash = () => {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    const id = decodeURIComponent(hash.replace(/^#/, ''));
+    if (!id) return undefined;
+
+    let frame = 0;
+    const startedAt = performance.now();
+    const tryScroll = () => {
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (performance.now() - startedAt < 5000) {
+        frame = requestAnimationFrame(tryScroll);
+      }
+    };
+    frame = requestAnimationFrame(tryScroll);
+
+    return () => cancelAnimationFrame(frame);
+  }, [hash]);
+};
+
 const Home = () => {
   const { t } = useTranslation();
+  useScrollToHash();
 
   const nightSkyRef = useRef<NightSkyHandle>(null);
 

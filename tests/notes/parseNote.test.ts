@@ -2,7 +2,7 @@ import {
   parseFileName,
   parseNote,
   pickTranslation,
-  sortNewestFirst,
+  sortNotes,
   toNoteLanguage,
 } from '../../src/notes/parseNote';
 import { formatNoteDate } from '../../src/notes/notes';
@@ -41,7 +41,13 @@ describe('parseNote', () => {
   it('sorts newest first', () => {
     const a = parseNote('a', '---\ndate: 2026-10-01\n---\n');
     const b = parseNote('b', '---\ndate: 2026-11-24\n---\n');
-    expect(sortNewestFirst([a, b]).map((n) => n.slug)).toEqual(['b', 'a']);
+    expect(sortNotes([a, b]).map((n) => n.slug)).toEqual(['b', 'a']);
+  });
+
+  it('always puts the post about the site last', () => {
+    const site = parseNote('site', '---\ndate: 2026-10-14\ntype: site\n---\n');
+    const event = parseNote('event', '---\ndate: 2026-10-13\ntype: event\n---\n');
+    expect(sortNotes([site, event]).map((n) => n.slug)).toEqual(['event', 'site']);
   });
 });
 

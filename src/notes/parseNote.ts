@@ -64,8 +64,12 @@ export const parseNote = (
   };
 };
 
-export const sortNewestFirst = (notes: Note[]) =>
-  [...notes].sort((a, b) => b.date.localeCompare(a.date));
+// Newest first, except the post about the site itself, which always goes last:
+// it's background, while events, hackathons and projects are what visitors come for.
+export const sortNotes = (notes: Note[]) =>
+  [...notes].sort(
+    (a, b) => Number(a.type === 'site') - Number(b.type === 'site') || b.date.localeCompare(a.date),
+  );
 
 const isNoteLanguage = (value: string): value is NoteLanguage =>
   (NOTE_LANGUAGES as readonly string[]).includes(value);
