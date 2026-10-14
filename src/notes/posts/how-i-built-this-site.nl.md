@@ -73,7 +73,7 @@ Samen brachten die de Lighthouse-score op desktop van 25 naar 85.
 
 ## Toegankelijkheid
 
-Omdat er zoveel beweegt op de pagina, wordt `prefers-reduced-motion` overal gerespecteerd: in de intro, de canvas-loops, de bloesemblaadjes en de zweefeffecten. Bedieningselementen zijn echte knoppen met ARIA-labels en zijn bereikbaar met het toetsenbord, en de achtergrondmuziek start pas na een interactie van de gebruiker, nooit bij het laden van de pagina.
+Omdat er zoveel beweegt op de pagina, wordt `prefers-reduced-motion` overal gerespecteerd: in de intro, de canvas-loops, de bloesemblaadjes en de zweefeffecten. Bedieningselementen zijn echte knoppen met ARIA-labels en zijn bereikbaar met het toetsenbord, en de achtergrondmuziek speelt alleen als je ze zelf aanzet, nooit vanzelf.
 
 ## Hosting en domein
 

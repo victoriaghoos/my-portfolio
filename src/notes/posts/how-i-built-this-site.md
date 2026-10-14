@@ -73,7 +73,7 @@ Altogether, this took the desktop Lighthouse score from 25 to 85.
 
 ## Accessibility
 
-Because so much of the page moves, `prefers-reduced-motion` is respected everywhere: the intro, the canvas loops, the petals and the floating effects. Controls are real buttons with ARIA labels and can be reached with the keyboard, and the background music only starts after a user interaction, never on page load.
+Because so much of the page moves, `prefers-reduced-motion` is respected everywhere: the intro, the canvas loops, the petals and the floating effects. Controls are real buttons with ARIA labels and can be reached with the keyboard, and the background music only plays when you turn it on, never on its own.
 
 ## Hosting and domain
 

@@ -8,6 +8,8 @@ const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
+  // The track only ever plays when the visitor presses the pill: no autoplay, and no starting on
+  // the first click elsewhere on the page.
   useEffect(() => {
     const audio = new Audio();
     audio.preload = 'none';
@@ -16,63 +18,27 @@ const MusicPlayer = () => {
     audio.volume = 0.15;
     audioRef.current = audio;
 
-    const handleFirstInteraction = () => {
-      if (!audioRef.current) return;
-
-      audioRef.current
-        .play()
-        .then(() => {
-          setIsPlaying(true);
-          cleanupListeners();
-        })
-        .catch(() => {});
-    };
-
-    const events = ['click', 'mousedown', 'touchstart', 'pointerdown', 'keydown'];
-
-    const handleKeyDown = (event: Event) => {
-      const keyboardEvent = event as KeyboardEvent;
-      if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
-        handleFirstInteraction();
-      }
-    };
-
-    const listeners: { type: string; handler: EventListener }[] = [];
-
-    const addListener = (type: string, handler: EventListener) => {
-      document.addEventListener(type, handler, { passive: true });
-      listeners.push({ type, handler });
-    };
-
-    const cleanupListeners = () => {
-      listeners.forEach(({ type, handler }) => {
-        document.removeEventListener(type, handler);
-      });
-      listeners.length = 0;
-    };
-
-    events.forEach((type) => {
-      if (type === 'keydown') {
-        addListener('keydown', handleKeyDown);
-      } else {
-        addListener(type, handleFirstInteraction);
-      }
-    });
     return () => {
       audio.pause();
-      cleanupListeners();
+      audioRef.current = null;
     };
   }, []);
 
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+
     if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
+      audio.pause();
+      setIsPlaying(false);
+      return;
     }
-    setIsPlaying(!isPlaying);
+
+    audio
+      .play()
+      .then(() => setIsPlaying(true))
+      .catch(() => setIsPlaying(false));
   };
 
   return (

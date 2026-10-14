@@ -73,7 +73,7 @@ Au total, le score Lighthouse sur desktop est passé de 25 à 85.
 
 ## Accessibilité
 
-Comme beaucoup d’éléments bougent sur la page, `prefers-reduced-motion` est respecté partout : l’intro, les boucles canvas, les pétales et les effets de flottement. Les commandes sont de vrais boutons avec des labels ARIA, accessibles au clavier, et la musique de fond ne démarre qu’après une interaction de l’utilisateur, jamais au chargement de la page.
+Comme beaucoup d’éléments bougent sur la page, `prefers-reduced-motion` est respecté partout : l’intro, les boucles canvas, les pétales et les effets de flottement. Les commandes sont de vrais boutons avec des labels ARIA, accessibles au clavier, et la musique de fond ne joue que si on l’active soi-même, jamais toute seule.
 
 ## Hébergement et domaine
 
