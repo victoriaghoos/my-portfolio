@@ -2,10 +2,11 @@ import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import NotesLayout from './NotesLayout';
-import { formatNoteDate, notes } from './notes';
+import { formatNoteDate, getNotes } from './notes';
 
 const NotesIndexPage = () => {
   const { t, i18n } = useTranslation();
+  const notes = getNotes(i18n.language);
 
   return (
     <NotesLayout title={t('notes.title')} backTo="/home" backLabel={t('notes.back_to_portfolio')}>
@@ -25,7 +26,7 @@ const NotesIndexPage = () => {
         <ol className="notes-list">
           {notes.map((note) => (
             <li key={note.slug}>
-              <Link to={`/notes/${note.slug}`} className="notes-list-item">
+              <Link to={`/notes/${note.slug}`} className="notes-list-item" lang={note.lang}>
                 <span className="note-card-shine" aria-hidden="true" />
                 <div className="note-meta">
                   <span className={`note-type type-${note.type}`}>

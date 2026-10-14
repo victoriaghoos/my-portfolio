@@ -1,4 +1,10 @@
-import { parseNote, sortNewestFirst } from '../../src/notes/parseNote';
+import {
+  parseFileName,
+  parseNote,
+  pickTranslation,
+  sortNewestFirst,
+  toNoteLanguage,
+} from '../../src/notes/parseNote';
 import { formatNoteDate } from '../../src/notes/notes';
 
 describe('parseNote', () => {
@@ -51,5 +57,39 @@ describe('formatNoteDate', () => {
 
   it('returns the raw value for invalid dates', () => {
     expect(formatNoteDate('', 'en')).toBe('');
+  });
+});
+
+describe('translations', () => {
+  it('reads the language from the file name, defaulting to English', () => {
+    expect(parseFileName('./posts/how-i-built-this-site.md')).toEqual({
+      slug: 'how-i-built-this-site',
+      lang: 'en',
+    });
+    expect(parseFileName('./posts/how-i-built-this-site.ja.md')).toEqual({
+      slug: 'how-i-built-this-site',
+      lang: 'ja',
+    });
+    // an unknown suffix is part of the slug, not a language
+    expect(parseFileName('./posts/talk.v2.md')).toEqual({ slug: 'talk.v2', lang: 'en' });
+  });
+
+  it('normalises i18next language tags', () => {
+    expect(toNoteLanguage('nl-BE')).toBe('nl');
+    expect(toNoteLanguage('ja_JP')).toBe('ja');
+    expect(toNoteLanguage('en-US@posix')).toBe('en');
+    expect(toNoteLanguage('de')).toBe('en');
+    expect(toNoteLanguage(undefined)).toBe('en');
+  });
+
+  it('picks the visitor language, then English, then whatever exists', () => {
+    const en = parseNote('a', 'English', 'en');
+    const nl = parseNote('a', 'Nederlands', 'nl');
+    const fr = parseNote('a', 'Français', 'fr');
+
+    expect(pickTranslation({ en, nl }, 'nl-BE')).toBe(nl);
+    expect(pickTranslation({ en, nl }, 'ja')).toBe(en);
+    expect(pickTranslation({ fr }, 'ja')).toBe(fr);
+    expect(pickTranslation({}, 'en')).toBeUndefined();
   });
 });

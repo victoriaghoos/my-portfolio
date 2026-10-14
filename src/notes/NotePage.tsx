@@ -8,7 +8,7 @@ import { formatNoteDate, getNote } from './notes';
 const NotePage = () => {
   const { slug } = useParams();
   const { t, i18n } = useTranslation();
-  const note = getNote(slug);
+  const note = getNote(slug, i18n.language);
 
   // Notes are my own Markdown files bundled at build time, so rendering their HTML is safe.
   const html = useMemo(
@@ -31,7 +31,7 @@ const NotePage = () => {
 
   return (
     <NotesLayout title={note.title} backTo="/notes" backLabel={t('notes.back_to_notes')}>
-      <article className="note-article">
+      <article className="note-article" lang={note.lang}>
         <header className="note-article-header">
           <div className="note-meta">
             <span className={`note-type type-${note.type}`}>{t(`notes.types.${note.type}`)}</span>

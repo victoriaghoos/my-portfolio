@@ -1,11 +1,16 @@
 import { memo, useMemo, useRef, useEffect, useState, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Cloud, Sparkles, Float } from '@react-three/drei';
+import { Cloud, Clouds, Sparkles, Float } from '@react-three/drei';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Github, Linkedin, Mail, ArrowUpCircle, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import useCanvasAnimationLoop, { type CanvasDrawArgs } from '../../hooks/useCanvasAnimationLoop';
 import '../../styles/sections/SocialsSection.scss';
+// Self-hosted copy of drei's default cloud sprite (drei otherwise fetches it from rawcdn.githack.com)
+import cloudTexture from '../../assets/images/cloud.png';
+
+const CLOUD_COUNT = 18;
+const CLOUD_SEGMENTS = 20;
 
 interface CloudPuffProps {
   position: [number, number, number];
@@ -19,7 +24,7 @@ const CloudPuff = ({ position, speed, opacity }: CloudPuffProps) => {
       position={position}
       opacity={opacity}
       speed={speed}
-      segments={20}
+      segments={CLOUD_SEGMENTS}
       color="#fff0f5"
       bounds={[6, 2, 2]}
       volume={10}
@@ -86,8 +91,7 @@ const SilkSkyScene = memo(function SilkSkyScene() {
       speed: number;
       opacity: number;
     }[] = [];
-    const cloudCount = 18;
-    for (let i = 0; i < cloudCount; i++) {
+    for (let i = 0; i < CLOUD_COUNT; i++) {
       const xPos = (Math.random() - 0.5) * 90;
       const distanceFromCenter = Math.abs(xPos);
       const yBase = -5;
@@ -120,19 +124,22 @@ const SilkSkyScene = memo(function SilkSkyScene() {
         color="#fff"
         position={[0, -2, 0]}
       />
-      <group position={[0, -10, -10]}>
-        <Float speed={reduceMotion ? 0 : 0.5} rotationIntensity={0.1} floatIntensity={0.2}>
-          {cloudPositions.map((cloud, i) => (
-            <group key={i} scale={cloud.scale}>
-              <CloudPuff
-                position={[cloud.x, cloud.y, cloud.z]}
-                speed={reduceMotion ? 0 : cloud.speed}
-                opacity={cloud.opacity}
-              />
-            </group>
-          ))}
-        </Float>
-      </group>
+      {/* One shared Clouds parent: a single instanced mesh for every puff, using the local texture */}
+      <Clouds texture={cloudTexture} limit={CLOUD_COUNT * CLOUD_SEGMENTS}>
+        <group position={[0, -10, -10]}>
+          <Float speed={reduceMotion ? 0 : 0.5} rotationIntensity={0.1} floatIntensity={0.2}>
+            {cloudPositions.map((cloud, i) => (
+              <group key={i} scale={cloud.scale}>
+                <CloudPuff
+                  position={[cloud.x, cloud.y, cloud.z]}
+                  speed={reduceMotion ? 0 : cloud.speed}
+                  opacity={cloud.opacity}
+                />
+              </group>
+            ))}
+          </Float>
+        </group>
+      </Clouds>
       <fog attach="fog" args={['#ffedd5', 5, 50]} />
     </>
   );

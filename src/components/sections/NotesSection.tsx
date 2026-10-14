@@ -3,14 +3,14 @@ import { ArrowRight, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import NotesStars from '../../notes/NotesStars';
-import { formatNoteDate, notes } from '../../notes/notes';
+import { formatNoteDate, getNotes } from '../../notes/notes';
 import '../../styles/sections/NotesSection.scss';
 
 const LATEST_COUNT = 3;
 
 const NotesSection = ({ id }: { id: string }) => {
   const { t, i18n } = useTranslation();
-  const latest = notes.slice(0, LATEST_COUNT);
+  const latest = getNotes(i18n.language).slice(0, LATEST_COUNT);
 
   if (latest.length === 0) return null;
 
@@ -41,7 +41,7 @@ const NotesSection = ({ id }: { id: string }) => {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.7, delay: 0.15 + index * 0.15, ease: 'easeOut' }}
             >
-              <Link to={`/notes/${note.slug}`} className="note-card">
+              <Link to={`/notes/${note.slug}`} className="note-card" lang={note.lang}>
                 <span className="note-card-shine" aria-hidden="true" />
                 <div className="note-card-meta">
                   <span className={`note-type type-${note.type}`}>
