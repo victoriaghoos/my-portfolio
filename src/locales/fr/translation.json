@@ -107,5 +107,27 @@
       "btn_pdf": "Version PDF",
       "scroll_hint": "Découvrez mes réseaux ci-dessous"
     }
+  },
+  "notes": {
+    "title": "Notes",
+    "subtitle": "Événements, hackathons & leçons apprises",
+    "intro": "De courts comptes rendus des événements, hackathons et projets auxquels je participe en tant qu’étudiante en dernière année d’ingénierie logicielle à Howest.",
+    "by": "par Victoria Ghoos",
+    "read_more": "Lire la suite",
+    "all_notes": "Toutes les notes",
+    "back_to_portfolio": "Portfolio",
+    "back_to_notes": "Toutes les notes",
+    "about_link": "En savoir plus sur moi",
+    "not_found": "Cette note n’existe pas (ou plus).",
+    "empty": "Pas encore de notes.",
+    "draft": "Brouillon",
+    "types": {
+      "event": "Événement",
+      "hackathon": "Hackathon",
+      "podcast": "Podcast",
+      "project": "Projet",
+      "site": "Site",
+      "other": "Note"
+    }
   }
 }

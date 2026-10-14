@@ -107,5 +107,27 @@
       "btn_pdf": "Get PDF Version",
       "scroll_hint": "Discover my socials below"
     }
+  },
+  "notes": {
+    "title": "Notes",
+    "subtitle": "Events, hackathons & lessons learned",
+    "intro": "Short write-ups of the events, hackathons and projects I take part in as a final-year software engineering student at Howest.",
+    "by": "by Victoria Ghoos",
+    "read_more": "Read note",
+    "all_notes": "All notes",
+    "back_to_portfolio": "Portfolio",
+    "back_to_notes": "All notes",
+    "about_link": "More about me",
+    "not_found": "This note doesn't exist (anymore).",
+    "empty": "No notes yet.",
+    "draft": "Draft",
+    "types": {
+      "event": "Event",
+      "hackathon": "Hackathon",
+      "podcast": "Podcast",
+      "project": "Project",
+      "site": "Site",
+      "other": "Note"
+    }
   }
 }

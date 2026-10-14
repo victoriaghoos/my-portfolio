@@ -107,5 +107,27 @@
       "btn_pdf": "PDF版を見る",
       "scroll_hint": "下記のリンクもぜひご覧ください"
     }
+  },
+  "notes": {
+    "title": "ノート",
+    "subtitle": "イベント・ハッカソン・学んだこと",
+    "intro": "Howestのソフトウェアエンジニアリング専攻の最終学年として参加したイベント、ハッカソン、プロジェクトの短い記録です。",
+    "by": "Victoria Ghoos",
+    "read_more": "続きを読む",
+    "all_notes": "すべてのノート",
+    "back_to_portfolio": "ポートフォリオ",
+    "back_to_notes": "すべてのノート",
+    "about_link": "プロフィールを見る",
+    "not_found": "このノートは存在しません。",
+    "empty": "まだノートはありません。",
+    "draft": "下書き",
+    "types": {
+      "event": "イベント",
+      "hackathon": "ハッカソン",
+      "podcast": "ポッドキャスト",
+      "project": "プロジェクト",
+      "site": "サイト",
+      "other": "ノート"
+    }
   }
 }

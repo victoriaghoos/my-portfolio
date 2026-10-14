@@ -107,5 +107,27 @@
       "btn_pdf": "PDF-versie bekijken",
       "scroll_hint": "Ontdek mijn socials hieronder"
     }
+  },
+  "notes": {
+    "title": "Notes",
+    "subtitle": "Events, hackathons & wat ik leerde",
+    "intro": "Korte verslagen van de events, hackathons en projecten waaraan ik deelneem als laatstejaarsstudent software engineering aan Howest.",
+    "by": "door Victoria Ghoos",
+    "read_more": "Lees verder",
+    "all_notes": "Alle notes",
+    "back_to_portfolio": "Portfolio",
+    "back_to_notes": "Alle notes",
+    "about_link": "Meer over mij",
+    "not_found": "Deze note bestaat niet (meer).",
+    "empty": "Nog geen notes.",
+    "draft": "Concept",
+    "types": {
+      "event": "Event",
+      "hackathon": "Hackathon",
+      "podcast": "Podcast",
+      "project": "Project",
+      "site": "Site",
+      "other": "Note"
+    }
   }
 }

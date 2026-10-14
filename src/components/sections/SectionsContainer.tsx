@@ -4,6 +4,7 @@ const AboutSection = lazy(() => import('./AboutSection'));
 const ProjectsSection = lazy(() => import('./ProjectsSection'));
 const SkillsSection = lazy(() => import('./SkillsSection'));
 const ResumeSection = lazy(() => import('./ResumeSection'));
+const NotesSection = lazy(() => import('./NotesSection'));
 const SocialsSection = lazy(() => import('./SocialsSection'));
 
 const SectionsContainer = () => {
@@ -20,6 +21,9 @@ const SectionsContainer = () => {
       </Suspense>
       <Suspense fallback={<div className="section-placeholder" />}>
         <ResumeSection id="resume-section" />
+      </Suspense>
+      <Suspense fallback={<div className="section-placeholder" />}>
+        <NotesSection id="notes-section" />
       </Suspense>
       <Suspense fallback={<div className="section-placeholder" />}>
         <SocialsSection id="socials-section" />

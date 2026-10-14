@@ -4,6 +4,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 
 const Home = lazy(() => import('./components/Home'));
+const NotesIndexPage = lazy(() => import('./notes/NotesIndexPage'));
+const NotePage = lazy(() => import('./notes/NotePage'));
+
+const routeFallback = <div className="section-placeholder" aria-hidden="true" />;
 
 function App() {
   return (
@@ -14,8 +18,24 @@ function App() {
           <Route
             path="/home"
             element={
-              <Suspense fallback={<div className="section-placeholder" aria-hidden="true" />}>
+              <Suspense fallback={routeFallback}>
                 <Home />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/notes"
+            element={
+              <Suspense fallback={routeFallback}>
+                <NotesIndexPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/notes/:slug"
+            element={
+              <Suspense fallback={routeFallback}>
+                <NotePage />
               </Suspense>
             }
           />

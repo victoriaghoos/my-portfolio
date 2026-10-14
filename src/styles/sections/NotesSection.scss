@@ -1,0 +1,202 @@
+@use '../notesTheme' as *;
+
+.notes-section {
+  scroll-snap-align: start;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  isolation: isolate;
+  font-family: 'Poppins', sans-serif;
+  // starts and ends on the same black as the Resume and Socials sections, so the seams disappear
+  background: linear-gradient(
+    to bottom,
+    $notes-space 0%,
+    $notes-deep 22%,
+    $notes-indigo 55%,
+    $notes-deep 82%,
+    $notes-space 100%
+  );
+
+  .notes-nebula {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 18% 35%, rgba($notes-cyan, 0.12) 0%, transparent 45%),
+      radial-gradient(ellipse at 82% 60%, rgba($notes-pink, 0.12) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 100%, rgba($notes-purple, 0.14) 0%, transparent 55%);
+    filter: blur(30px);
+  }
+
+  .notes-stars {
+    z-index: 1;
+  }
+
+  .notes-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    padding: 5rem clamp(1.25rem, 4vw, 2rem);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(2rem, 4vh, 3rem);
+  }
+
+  .notes-header {
+    text-align: center;
+
+    .notes-title {
+      @include notes-gradient-text;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+      filter: drop-shadow(0 0 12px rgba($notes-purple, 0.5));
+    }
+
+    .notes-underline {
+      @include notes-title-underline;
+    }
+
+    .notes-subtitle {
+      margin: 1.5rem 0 0;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+  }
+
+  .notes-grid {
+    width: 100%;
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    &.count-1 {
+      grid-template-columns: minmax(0, 420px);
+      justify-content: center;
+    }
+
+    &.count-2 {
+      grid-template-columns: repeat(2, minmax(0, 420px));
+      justify-content: center;
+    }
+
+    > div {
+      display: flex;
+    }
+  }
+
+  .note-card {
+    @include notes-glass-card;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 2vw, 1.75rem);
+    text-align: left;
+
+    h3 {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  .note-card-meta {
+    @include notes-meta-row;
+  }
+
+  .note-card-link {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: $notes-glow;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    svg {
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .note-card:hover .note-card-link svg,
+  .note-card:focus-visible .note-card-link svg {
+    transform: translateX(4px);
+  }
+
+  .notes-all-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 30px;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    background: rgba($notes-indigo, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+
+    svg {
+      color: $notes-glow;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background: $notes-indigo;
+      border-color: $notes-glow;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .notes-section {
+    .notes-grid,
+    .notes-grid.count-2 {
+      grid-template-columns: minmax(0, 520px);
+      justify-content: center;
+    }
+
+    .note-card p {
+      -webkit-line-clamp: 2;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notes-section .note-card,
+  .notes-section .note-card-shine,
+  .notes-section .notes-all-button {
+    transition: none;
+  }
+}
