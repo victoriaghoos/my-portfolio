@@ -11,7 +11,7 @@
     "greeting": "Hallo, ik ben <0>Victoria</0> 👋",
     "bio_p1": "Ik ben een <0>Belgische studente software engineering</0>. Wat begon als wat Python programmeren uit interesse, groeide al snel uit tot een serieuze passie. Voor de fun LeetCode-problemen oplossen bracht me uiteindelijk bij mijn graduaat aan Howest, waar ik <1>met grote onderscheiding</1> afstudeerde.",
     "bio_p2": "Momenteel volg ik een Bachelor Toegepaste Informatica met specialisatie software engineering. Ik combineer schoolprojecten met eigen projecten, zoals het bouwen van deze website. Buiten het coderen leer ik <0>Japans (JLPT N4)</0>, ga ik graag wandelen in de Belgische natuur en neem ik foto’s.",
-    "bio_p3": "Ik werk toe naar een <0>stage in Tokio in 2027</0> en plan om na mijn afstuderen naar Chiba te verhuizen. Ik hou ervan om technische nauwkeurigheid te combineren met creativiteit, of dat nu in code is of achter de camera."
+    "bio_p3": "In februari 2027 start ik mijn <0>stage bij DLC in België</0>, met als doel op lange termijn om naar Japan te verhuizen. Ik hou ervan om technische nauwkeurigheid te combineren met creativiteit, of dat nu in code is of achter de camera."
   },
   "projects": "Projecten",
   "classified": "GECLASSIFICEERD",
@@ -65,7 +65,7 @@
     },
     "p1": {
       "title": "Professioneel Profiel",
-      "text": "Laatstejaarsstudent software engineering, met een afgeronde programmeeropleiding en een stage achter de rug. Ik bouw backends in Python en C# en frontends in React, Vue en TypeScript, en wat me het meest interesseert is hoe de structuur van een systeem bepaalt hoe ver het kan groeien. Mijn hoofdproject is een routeplanningsengine over 20 miljoen kaartknooppunten, gebouwd volgens een hexagonale architectuur. Onlangs leverde ik een tweetalige productiewebsite op voor een klant in Tokio. Beschikbaar in Japan vanaf februari 2027."
+      "text": "Laatstejaarsstudent software engineering, met een afgeronde programmeeropleiding en een stage achter de rug. Ik bouw backends in Python en C# en frontends in React, Vue en TypeScript, en wat me het meest interesseert is hoe de structuur van een systeem bepaalt hoe ver het kan groeien. Mijn hoofdproject is een routeplanningsengine over 20 miljoen kaartknooppunten, gebouwd volgens een hexagonale architectuur. Onlangs leverde ik een tweetalige productiewebsite op voor een klant in Tokio. Vanaf februari 2027 loop ik stage als software engineer bij DLC in België."
     },
     "p2": {
       "title": "Graduaat",
@@ -95,8 +95,8 @@
     },
     "p5": {
       "title": "Goals?",
-      "target_title": "Hoofddoel: Japan (2027)",
-      "target_text": "Mijn doel is een software engineering-stage in de regio Tokio/Osaka zien te vinden.",
+      "target_title": "Volgende stap: stage bij DLC (2027)",
+      "target_text": "Software engineering-stage bij DLC in België, vanaf februari 2027.",
       "readiness_title": "Waar ik nu aan werk",
       "list_jp": "<1>Japans:</1> Actief bezig met JLPT N4.",
       "list_tech": "<1>Technisch:</1> Mijn full-stack kennis verder uitbouwen en werken aan persoonlijke projecten."

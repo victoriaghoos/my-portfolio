@@ -11,7 +11,7 @@
     "greeting": "Hello, I'm <0>Victoria</0> 👋",
     "bio_p1": "I'm a <0>Belgian software engineering student</0> with a passion that grew from hobbyist Python coding into a professional career path. What started as solving LeetCode problems for fun led me to pursue an associate's degree at Howest, where I graduated <1>with high honors</1>.",
     "bio_p2": "Currently further expanding my skills with a Bachelor of Applied Computer Science specializing in software engineering, I'm balancing academic projects with personal ventures like building this website. When I'm not coding, you'll find me <0>learning Japanese N4</0>, hiking the Belgian countryside, or capturing moments through photography.",
-    "bio_p3": "I'm actively working toward my goal of a <0>Tokyo internship in 2027</0>, with plans to relocate permanently to Chiba after graduation. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture."
+    "bio_p3": "I'm starting my <0>internship at DLC in Belgium in February 2027</0>, with the long-term goal of relocating to Japan. I believe in blending technical precision with creative expression, whether I'm debugging code or composing the perfect picture."
   },
   "projects": "Projects",
   "classified": "CLASSIFIED",
@@ -65,7 +65,7 @@
     },
     "p1": {
       "title": "Professional Profile",
-      "text": "Software engineering student in my final year, with a completed programming degree and an internship behind me. I build backends in Python and C# and frontends in React, Vue and TypeScript, and I care most about the part where a system's structure decides how far it can grow. My main project is a route planning engine over 20 million map nodes, built in a hexagonal architecture. I recently delivered a bilingual production website for a client in Tokyo. Available in Japan from February 2027."
+      "text": "Software engineering student in my final year, with a completed programming degree and an internship behind me. I build backends in Python and C# and frontends in React, Vue and TypeScript, and I care most about the part where a system's structure decides how far it can grow. My main project is a route planning engine over 20 million map nodes, built in a hexagonal architecture. I recently delivered a bilingual production website for a client in Tokyo. Starting a software engineering internship at DLC in Belgium in February 2027."
     },
     "p2": {
       "title": "Associate Degree",
@@ -95,8 +95,8 @@
     },
     "p5": {
       "title": "Goals?",
-      "target_title": "Primary Target: Japan (2027)",
-      "target_text": "Securing a Software Engineering internship in the Tokyo/Osaka region.",
+      "target_title": "Next Step: DLC Internship (2027)",
+      "target_text": "Software engineering internship at DLC in Belgium, starting February 2027.",
       "readiness_title": "Skills in Progress",
       "list_jp": "<1>Japanese:</1> Currently JLPT N4 level (Active study).",
       "list_tech": "<1>Technical:</1> Expanding Full-stack expertise and building on personal projects."
