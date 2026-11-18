@@ -22,6 +22,8 @@ export interface Note {
   location?: string;
   excerpt: string;
   cover?: string;
+  /** Alt text for the cover photo. Without it the cover is treated as decorative. */
+  coverAlt?: string;
   draft: boolean;
   body: string;
 }
@@ -59,6 +61,7 @@ export const parseNote = (
     location: meta.location || undefined,
     excerpt: meta.excerpt || '',
     cover: meta.cover || undefined,
+    coverAlt: meta.coverAlt || undefined,
     draft: meta.draft === 'true',
     body: body.trim(),
   };

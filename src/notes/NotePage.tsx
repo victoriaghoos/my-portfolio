@@ -43,7 +43,17 @@ const NotePage = () => {
           <div className="notes-underline" />
         </header>
 
-        {note.cover && <img className="note-cover" src={note.cover} alt="" />}
+        {note.cover && (
+          // Every cover is a 4:3 photo. width/height let the browser reserve the space before the
+          // image loads, so the text below doesn't jump down (CLS).
+          <img
+            className="note-cover"
+            src={note.cover}
+            alt={note.coverAlt ?? ''}
+            width={1600}
+            height={1200}
+          />
+        )}
 
         <div className="note-prose" dangerouslySetInnerHTML={{ __html: html }} />
       </article>

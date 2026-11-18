@@ -14,7 +14,7 @@ interface NotesLayoutProps {
 }
 
 const NotesLayout = ({ title, backTo, backLabel, children }: NotesLayoutProps) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     document.title = `${title} · Victoria Ghoos`;
@@ -25,6 +25,9 @@ const NotesLayout = ({ title, backTo, backLabel, children }: NotesLayoutProps) =
 
   return (
     <div className="notes-page" lang={i18n.language}>
+      <a className="skip-link" href="#main">
+        {t('a11y.skip_to_content')}
+      </a>
       <div className="notes-page-bg" aria-hidden="true" />
       <NotesStars count={260} className="notes-page-stars" />
 
@@ -36,7 +39,9 @@ const NotesLayout = ({ title, backTo, backLabel, children }: NotesLayoutProps) =
       </header>
       <LanguageSelector />
 
-      <main className="notes-main">{children}</main>
+      <main id="main" tabIndex={-1} className="notes-main">
+        {children}
+      </main>
 
       <footer className="notes-footer">© 2026 Victoria Ghoos</footer>
     </div>
