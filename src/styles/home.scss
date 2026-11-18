@@ -349,7 +349,6 @@ body {
   font-weight: 600;
   letter-spacing: 2px;
   transition: all 0.3s ease;
-  outline: none;
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
@@ -433,6 +432,39 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+// Keyboard version of the 3D hub: hidden until one of its buttons gets focus, then shown near the
+// bottom of the hub, just above the "drag to rotate" hint (which is for mouse users).
+.hub-keyboard-nav {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  z-index: 30;
+  display: flex;
+  gap: 10px;
+  transform: translateX(-50%);
+
+  &:not(:focus-within) {
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  button {
+    padding: 10px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    background: rgba(11, 14, 20, 0.85);
+    color: #fff;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
   }
 }
 
