@@ -28,7 +28,7 @@ describe('LanguageSelector', () => {
     const user = userEvent.setup();
     renderSelector();
 
-    await user.click(screen.getByRole('button', { name: /select language/i }));
+    await user.click(screen.getByRole('button', { name: /language: en/i }));
 
     expect(screen.getByText('Nederlands')).toBeInTheDocument();
     expect(screen.getByText('Français')).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe('LanguageSelector', () => {
     const user = userEvent.setup();
     renderSelector();
 
-    await user.click(screen.getByRole('button', { name: /select language/i }));
+    await user.click(screen.getByRole('button', { name: /language: en/i }));
     await user.click(screen.getByText('Français'));
 
     expect(i18n.language).toBe('fr');
@@ -47,11 +47,46 @@ describe('LanguageSelector', () => {
     expect(screen.queryByText('Nederlands')).not.toBeInTheDocument();
   });
 
+  it('names the button with the visible language code and reports whether it is open', async () => {
+    const user = userEvent.setup();
+    renderSelector();
+
+    const button = screen.getByRole('button', { name: 'Language: EN' });
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+
+    await user.click(button);
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText('Nederlands')).toHaveAttribute('lang', 'nl');
+    expect(screen.getByText('English')).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('closes the dropdown with Escape and puts the focus back on the button', async () => {
+    const user = userEvent.setup();
+    renderSelector();
+
+    const button = screen.getByRole('button', { name: 'Language: EN' });
+    await user.click(button);
+    await user.keyboard('{Escape}');
+
+    expect(screen.queryByText('Nederlands')).not.toBeInTheDocument();
+    expect(button).toHaveFocus();
+  });
+
+  it('keeps the page language (html lang) in sync with the chosen language', async () => {
+    const user = userEvent.setup();
+    renderSelector();
+
+    await user.click(screen.getByRole('button', { name: 'Language: EN' }));
+    await user.click(screen.getByText('日本語'));
+
+    expect(document.documentElement.lang).toBe('ja');
+  });
+
   it('closes the dropdown when clicking outside of it', async () => {
     const user = userEvent.setup();
     renderSelector();
 
-    await user.click(screen.getByRole('button', { name: /select language/i }));
+    await user.click(screen.getByRole('button', { name: /language: en/i }));
     expect(screen.getByText('Nederlands')).toBeInTheDocument();
 
     await user.click(document.body);

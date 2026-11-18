@@ -26,6 +26,16 @@ describe('parseNote', () => {
     expect(note.body).toBe('## Heading\n\nBody text');
   });
 
+  it('reads the alt text of the cover photo', () => {
+    const note = parseNote(
+      'with-cover',
+      '---\ncover: /notes-media/x/cover.webp\ncoverAlt: Speaker next to a slide\n---\nBody',
+    );
+    expect(note.cover).toBe('/notes-media/x/cover.webp');
+    expect(note.coverAlt).toBe('Speaker next to a slide');
+    expect(parseNote('no-alt', '---\ncover: /c.webp\n---\n').coverAlt).toBeUndefined();
+  });
+
   it('falls back to safe defaults', () => {
     const note = parseNote('plain', 'Just text');
     expect(note).toMatchObject({ title: 'plain', type: 'other', draft: false, body: 'Just text' });
