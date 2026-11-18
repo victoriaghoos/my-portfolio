@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import routineTrack from '../assets/music/Routine.mp3';
 import { Volume2, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const MusicPlayer = () => {
+  const { t } = useTranslation();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -47,13 +49,18 @@ const MusicPlayer = () => {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       className={`music-player-pill ${isPlaying ? 'active' : ''}`}
-      aria-label={isPlaying ? 'Mute background audio' : 'Play background audio'}
-      aria-pressed={isPlaying}
+      // The name starts with the visible status text, so voice users can say what they see
+      // (WCAG 2.5.3), followed by what pressing the button does.
+      aria-label={
+        isPlaying
+          ? `${t('music.playing')}: ${t('music.mute')}`
+          : `${t('music.muted')}: ${t('music.play')}`
+      }
       onClick={togglePlay}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="icon-wrapper">
+      <div className="icon-wrapper" aria-hidden="true">
         {isPlaying ? <Volume2 size={16} /> : <VolumeX size={16} />}
       </div>
 
@@ -70,7 +77,7 @@ const MusicPlayer = () => {
               exit={{ opacity: 0, y: -10 }}
               className="music-status"
             >
-              AUDIO MUTED
+              {t('music.muted')}
             </motion.span>
           ) : isHovered ? (
             <motion.span
@@ -90,14 +97,14 @@ const MusicPlayer = () => {
               exit={{ opacity: 0, y: -10 }}
               className="music-status"
             >
-              LO-FI
+              {t('music.playing')}
             </motion.span>
           )}
         </AnimatePresence>
       </div>
 
       {isPlaying && (
-        <div className="visualizer">
+        <div className="visualizer" aria-hidden="true">
           <div className="bar"></div>
           <div className="bar"></div>
           <div className="bar"></div>

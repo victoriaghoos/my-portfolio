@@ -324,7 +324,9 @@ const ProjectsSection = ({ id }: { id: string }) => {
                     </div>
                   </div>
 
-                  <div className="player-controls">
+                  {/* Decoration in the style of a music player: these buttons don't do anything,
+                      so they're hidden from screen readers and skipped by Tab */}
+                  <div className="player-controls" aria-hidden="true">
                     <button
                       type="button"
                       aria-label="Previous project (unavailable)"
@@ -336,6 +338,7 @@ const ProjectsSection = ({ id }: { id: string }) => {
                     <motion.button
                       className="main-play-btn"
                       type="button"
+                      tabIndex={-1}
                       whileTap={{ scale: 0.9 }}
                       style={{ '--accent-color': project.color } as CSSProperties}
                     >

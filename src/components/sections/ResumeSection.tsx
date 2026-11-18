@@ -26,6 +26,7 @@ import {
 import { motion } from 'framer-motion';
 import '../../styles/sections/ResumeSection.scss';
 import resumePDF from '../../assets/files/Resume2026.pdf';
+import { scrollToSection } from '../../utils/scrollToSection';
 
 const ResumeStarsCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -361,14 +362,12 @@ const ResumeSection = ({ id }: { id: string }) => {
   }, [currentPage, isMobile]);
 
   const scrollToSocials = () => {
-    const socialsSection = document.getElementById('socials-section');
-    if (socialsSection) {
-      socialsSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToSection(document.getElementById('socials-section'));
   };
 
   return (
     <section id={id} className="resume-section">
+      <h2 className="sr-only">{t('resume')}</h2>
       <StarBackground />
 
       {isMobile ? (
@@ -383,7 +382,7 @@ const ResumeSection = ({ id }: { id: string }) => {
             <div className="icon-circle">
               <Code size={40} className="mobile-icon" />
             </div>
-            <h1 className="mobile-title">Victoria</h1>
+            <p className="mobile-title">Victoria</p>
             <p className="mobile-subtitle">{t('resume_content.cover.subtitle')}</p>
 
             <div className="mobile-divider"></div>
@@ -484,13 +483,13 @@ const ResumeSection = ({ id }: { id: string }) => {
                   </div>
 
                   <div className="cover-text-group">
-                    <h1 className="book-title">Victoria</h1>
+                    <p className="book-title">Victoria</p>
                     <div className="title-separator">
                       <span className="dot"></span>
                       <span className="line"></span>
                       <span className="dot"></span>
                     </div>
-                    <h2 className="book-subtitle">{t('resume_content.cover.subtitle')}</h2>
+                    <p className="book-subtitle">{t('resume_content.cover.subtitle')}</p>
                     <div className="edition-badge">{t('resume_content.cover.edition')}</div>
                   </div>
                 </div>

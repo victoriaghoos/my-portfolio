@@ -10,6 +10,7 @@ import { isWebGLAvailable, useContextLossHandler } from '../webgl/webgl';
 import '../../styles/sections/SocialsSection.scss';
 // Self-hosted copy of drei's default cloud sprite (drei otherwise fetches it from rawcdn.githack.com)
 import cloudTexture from '../../assets/images/cloud.png';
+import { scrollToSection } from '../../utils/scrollToSection';
 
 const CLOUD_COUNT = 18;
 const CLOUD_SEGMENTS = 20;
@@ -197,10 +198,8 @@ const SocialsSection = ({ id }: { id: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleFlyToCosmos = () => {
-    const home = document.getElementById('home-3d');
-    if (home) {
-      home.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    // back to the top, with the focus on <main> so the next Tab starts at the top too
+    scrollToSection(document.getElementById('main'));
   };
 
   useEffect(() => {

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, type RefObject } from 'react';
 import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { Html, useTexture, Float, useCursor } from '@react-three/drei';
 import * as THREE from 'three';
+import { useReducedMotion } from 'framer-motion';
 
 export interface PanelIcon {
   id: string;
@@ -238,6 +239,7 @@ const InteractivePanel = ({
   const panelPositionRef = useRef(new THREE.Vector3());
   const pngTexture = useTexture(icon.png);
   const [hovered, setHovered] = useState(false);
+  const reduceMotion = useReducedMotion();
   const { camera } = useThree();
   const { labelVisible, updateLabelVisibility } = useLabelVisibility(camera);
   const { playVideo, resetVideo, updateVideoTexture, videoTexture } = usePanelVideoTexture(
@@ -307,7 +309,12 @@ const InteractivePanel = ({
 
   return (
     <group ref={ref} position={position}>
-      <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
+      {/* the rings stop bobbing for visitors who prefer reduced motion */}
+      <Float
+        speed={reduceMotion ? 0 : 1.5}
+        rotationIntensity={reduceMotion ? 0 : 0.5}
+        floatIntensity={reduceMotion ? 0 : 0.5}
+      >
         <mesh ref={ringRef}>
           <ringGeometry args={[ringInner, ringOuter, 32]} />
           <meshBasicMaterial

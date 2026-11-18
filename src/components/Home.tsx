@@ -14,7 +14,7 @@ import { suspend } from 'suspend-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useTranslation } from 'react-i18next';
 import { Environment, Preload } from '@react-three/drei';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import * as THREE from 'three';
 import '../styles/home.scss';
@@ -40,6 +40,7 @@ import { isWebGLAvailable, useContextLossHandler } from './webgl/webgl';
 import hologramImage from '../assets/images/hologram.png';
 import OutlineStars from './OutlineStars';
 import SectionsContainer from './sections/SectionsContainer';
+import { scrollToSection } from '../utils/scrollToSection';
 
 import catPoints from '../catPoints.json';
 import cameraPoints from '../cameraPoints.json';
@@ -123,6 +124,7 @@ const RotatingPanels = memo(function RotatingPanels({
   const panelsGroupRef = useRef<THREE.Group>(null);
   const introStartTimeRef = useRef<number | null>(null);
   const introSpeedRef = useRef(0.6);
+  const reduceMotion = useReducedMotion();
 
   useFrame(({ clock }, delta) => {
     if (!panelsGroupRef.current) {
@@ -134,7 +136,10 @@ const RotatingPanels = memo(function RotatingPanels({
       return;
     }
 
-    if (!initialRotationComplete) {
+    if (!initialRotationComplete && reduceMotion) {
+      // no spinning intro for visitors who prefer reduced motion
+      onInitialRotationComplete();
+    } else if (!initialRotationComplete) {
       if (introStartTimeRef.current === null) {
         introStartTimeRef.current = clock.getElapsedTime();
       }
@@ -240,6 +245,7 @@ const SceneContent = memo(function SceneContent({
   webglFailed: boolean;
   onWebglFailure: () => void;
 }) {
+  const { t } = useTranslation();
   const navEnabled = show3DNav && isInView;
   const handleCanvasCreated = useContextLossHandler(onWebglFailure);
 
@@ -345,8 +351,9 @@ const SceneContent = memo(function SceneContent({
       )}
 
       {!show3DNav && (
-        <motion.div
+        <motion.nav
           className="static-menu-overlay mobile-home-layout"
+          aria-label={t('a11y.sections_nav')}
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
@@ -360,7 +367,8 @@ const SceneContent = memo(function SceneContent({
                 style={{ '--item-color': `#${icon.color.getHexString()}` } as CSSProperties}
               >
                 <div className="icon-wrapper">
-                  <img src={icon.png} alt={icon.label} decoding="async" />
+                  {/* decorative: the label below already names the button */}
+                  <img src={icon.png} alt="" decoding="async" />
                 </div>
                 <span className="label" style={{ userSelect: 'none' }}>
                   {icon.label}
@@ -368,7 +376,19 @@ const SceneContent = memo(function SceneContent({
               </button>
             ))}
           </div>
-        </motion.div>
+        </motion.nav>
+      )}
+
+      {show3DNav && (
+        // The 3D icons live in a WebGL canvas, which keyboards and screen readers can't reach.
+        // This menu offers the same five destinations; it stays hidden until it gets focus.
+        <nav className="hub-keyboard-nav" aria-label={t('a11y.sections_nav')}>
+          {icons.map((icon) => (
+            <button key={icon.id} type="button" onClick={() => handleIconClick(icon.id)}>
+              {icon.label}
+            </button>
+          ))}
+        </nav>
       )}
     </div>
   );
@@ -388,7 +408,7 @@ const useScrollToHash = () => {
     const tryScroll = () => {
       const target = document.getElementById(id);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollToSection(target);
       } else if (performance.now() - startedAt < 5000) {
         frame = requestAnimationFrame(tryScroll);
       }
@@ -570,16 +590,6 @@ const Home = () => {
     setInitialRotationComplete((prev) => (prev ? prev : true));
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
-
   const handleIconClick = useCallback((iconId: string) => {
     const sectionMap: Record<string, string> = {
       About: 'about-section',
@@ -588,7 +598,7 @@ const Home = () => {
       Resume: 'resume-section',
       Socials: 'socials-section',
     };
-    scrollToSection(sectionMap[iconId]);
+    scrollToSection(document.getElementById(sectionMap[iconId]));
   }, []);
 
   // pointerup fires before native mouseup, so this beats the shockwave check
@@ -667,55 +677,64 @@ const Home = () => {
   return (
     <>
       <div className="main-container">
-        <LanguageSelector />
-        <MusicPlayer />
+        <a className="skip-link" href="#main">
+          {t('a11y.skip_to_content')}
+        </a>
+        <header>
+          <LanguageSelector />
+          <MusicPlayer />
+        </header>
 
-        {/* oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- drag-to-rotate is a pointer-only enhancement; every icon stays reachable via its own button/click handler */}
-        <section
-          ref={homeRef}
-          className="home-3d"
-          onMouseDown={
-            show3DNav && isInView
-              ? (e) => {
-                  if (!initialRotationComplete) return;
-                  dragRef.current.dragging = true;
-                  setIsDragging(true);
-                  dragRef.current.hasDraggedThisGesture = false;
-                  dragRef.current.clickedPanel = false;
-                  dragRef.current.startX = e.clientX;
-                  dragRef.current.startY = e.clientY;
-                  dragRef.current.startRot = targetRotationYRef.current;
-                }
-              : undefined
-          }
-          style={{
-            cursor: show3DNav ? (isDragging ? 'grabbing' : 'grab') : 'default',
-          }}
-        >
-          <SceneContent
-            eventSource={homeRef}
-            nightSkyRef={nightSkyRef}
-            show3DNav={show3DNav}
-            initialRotationComplete={initialRotationComplete}
-            hasDragged={hasDragged}
-            icons={icons}
-            scalingConfig={scalingConfig}
-            active={active}
-            setActive={setActive}
-            panelPositions={panelPositions}
-            handleIconClick={handleIconClick}
-            onPanelPointerUp={markPanelPointerUp}
-            isInView={isInView}
-            constellationScales={constellationScales}
-            onInitialRotationComplete={markInitialRotationComplete}
-            rotationYRef={rotationYRef}
-            targetRotationYRef={targetRotationYRef}
-            webglFailed={webglFailed}
-            onWebglFailure={handleWebglFailure}
-          />
-        </section>
+        <main id="main" tabIndex={-1}>
+          <h1 className="sr-only">{t('a11y.home_heading')}</h1>
 
-        <SectionsContainer />
+          {/* oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- drag-to-rotate is a pointer-only enhancement; every icon stays reachable via its own button/click handler */}
+          <section
+            ref={homeRef}
+            className="home-3d"
+            onMouseDown={
+              show3DNav && isInView
+                ? (e) => {
+                    if (!initialRotationComplete) return;
+                    dragRef.current.dragging = true;
+                    setIsDragging(true);
+                    dragRef.current.hasDraggedThisGesture = false;
+                    dragRef.current.clickedPanel = false;
+                    dragRef.current.startX = e.clientX;
+                    dragRef.current.startY = e.clientY;
+                    dragRef.current.startRot = targetRotationYRef.current;
+                  }
+                : undefined
+            }
+            style={{
+              cursor: show3DNav ? (isDragging ? 'grabbing' : 'grab') : 'default',
+            }}
+          >
+            <SceneContent
+              eventSource={homeRef}
+              nightSkyRef={nightSkyRef}
+              show3DNav={show3DNav}
+              initialRotationComplete={initialRotationComplete}
+              hasDragged={hasDragged}
+              icons={icons}
+              scalingConfig={scalingConfig}
+              active={active}
+              setActive={setActive}
+              panelPositions={panelPositions}
+              handleIconClick={handleIconClick}
+              onPanelPointerUp={markPanelPointerUp}
+              isInView={isInView}
+              constellationScales={constellationScales}
+              onInitialRotationComplete={markInitialRotationComplete}
+              rotationYRef={rotationYRef}
+              targetRotationYRef={targetRotationYRef}
+              webglFailed={webglFailed}
+              onWebglFailure={handleWebglFailure}
+            />
+          </section>
+
+          <SectionsContainer />
+        </main>
       </div>
     </>
   );
