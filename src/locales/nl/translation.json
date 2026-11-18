@@ -129,5 +129,18 @@
       "site": "Site",
       "other": "Note"
     }
+  },
+  "a11y": {
+    "skip_to_content": "Ga naar de hoofdinhoud",
+    "home_heading": "Victoria Ghoos, software engineer",
+    "sections_nav": "Secties",
+    "language": "Taal",
+    "photo_alt": "Portret van Victoria Ghoos"
+  },
+  "music": {
+    "muted": "Audio uit",
+    "playing": "Lo-fi",
+    "play": "achtergrondmuziek afspelen",
+    "mute": "achtergrondmuziek dempen"
   }
 }

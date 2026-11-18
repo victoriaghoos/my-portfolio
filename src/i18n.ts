@@ -14,6 +14,14 @@ const resources = {
   ja: { translation: translationJA },
 };
 
+// Keep <html lang> in sync with the chosen language, so screen readers pronounce the page in the
+// right language (WCAG 3.1.1). Registered before init, so the detected language is set too.
+i18n.on('languageChanged', (lng) => {
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = i18n.resolvedLanguage || lng;
+  }
+});
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)

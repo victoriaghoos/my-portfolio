@@ -129,5 +129,18 @@
       "site": "Site",
       "other": "Note"
     }
+  },
+  "a11y": {
+    "skip_to_content": "Aller au contenu principal",
+    "home_heading": "Victoria Ghoos, ingénieure logiciel",
+    "sections_nav": "Sections",
+    "language": "Langue",
+    "photo_alt": "Portrait de Victoria Ghoos"
+  },
+  "music": {
+    "muted": "Son coupé",
+    "playing": "Lo-fi",
+    "play": "lancer la musique de fond",
+    "mute": "couper la musique de fond"
   }
 }

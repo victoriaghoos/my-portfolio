@@ -129,5 +129,18 @@
       "site": "サイト",
       "other": "ノート"
     }
+  },
+  "a11y": {
+    "skip_to_content": "メインコンテンツへスキップ",
+    "home_heading": "Victoria Ghoos（ソフトウェアエンジニア）",
+    "sections_nav": "セクション",
+    "language": "言語",
+    "photo_alt": "Victoria Ghoosのポートレート"
+  },
+  "music": {
+    "muted": "音声オフ",
+    "playing": "Lo-fi",
+    "play": "BGMを再生",
+    "mute": "BGMを停止"
   }
 }
