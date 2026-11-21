@@ -40,15 +40,26 @@ export const getNote = (slug: string | undefined, language: string | undefined) 
 
 const DATE_OPTIONS: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
 
+// Creating an Intl.DateTimeFormat is slow (it loads locale data), so one per language is kept
+const dateFormatters = new Map<string, Intl.DateTimeFormat>();
+const getDateFormatter = (language: string) => {
+  let formatter = dateFormatters.get(language);
+  if (!formatter) {
+    try {
+      formatter = new Intl.DateTimeFormat(language, DATE_OPTIONS);
+    } catch {
+      // the language detector can hand us tags Intl rejects (e.g. "en-US@posix")
+      formatter = new Intl.DateTimeFormat('en', DATE_OPTIONS);
+    }
+    dateFormatters.set(language, formatter);
+  }
+  return formatter;
+};
+
 export const formatNoteDate = (date: string, language: string) => {
   const parsed = new Date(`${date}T00:00:00`);
   if (Number.isNaN(parsed.getTime())) return date;
-  try {
-    return new Intl.DateTimeFormat(language, DATE_OPTIONS).format(parsed);
-  } catch {
-    // the language detector can hand us tags Intl rejects (e.g. "en-US@posix")
-    return new Intl.DateTimeFormat('en', DATE_OPTIONS).format(parsed);
-  }
+  return getDateFormatter(language).format(parsed);
 };
 
 export type { Note };
