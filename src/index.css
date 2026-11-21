@@ -24,6 +24,10 @@ code {
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+  /* its own colours: otherwise it inherits black, and contrast checkers (WAVE) flag black on
+     the dark page even though the text is never shown */
+  color: #fff;
+  background-color: #000;
 }
 
 /* One clearly visible focus ring for keyboard users on every interactive element (WCAG 2.4.7).
