@@ -68,7 +68,8 @@ const MusicPlayer = () => {
         className="text-container"
         style={{ position: 'relative', overflow: 'hidden', minWidth: '40px' }}
       >
-        <AnimatePresence mode="wait">
+        {/* initial={false}: the first label is there immediately, the animation is for changes */}
+        <AnimatePresence mode="wait" initial={false}>
           {!isPlaying ? (
             <motion.span
               key="muted"
