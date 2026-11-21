@@ -18,18 +18,11 @@
     <link rel="apple-touch-icon" href="/logo192.png" />
     <link rel="manifest" href="/manifest.json" />
     <!--
-      The hologram photo is the largest thing on screen on phones and tablets (the LCP element).
-      Without this the browser only finds it after the JS has run. The media query matches the
-      devices that get the static photo instead of the 3D hub (see show3DNav in Home.tsx), so
-      desktops with the 3D hub don't fetch it this early.
+      The hologram photo is the largest thing on screen (the LCP element): every device shows it
+      first, desktops until the 3D hub has loaded (which then uses it as a texture). Without this
+      the browser only finds it after the JS has run.
     -->
-    <link
-      rel="preload"
-      as="image"
-      href="/src/assets/images/hologram.webp"
-      fetchpriority="high"
-      media="(max-width: 1023.98px), not all and (pointer: fine), not all and (hover: hover)"
-    />
+    <link rel="preload" as="image" href="/src/assets/images/hologram.webp" fetchpriority="high" />
     <style>
       body,
       html {
