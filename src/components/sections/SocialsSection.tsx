@@ -101,7 +101,7 @@ const SocialsSection = ({ id }: { id: string }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
   // The clouds are decoration: without WebGL the section keeps its gradient and stars.
-  const [webglFailed, setWebglFailed] = useState(() => !isWebGLAvailable());
+  const [webglFailed, setWebglFailed] = useState(false);
   const handleWebglFailure = useCallback(() => setWebglFailed(true), []);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -144,13 +144,17 @@ const SocialsSection = ({ id }: { id: string }) => {
     return () => observer.disconnect();
   }, []);
 
+  // Probed only once the clouds are about to be shown: the probe creates a real WebGL context,
+  // which on a phone costs tens of milliseconds while the page is still loading
+  const webglUnavailable = useMemo(() => hasBeenVisible && !isWebGLAvailable(), [hasBeenVisible]);
+
   const { t } = useTranslation();
   return (
     <section id={id} className="socials-section">
       <div className="transition-gradient-top"></div>
       <div className="canvas-container" ref={containerRef}>
         <SocialsStarsCanvas />
-        {hasBeenVisible && !webglFailed && (
+        {hasBeenVisible && !webglUnavailable && !webglFailed && (
           <Suspense fallback={null}>
             <SocialsSky isVisible={isVisible} onWebglFailure={handleWebglFailure} />
           </Suspense>
