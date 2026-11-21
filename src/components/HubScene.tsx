@@ -1,7 +1,7 @@
 // The WebGL part of the hub: rotating 3D icons, the hologram photo and the constellations.
 // It's a separate chunk that only loads on desktop with a mouse, because three.js and the
 // point clouds are by far the heaviest part of the site. Phones and tablets get a plain image.
-import { memo, Suspense, useEffect, useRef, type MutableRefObject, type RefObject } from 'react';
+import { memo, Suspense, useRef, type MutableRefObject, type RefObject } from 'react';
 import { suspend } from 'suspend-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Environment, Preload } from '@react-three/drei';
@@ -155,18 +155,7 @@ export interface HubSceneProps {
   rotationYRef: MutableRefObject<number>;
   targetRotationYRef: MutableRefObject<number>;
   onWebglFailure: () => void;
-  /** Called once everything inside the scene has loaded, so Home can fade out the photo */
-  onReady: () => void;
 }
-
-// Mounts together with the rest of the scene, i.e. only after every texture and the
-// environment map have loaded (they all suspend the same boundary)
-const ReadySignal = ({ onReady }: { onReady: () => void }) => {
-  useEffect(() => {
-    onReady();
-  }, [onReady]);
-  return null;
-};
 
 const HubScene = ({
   eventSource,
@@ -185,7 +174,6 @@ const HubScene = ({
   rotationYRef,
   targetRotationYRef,
   onWebglFailure,
-  onReady,
 }: HubSceneProps) => {
   const handleCanvasCreated = useContextLossHandler(onWebglFailure);
 
@@ -277,7 +265,6 @@ const HubScene = ({
           )}
 
           <Preload all />
-          <ReadySignal onReady={onReady} />
         </Suspense>
       </Canvas>
     </CanvasErrorBoundary>
