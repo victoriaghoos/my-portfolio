@@ -104,6 +104,17 @@ interface ShootingStar {
   size: number;
 }
 
+interface Sparkle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  maxLife: number;
+  size: number;
+  twinkleOffset: number;
+}
+
 interface Shockwave {
   x: number;
   y: number;
@@ -432,20 +443,42 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
       if (!lite) window.addEventListener('mousemove', onMouseMoveParallax, { passive: true });
 
       const shooting: ShootingStar[] = [];
-      const maxShooting = 4;
+      // Rare enough to feel special: one every 3 to 8 seconds (in time, so the same at 20 and
+      // 30 fps), the first soon after the page opens, at most two at once
+      const maxShooting = 2;
+      const SHOOTING_MIN_GAP = 3;
+      const SHOOTING_EXTRA_GAP = 5;
+      let nextShootingAt = -1;
+      // sparks that fall off a shooting star's head and linger for a moment
+      const sparkles: Sparkle[] = [];
+      const maxSparkles = 140;
+      const SPARKLES_PER_SECOND = 70;
+      // Like a real meteor shower, every shooting star flies away from one point (the radiant),
+      // so they fan out instead of all running parallel. The radiant sits just beyond the top
+      // left or top right corner, picked once per visit, as a fraction of the viewport: above
+      // the middle they fell almost straight down, like rain.
+      const radiantOnLeft = Math.random() < 0.5;
+      const radiant = {
+        x: radiantOnLeft ? -0.15 + Math.random() * 0.1 : 1.05 + Math.random() * 0.1,
+        y: -0.8,
+      };
+
       const spawnShootingStar = () => {
-        const startX = Math.random() * viewW * 0.8;
-        const startY = Math.random() * viewH * 0.2;
-        const angle = Math.PI / 4 + (Math.random() - 0.5) * 0.4;
-        const speed = 30 + Math.random() * 25;
-        const length = 80 + Math.random() * 150;
+        const startX = Math.random() * viewW;
+        const startY = Math.random() * viewH * 0.35;
+        const angle =
+          Math.atan2(startY - radiant.y * viewH, startX - radiant.x * viewW) +
+          (Math.random() - 0.5) * 0.1;
+        // speed in px per second and life in seconds, so they look the same at 20 and 30 fps
+        const speed = 900 + Math.random() * 600;
+        const duration = 0.6 + Math.random() * 0.5;
         shooting.push({
           x: startX,
           y: startY,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          life: Math.floor(length / speed) + 8,
-          maxLife: Math.floor(length / speed) + 8,
+          life: duration,
+          maxLife: duration,
           size: 1 + Math.random() * 1.2,
         });
       };
@@ -703,30 +736,111 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         });
         ctx.globalAlpha = 1;
 
+        // violet in the hue of the aurora (250): lavender with more red turned pink over the nebula
+        const trailRgb = '150,140,255';
+        const glowRgb = '118,94,237';
+
+        // Sparks drift slowly, twinkle and fade out; drawn before the shooting stars so the
+        // trails stay on top
+        ctx.fillStyle = `rgb(${trailRgb})`;
+        for (let i = sparkles.length - 1; i >= 0; i--) {
+          const sp = sparkles[i];
+          sp.life -= dt;
+          if (sp.life <= 0) {
+            sparkles.splice(i, 1);
+            continue;
+          }
+          sp.x += sp.vx * dt;
+          sp.y += sp.vy * dt;
+          const fade = sp.life / sp.maxLife;
+          const twinkle = 0.6 + 0.4 * Math.sin(t * 18 + sp.twinkleOffset);
+          ctx.globalAlpha = 0.85 * fade * twinkle;
+          ctx.fillRect(sp.x - sp.size, sp.y - sp.size, sp.size * 2, sp.size * 2);
+        }
+        ctx.globalAlpha = 1;
+
+        // A shooting star in three layers: a soft coloured glow along the whole path, a tapered
+        // trail that thins out towards the tail, and a bright head with a small halo
         for (let i = shooting.length - 1; i >= 0; i--) {
           const st = shooting[i];
-          st.x += st.vx * dt * 60;
-          st.y += st.vy * dt * 60;
-          st.life--;
-          const lifeRatio = st.life / st.maxLife;
-          const trailLength = Math.max(25, st.maxLife * 4 * lifeRatio);
-          ctx.beginPath();
-          ctx.moveTo(st.x, st.y);
-          ctx.lineTo(
-            st.x - st.vx * (trailLength / st.maxLife),
-            st.y - st.vy * (trailLength / st.maxLife),
+          st.x += st.vx * dt;
+          st.y += st.vy * dt;
+          st.life -= dt;
+          if (st.life <= 0 || st.x < -400 || st.x > W + 400 || st.y > H + 400) {
+            shooting.splice(i, 1);
+            continue;
+          }
+
+          const progress = 1 - st.life / st.maxLife;
+          // flares up quickly, then burns out
+          const intensity = Math.min(1, progress * 6) * Math.min(1, (1 - progress) * 2.5);
+          const speed = Math.hypot(st.vx, st.vy);
+          const dirX = st.vx / speed;
+          const dirY = st.vy / speed;
+          const tail = (160 + st.size * 70) * Math.min(1, progress * 4);
+          const tailX = st.x - dirX * tail;
+          const tailY = st.y - dirY * tail;
+
+          // shed sparks just behind the head, more while it burns brightest
+          const sparkCount = Math.floor(SPARKLES_PER_SECOND * intensity * dt + Math.random());
+          for (let n = 0; n < sparkCount && sparkles.length < maxSparkles; n++) {
+            const back = Math.random() * 30;
+            const side = (Math.random() - 0.5) * st.size * 8;
+            const maxLife = 0.5 + Math.random() * 0.7;
+            sparkles.push({
+              x: st.x - dirX * back - dirY * side,
+              y: st.y - dirY * back + dirX * side,
+              // a little of the star's own motion, plus a slow random drift
+              vx: st.vx * 0.04 + (Math.random() - 0.5) * 30,
+              vy: st.vy * 0.04 + (Math.random() - 0.5) * 30,
+              life: maxLife,
+              maxLife,
+              size: 0.5 + Math.random() * 0.7,
+              twinkleOffset: Math.random() * Math.PI * 2,
+            });
+          }
+
+          // a wedge from the head (halfWidth wide) to a point at the tail, fading along its length
+          const wedge = (halfWidth: number, head: string, middle?: string) => {
+            const gradient = ctx.createLinearGradient(st.x, st.y, tailX, tailY);
+            gradient.addColorStop(0, head);
+            if (middle) gradient.addColorStop(0.35, middle);
+            gradient.addColorStop(1, `rgba(${glowRgb},0)`);
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(st.x - dirY * halfWidth, st.y + dirX * halfWidth);
+            ctx.lineTo(tailX, tailY);
+            ctx.lineTo(st.x + dirY * halfWidth, st.y - dirX * halfWidth);
+            ctx.closePath();
+            ctx.fill();
+          };
+
+          // three ever wider, fainter wedges blend into a soft glow without hard edges
+          wedge(st.size * 5, `rgba(${glowRgb},${0.07 * intensity})`);
+          wedge(st.size * 3, `rgba(${glowRgb},${0.1 * intensity})`);
+          wedge(st.size * 1.8, `rgba(${glowRgb},${0.14 * intensity})`);
+          wedge(
+            st.size * 0.9,
+            `rgba(255,255,255,${0.95 * intensity})`,
+            `rgba(${trailRgb},${0.5 * intensity})`,
           );
-          ctx.lineWidth = st.size;
-          ctx.strokeStyle = `rgba(255,255,255,${0.7 * lifeRatio})`;
-          ctx.stroke();
+
+          const headRadius = st.size * 5;
+          const head = ctx.createRadialGradient(st.x, st.y, 0, st.x, st.y, headRadius);
+          head.addColorStop(0, `rgba(255,255,255,${intensity})`);
+          head.addColorStop(0.2, `rgba(${glowRgb},${0.45 * intensity})`);
+          head.addColorStop(1, `rgba(${glowRgb},0)`);
+          ctx.fillStyle = head;
           ctx.beginPath();
-          ctx.arc(st.x, st.y, st.size * 0.7, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,255,255,${lifeRatio})`;
+          ctx.arc(st.x, st.y, headRadius, 0, Math.PI * 2);
           ctx.fill();
-          if (st.life <= 0 || st.x > W + 100 || st.y > H + 100) shooting.splice(i, 1);
         }
 
-        if (Math.random() < 0.025 && shooting.length < maxShooting) spawnShootingStar();
+        if (nextShootingAt < 0) nextShootingAt = t + 1.5 + Math.random() * 2.5;
+        if (t >= nextShootingAt) {
+          if (shooting.length < maxShooting) spawnShootingStar();
+          nextShootingAt = t + SHOOTING_MIN_GAP + Math.random() * SHOOTING_EXTRA_GAP;
+        }
 
         // Subtle vignette
         ctx.globalCompositeOperation = 'source-over';
