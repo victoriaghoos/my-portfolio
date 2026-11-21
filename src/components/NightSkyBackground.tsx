@@ -56,6 +56,7 @@ const sampleRamp = (t: number): number[] => {
 };
 
 // Weighted so most stars are white/blue-white (like real skies), with occasional warm outliers.
+// `fill` is built once here instead of as a new string for every star in every frame
 const STAR_COLORS = [
   { r: 255, g: 255, b: 255, weight: 40 },
   { r: 202, g: 216, b: 255, weight: 25 },
@@ -63,13 +64,14 @@ const STAR_COLORS = [
   { r: 255, g: 244, b: 214, weight: 12 },
   { r: 255, g: 210, b: 161, weight: 7 },
   { r: 255, g: 178, b: 158, weight: 4 },
-];
+].map((c) => ({ ...c, fill: `rgb(${c.r},${c.g},${c.b})` }));
 const STAR_COLOR_TOTAL = STAR_COLORS.reduce((sum, c) => sum + c.weight, 0);
 
 interface StarColor {
   r: number;
   g: number;
   b: number;
+  fill: string;
   weight?: number;
 }
 
@@ -282,6 +284,10 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
       let nebulaTexture: HTMLCanvasElement | null = null;
       let bloomCanvas: HTMLCanvasElement | null = null;
       let bloomCtx: CanvasRenderingContext2D | null = null;
+      // The blurred copy is the most expensive step of a frame, so it is only redone every
+      // BLOOM_EVERY frames and reused in between; the sky changes too slowly to notice.
+      const BLOOM_EVERY = 3;
+      let bloomFrame = 0;
       // Kept up to date by resize(): reading window.innerWidth in every frame forces a layout
       // whenever something else on the page changed (framer-motion, sections mounting)
       let viewW = window.innerWidth;
@@ -299,6 +305,7 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         canvas.style.height = `${window.innerHeight}px`;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         nebulaTexture = buildNebulaTexture();
+        bloomFrame = 0;
         bloomCanvas = document.createElement('canvas');
         bloomCanvas.width = Math.max(1, Math.floor(window.innerWidth / 3));
         bloomCanvas.height = Math.max(1, Math.floor(window.innerHeight / 3));
@@ -493,11 +500,19 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
           const drawX = s.x + px;
           const drawY = s.y + py;
 
-          ctx.globalAlpha = alpha;
-          ctx.fillStyle = `rgb(${s.color.r},${s.color.g},${s.color.b})`;
-          ctx.beginPath();
-          ctx.arc(drawX, drawY, s.size * 0.9, 0, Math.PI * 2);
-          ctx.fill();
+          const radius = s.size * 0.9;
+          ctx.fillStyle = s.color.fill;
+          if (radius < 1) {
+            // Most stars are under 2px across, where a square looks the same as a circle and is
+            // far cheaper to draw than an arc path. π/4 keeps the same amount of light.
+            ctx.globalAlpha = alpha * (Math.PI / 4);
+            ctx.fillRect(drawX - radius, drawY - radius, radius * 2, radius * 2);
+          } else {
+            ctx.globalAlpha = alpha;
+            ctx.beginPath();
+            ctx.arc(drawX, drawY, radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
 
           if (layer === heroLayer) {
             const ray = s.size * 5;
@@ -569,7 +584,7 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         bakedLayers.forEach((layer) =>
           layer.stars.forEach((s) => {
             c.globalAlpha = s.brightness * 0.8 * 0.96;
-            c.fillStyle = `rgb(${s.color.r},${s.color.g},${s.color.b})`;
+            c.fillStyle = s.color.fill;
             c.beginPath();
             c.arc(s.baseX, s.baseY, s.size * 0.9, 0, Math.PI * 2);
             c.fill();
@@ -730,10 +745,13 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
 
         // Cheap bloom (skipped in the lite version)
         if (!lite && bloomCanvas && bloomCtx) {
-          bloomCtx.clearRect(0, 0, bloomCanvas.width, bloomCanvas.height);
-          bloomCtx.filter = 'brightness(0.4) contrast(2.2) blur(3px)';
-          bloomCtx.drawImage(canvas, 0, 0, bloomCanvas.width, bloomCanvas.height);
-          bloomCtx.filter = 'none';
+          if (bloomFrame % BLOOM_EVERY === 0) {
+            bloomCtx.clearRect(0, 0, bloomCanvas.width, bloomCanvas.height);
+            bloomCtx.filter = 'brightness(0.4) contrast(2.2) blur(3px)';
+            bloomCtx.drawImage(canvas, 0, 0, bloomCanvas.width, bloomCanvas.height);
+            bloomCtx.filter = 'none';
+          }
+          bloomFrame++;
 
           ctx.save();
           ctx.globalCompositeOperation = 'lighter';
