@@ -24,6 +24,7 @@ const TestHarness = ({
 
 describe('useCanvasAnimationLoop', () => {
   let observerCallback: ObserverCallback;
+  let resizeCallback: () => void;
   let rafSpy: MockInstance<typeof window.requestAnimationFrame>;
   let cafSpy: MockInstance<typeof window.cancelAnimationFrame>;
 
@@ -32,6 +33,11 @@ describe('useCanvasAnimationLoop', () => {
       observerCallback = callback;
       return { observe: vi.fn(), disconnect: vi.fn() };
     }) as unknown as typeof IntersectionObserver;
+    // like the real one, it reports the element's size as soon as it starts observing
+    window.ResizeObserver = vi.fn().mockImplementation(function (callback: () => void) {
+      resizeCallback = callback;
+      return { observe: vi.fn(() => callback()), disconnect: vi.fn() };
+    }) as unknown as typeof ResizeObserver;
     rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(1);
     cafSpy = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
     // jsdom does no layout, so every element is 0x0 unless we give it a size
@@ -83,11 +89,45 @@ describe('useCanvasAnimationLoop', () => {
     // not 300x150: that is a canvas's default size, so it would already match
     setCanvasSize(640, 360);
     act(() => {
+      resizeCallback();
       observerCallback([{ isIntersecting: false }]);
     });
 
     expect(onResize).toHaveBeenCalledWith(expect.objectContaining({ width: 640, height: 360 }));
     expect(onDraw).toHaveBeenCalledWith(expect.objectContaining({ width: 640, height: 360 }));
+  });
+
+  it('reads the size once instead of on every frame', () => {
+    const widthSpy = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(300);
+    const onDraw = vi.fn();
+    render(<TestHarness onDraw={onDraw} />);
+    widthSpy.mockClear();
+
+    act(() => {
+      observerCallback([{ isIntersecting: false }]);
+      observerCallback([{ isIntersecting: false }]);
+    });
+
+    expect(onDraw).toHaveBeenCalledTimes(2);
+    expect(widthSpy).not.toHaveBeenCalled();
+  });
+
+  it('redraws a canvas that stands still when its size changes', () => {
+    const onDraw = vi.fn();
+    render(<TestHarness onDraw={onDraw} />);
+    act(() => {
+      observerCallback([{ isIntersecting: false }]);
+    });
+    onDraw.mockClear();
+
+    setCanvasSize(640, 360);
+    act(() => {
+      resizeCallback();
+    });
+
+    expect(onDraw).toHaveBeenCalledWith(
+      expect.objectContaining({ width: 640, height: 360, isStatic: true }),
+    );
   });
 
   it('schedules an animation frame when visible and motion is not reduced', () => {
