@@ -4,6 +4,8 @@ import { useTranslation, Trans } from 'react-i18next';
 import useCanvasAnimationLoop, { type CanvasDrawArgs } from '../../hooks/useCanvasAnimationLoop';
 import '../../styles/sections/AboutSection.scss';
 import foto1 from '../../assets/images/me.webp';
+// smaller copy for phones: the avatar is at most 200px wide there, 340px on larger screens
+import foto1Small from '../../assets/images/me-400.webp';
 
 const textVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
@@ -216,6 +218,8 @@ const AboutSection = ({ id }: { id: string }) => {
                 <div className="avatar-glow"></div>
                 <img
                   src={foto1}
+                  srcSet={`${foto1Small} 400w, ${foto1} 560w`}
+                  sizes="(max-width: 600px) 200px, 340px"
                   alt={t('a11y.photo_alt')}
                   className="avatar-image"
                   loading="lazy"
