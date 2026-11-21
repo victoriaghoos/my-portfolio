@@ -55,8 +55,14 @@ const useCanvasAnimationLoop = (
       height: canvas.clientHeight,
     });
 
+    // A canvas that is hidden or not laid out yet reports 0x0. Drawing then is pointless, and
+    // callbacks that divide by the size (AboutSection's orbs) end up with Infinity/NaN
+    // positions, so both resize and draw skip it.
+    const hasSize = (width: number, height: number) => width > 0 && height > 0;
+
     const resizeCanvas = () => {
       const { width, height } = getSize();
+      if (!hasSize(width, height)) return;
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -65,6 +71,12 @@ const useCanvasAnimationLoop = (
 
     const drawFrame = (timestamp: number, isStatic = false) => {
       const { width, height } = getSize();
+      if (!hasSize(width, height)) return;
+      // The canvas can get its size after mount without a window resize (a section that was
+      // hidden becomes visible), so size it here when it no longer matches
+      if (canvas.width !== Math.floor(width * dpr) || canvas.height !== Math.floor(height * dpr)) {
+        resizeCanvas();
+      }
       onDrawRef.current?.({ canvas, ctx, width, height, timestamp, isStatic });
     };
 
