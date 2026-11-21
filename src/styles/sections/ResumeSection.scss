@@ -56,7 +56,8 @@ $page-color: #0d0d2b;
       left: 0;
       opacity: 0.03;
       pointer-events: none;
-      background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+      // patterns from transparenttextures.com, self-hosted as WebP (no extra domain to connect to)
+      background-image: url('../../assets/textures/stardust.webp');
       mix-blend-mode: overlay;
     }
 
@@ -423,7 +424,7 @@ $page-color: #0d0d2b;
         left: 0;
         width: 100%;
         height: 100%;
-        background-image: url('https://www.transparenttextures.com/patterns/pinstriped-suit.png');
+        background-image: url('../../assets/textures/pinstriped-suit.webp');
         opacity: 0.05;
         pointer-events: none;
         z-index: 10;
@@ -450,7 +451,7 @@ $page-color: #0d0d2b;
           transparent 10%
         ),
         linear-gradient(rgba(8, 10, 26, 0.88), rgba(5, 6, 20, 0.92)),
-        url('https://www.transparenttextures.com/patterns/leather.png') !important;
+        url('../../assets/textures/leather.webp') !important;
 
       display: flex;
       flex-direction: column;
@@ -644,7 +645,7 @@ $page-color: #0d0d2b;
           transparent 12%
         ),
         linear-gradient(rgba(8, 10, 26, 0.92), rgba(5, 6, 20, 0.96)),
-        url('https://www.transparenttextures.com/patterns/leather.png') !important;
+        url('../../assets/textures/leather.webp') !important;
 
       .corner-ornament {
         opacity: 0.4;
