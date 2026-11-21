@@ -1,10 +1,19 @@
 // The WebGL part of the hub: rotating 3D icons, the hologram photo and the constellations.
 // It's a separate chunk that only loads on desktop with a mouse, because three.js and the
 // point clouds are by far the heaviest part of the site. Phones and tablets get a plain image.
-import { memo, Suspense, useRef, type MutableRefObject, type RefObject } from 'react';
+import {
+  memo,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MutableRefObject,
+  type RefObject,
+} from 'react';
 import { suspend } from 'suspend-react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, Preload } from '@react-three/drei';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Environment } from '@react-three/drei';
 import { motion, useReducedMotion } from 'framer-motion';
 import * as THREE from 'three';
 
@@ -157,6 +166,39 @@ export interface HubSceneProps {
   onWebglFailure: () => void;
 }
 
+// Replaces drei's <Preload all />, which compiled every shader synchronously and rendered the
+// whole scene six times into a cube camera: one ~0.7 s task that froze the page while the hub
+// loaded. compileAsync lets the GPU compile in the background (KHR_parallel_shader_compile);
+// the scene is only drawn once that is done, so it still appears in one go.
+const COMPILE_TIMEOUT_MS = 4000;
+
+const CompileShaders = ({ onCompiled }: { onCompiled: () => void }) => {
+  const gl = useThree((state) => state.gl);
+  const scene = useThree((state) => state.scene);
+  const camera = useThree((state) => state.camera);
+
+  useEffect(() => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      onCompiled();
+    };
+
+    // compiles hidden objects too, like Preload's `all`
+    gl.compileAsync(scene, camera).then(finish, finish);
+
+    // never leave the hub blank if the browser doesn't report back
+    const timer = window.setTimeout(finish, COMPILE_TIMEOUT_MS);
+    return () => {
+      done = true;
+      window.clearTimeout(timer);
+    };
+  }, [gl, scene, camera, onCompiled]);
+
+  return null;
+};
+
 const HubScene = ({
   eventSource,
   navEnabled,
@@ -176,11 +218,13 @@ const HubScene = ({
   onWebglFailure,
 }: HubSceneProps) => {
   const handleCanvasCreated = useContextLossHandler(onWebglFailure);
+  const [compiled, setCompiled] = useState(false);
+  const handleCompiled = useCallback(() => setCompiled(true), []);
 
   return (
     <CanvasErrorBoundary onError={onWebglFailure}>
       <Canvas
-        frameloop={isInView ? 'always' : 'never'}
+        frameloop={isInView && compiled ? 'always' : 'never'}
         camera={{ position: [0, 5, 20], fov: 45 }}
         eventSource={eventSource as MutableRefObject<HTMLElement>}
         eventPrefix="client"
@@ -264,7 +308,7 @@ const HubScene = ({
             </>
           )}
 
-          <Preload all />
+          <CompileShaders onCompiled={handleCompiled} />
         </Suspense>
       </Canvas>
     </CanvasErrorBoundary>
