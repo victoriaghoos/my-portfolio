@@ -1,72 +1,75 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 
-const AboutSection = lazy(() => import('./AboutSection'));
-const ProjectsSection = lazy(() => import('./ProjectsSection'));
-const SkillsSection = lazy(() => import('./SkillsSection'));
-const ResumeSection = lazy(() => import('./ResumeSection'));
-const NotesSection = lazy(() => import('./NotesSection'));
-const SocialsSection = lazy(() => import('./SocialsSection'));
+const loadAbout = () => import('./AboutSection');
+const loadSkills = () => import('./SkillsSection');
+const loadProjects = () => import('./ProjectsSection');
+const loadResume = () => import('./ResumeSection');
+const loadNotes = () => import('./NotesSection');
+const loadSocials = () => import('./SocialsSection');
+
+// In page order: they are built from the top down
+const SECTIONS = [
+  { id: 'about-section', load: loadAbout, Component: lazy(loadAbout) },
+  { id: 'skills-section', load: loadSkills, Component: lazy(loadSkills) },
+  { id: 'projects-section', load: loadProjects, Component: lazy(loadProjects) },
+  { id: 'resume-section', load: loadResume, Component: lazy(loadResume) },
+  { id: 'notes-section', load: loadNotes, Component: lazy(loadNotes) },
+  { id: 'socials-section', load: loadSocials, Component: lazy(loadSocials) },
+];
 
 const WAKE_EVENTS = ['keydown', 'wheel', 'touchstart', 'pointerdown', 'scroll'] as const;
 
 /**
- * The sections below the hub are built only after the hub has been painted: as soon as the
- * browser is idle, or right away when the visitor scrolls, types or arrives with a link to a
- * section (/home#about-section). Building all six at once took ~0.5 s of main thread on a slow
- * phone, right when the hub should appear.
+ * The sections below the hub are built only after the hub has been painted, and then one per
+ * idle moment, top to bottom. Building all six in one go took ~0.5 s of main thread on a slow
+ * phone, right when the hub should appear. As soon as the visitor scrolls, taps or types, or
+ * arrives with a link to a section (/home#about-section), the rest is built at once.
+ * Returns how many sections (from the top) to render.
  */
-const useMountAfterFirstPaint = () => {
-  const [ready, setReady] = useState(() => typeof window !== 'undefined' && !!window.location.hash);
+const useProgressiveMount = () => {
+  const total = SECTIONS.length;
+  const [count, setCount] = useState(() =>
+    typeof window !== 'undefined' && window.location.hash ? total : 0,
+  );
 
   useEffect(() => {
-    if (ready) return undefined;
+    if (count >= total) return undefined;
 
-    const mount = () => setReady(true);
+    // the first step also starts downloading every section's code; downloads don't block
+    if (count === 0) SECTIONS.forEach((section) => void section.load());
+
+    const mountNext = () => setCount((c) => Math.min(total, c + 1));
+    const mountAll = () => setCount(total);
     // Safari has no requestIdleCallback, so it falls back to a short timeout
     const hasIdle = 'requestIdleCallback' in window;
-    const idleId = hasIdle ? window.requestIdleCallback(mount, { timeout: 1500 }) : undefined;
-    const timeoutId = hasIdle ? undefined : window.setTimeout(mount, 300);
+    const idleId = hasIdle
+      ? window.requestIdleCallback(mountNext, { timeout: count === 0 ? 1500 : 500 })
+      : undefined;
+    const timeoutId = hasIdle ? undefined : window.setTimeout(mountNext, count === 0 ? 300 : 50);
     WAKE_EVENTS.forEach((type) =>
-      window.addEventListener(type, mount, { once: true, passive: true, capture: true }),
+      window.addEventListener(type, mountAll, { once: true, passive: true, capture: true }),
     );
 
     return () => {
       if (idleId !== undefined) window.cancelIdleCallback(idleId);
       if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-      WAKE_EVENTS.forEach((type) => window.removeEventListener(type, mount, { capture: true }));
+      WAKE_EVENTS.forEach((type) => window.removeEventListener(type, mountAll, { capture: true }));
     };
-  }, [ready]);
+  }, [count, total]);
 
-  return ready;
+  return count;
 };
 
 const SectionsContainer = () => {
-  const ready = useMountAfterFirstPaint();
-
-  if (!ready) {
-    return <div className="sections-container" />;
-  }
+  const count = useProgressiveMount();
 
   return (
     <div className="sections-container">
-      <Suspense fallback={<div className="section-placeholder" />}>
-        <AboutSection id="about-section" />
-      </Suspense>
-      <Suspense fallback={<div className="section-placeholder" />}>
-        <SkillsSection id="skills-section" />
-      </Suspense>
-      <Suspense fallback={<div className="section-placeholder" />}>
-        <ProjectsSection id="projects-section" />
-      </Suspense>
-      <Suspense fallback={<div className="section-placeholder" />}>
-        <ResumeSection id="resume-section" />
-      </Suspense>
-      <Suspense fallback={<div className="section-placeholder" />}>
-        <NotesSection id="notes-section" />
-      </Suspense>
-      <Suspense fallback={<div className="section-placeholder" />}>
-        <SocialsSection id="socials-section" />
-      </Suspense>
+      {SECTIONS.slice(0, count).map(({ id, Component }) => (
+        <Suspense key={id} fallback={<div className="section-placeholder" />}>
+          <Component id={id} />
+        </Suspense>
+      ))}
     </div>
   );
 };
