@@ -464,7 +464,8 @@ $white: #ffffff;
     border: 2px dashed rgba(255, 255, 255, 0.3);
 
     span {
-      color: #f43f5e;
+      // one shade darker than #f43f5e: 4.7:1 on white instead of 3.7:1 (WCAG AA needs 4.5:1)
+      color: #e11d48;
       font-weight: 900;
       letter-spacing: 5px;
       background: white;
