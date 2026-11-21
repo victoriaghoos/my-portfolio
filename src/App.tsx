@@ -1,8 +1,10 @@
 import './App.css';
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
 
+// The intro is switched off for now (see INTRO_DISABLED_UNTIL), so it shouldn't weigh down the
+// first download for everyone: it's lazy-loaded like the other pages
+const LandingPage = lazy(() => import('./components/LandingPage'));
 const Home = lazy(() => import('./components/Home'));
 const NotesIndexPage = lazy(() => import('./notes/NotesIndexPage'));
 const NotePage = lazy(() => import('./notes/NotePage'));
@@ -22,7 +24,15 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={showIntro() ? <LandingPage /> : <Navigate to="/home" replace />}
+            element={
+              showIntro() ? (
+                <Suspense fallback={routeFallback}>
+                  <LandingPage />
+                </Suspense>
+              ) : (
+                <Navigate to="/home" replace />
+              )
+            }
           />
           <Route
             path="/home"
