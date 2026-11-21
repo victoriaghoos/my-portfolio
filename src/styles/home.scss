@@ -719,6 +719,20 @@ body {
   }
 }
 
+// Desktop: once the 3D hub is drawn, the photo and 2D menu on top of it fade out. The photo
+// fades in step with the 3D hologram fading in (HubScene: 1.2 s delay, 1.5 s), so the two
+// overlap instead of leaving a gap. Home unmounts both after STATIC_FADE_MS.
+.hub-static-hologram.is-fading {
+  opacity: 0;
+  transition: opacity 1.5s ease 1.2s;
+}
+
+.static-menu-overlay.is-fading {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
 @media (max-width: 599px) {
   .hub-static-hologram {
     position: relative;
