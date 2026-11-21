@@ -1,35 +1,39 @@
-# ✨ Victoria’s Interactive Cosmos | Portfolio
+# Victoria's Interactive Cosmos
 
-Welcome to the repository for my interactive portfolio! This website showcases my skills, projects, and experience in an engaging and modern way.
+The portfolio of Victoria Ghoos, software engineer: an interactive 3D night sky built with React and Three.js.
 
-## About the Portfolio
+**Live:** [victoriaghoos.com](https://victoriaghoos.com/)
 
-This portfolio is a React single-page application exploring time-based animation, particle systems, procedural rendering, and real-time 3D graphics in the browser. It combines React state and Framer Motion for eased, state-driven transitions; memoized pseudo-random particle fields animated through parametric keyframes; custom canvas effects including Perlin noise-driven nebula rendering, light orbs, and lightweight motion physics; and WebGL scenes built with React Three Fiber and Drei for clouds, stars, lighting, and fog. Styling is handled with responsive SCSS layering, while i18next powers runtime language switching across English, Dutch, French, and Japanese.
+![The 3D hub: a hologram portrait with orbiting navigation panels in a procedural night sky](docs/screenshot.webp)
 
-## 💡 About Me & Name Usage
+## What it is
 
-- **Victoria Ghoos** is my current legal and preferred name, which I use on both academic/professional and personal projects.
-- **Victoria Marinus** is my former legal name and may still appear on some older accounts or materials/posts.
+- **3D hub (desktop):** a React Three Fiber scene with a hologram portrait, orbiting panels with video previews, drag-to-rotate with inertia and constellations that appear on hover.
+- **Procedural night sky:** Canvas 2D with a Perlin-noise nebula, parallax star layers, a galactic band, bloom, click shockwaves and shooting stars that fan out from a radiant.
+- **Sections:** about, skills, projects, a flipbook resume, notes and a socials section with WebGL clouds.
+- **Four languages:** English, Dutch, French and Japanese (i18next).
 
-Regardless of which name you come across, it's always **me** behind the work! 😊
+## Engineering decisions
 
-## 🛠️ Technologies Used
+**Performance.** Mobile Lighthouse score 93 (LCP 2.5 s, TBT 210 ms, CLS 0).
 
-- **Frontend:** React.js, TypeScript, SCSS
-- **Animations:** Framer Motion
-- **3D & Graphics:** Three.js, @react-three/fiber, @react-three/drei
-- **Testing:** Vitest, React Testing Library
-- **Tooling:** Oxlint, Prettier, TypeScript (`tsc --noEmit`), GitHub Actions CI
-- **Hosting:** Netlify
-- **Version Control:** Git & GitHub
+- Phones and tablets never download three.js: they get the hologram as a preloaded image, a 2D menu and a lighter night sky where the faint stars are painted once into a cached backdrop.
+- Shaders compile in the background with `compileAsync` (`KHR_parallel_shader_compile`) instead of drei's `<Preload all />`, which blocked the main thread for about 0.7 s while the hub loaded.
+- The constellation point clouds (1.8 MB) live in their own chunk and load on the first hover.
+- A small Vite plugin preloads the Home chunk and its imports from `index.html`, so they download in parallel with the entry script.
+- Sections below the hub mount one at a time while the browser is idle; canvas loops pause off-screen and track their size with a `ResizeObserver` instead of reading layout every frame.
+- Fonts, textures and the HDR environment are self-hosted; images are WebP with responsive `srcset`.
 
-## 🔗 Live Demo
+**Accessibility.**
 
-Check out my portfolio live at: [victoriaghoos.com](https://victoriaghoos.com/)
+- The WebGL hub has a keyboard-reachable menu with the same destinations.
+- `prefers-reduced-motion` is respected throughout, including a still night sky.
+- Visible focus rings, screen-reader headings, `<html lang>` kept in sync with the language, a `<noscript>` fallback, and WAVE-checked contrast.
+- If WebGL is missing or its context is lost, the hub falls back to the 2D menu.
 
-## 🛠️ Setup & Installation
+## Running it locally
 
-To run this project locally:
+Developed and tested on Node.js 24 (the version CI uses).
 
 ```bash
 git clone https://github.com/victoriaghoos/my-portfolio.git
@@ -38,54 +42,24 @@ npm install
 npm run dev
 ```
 
-Other available scripts:
+| Script                                                        | What it does                     |
+| ------------------------------------------------------------- | -------------------------------- |
+| `npm run build`                                               | Production build into `build/`   |
+| `npm run test`                                                | Vitest + React Testing Library   |
+| `npm run lint` / `npm run typecheck` / `npm run format:check` | Oxlint, `tsc --noEmit`, Prettier |
 
-```bash
-npm run build
-npm run test
-npm run lint
-npm run typecheck
-npm run format
-```
+GitHub Actions runs lint, typecheck, format check, tests and build on every push.
 
-## 🌌 Main Features
+## Tech stack
 
-- **Animated Landing Page:** React video with typewriter intro and a timed or skip-able transition, leading into the main 3D cosmos experience.
-- **Interactive 3D Cosmos Navigation:** Once past the intro, a custom React Three Fiber scene featuring a rotating hologram-avatar hub, orbiting interactive panels with video-texture previews, and constellation reveals on hover with inertial drag rotation, click-triggered shockwave physics, and a procedurally generated night sky (Perlin-noise nebula, parallax star layers, galactic band, and bloom) built entirely with the Canvas API.
-- **About Section:** Framer Motion–animated bio with hologram-style avatar and content for education, goals, and interests.
-- **Skills Section:** Sakura‑themed skills galaxy built with React, Framer Motion, and SCSS, grouping languages, frameworks, backend, frontend, mobile/desktop, DevOps, and tooling.
-- **Projects Section:** Lofi music-player–inspired cards using React, Framer Motion, and Lucide icons, with tech‑stack tags, internship/classified highlights, and an animated audio visualizer.
-- **Resume Section:** Interactive React flipbook, letting visitors “page through” experience and education.
-- **Socials Section:** 3D cloud-and-stars scene rendered with React Three Fiber and Drei, with animated sky and direct links to LinkedIn, GitHub, and email.
-- **Internationalization:** i18next-powered multi-language UI (English, Dutch, French, Japanese).
+React 18, TypeScript, Vite, SCSS, Three.js with React Three Fiber and Drei, Framer Motion, i18next, Vitest. Hosted on Netlify.
 
-## ⚡ Performance & Accessibility
+## About the name
 
-- Visibility-gated animation loops (IntersectionObserver + rAF) so canvas/WebGL rendering pauses when scrolled out of view
-- Respects `prefers-reduced-motion` throughout
-- Code-split, lazy-loaded sections; profiled and optimized for Core Web Vitals (LCP)
-- Keyboard-navigable controls with ARIA labeling
+Victoria Ghoos is my current legal name. Older accounts or posts may still show my former name, Victoria Marinus; it's the same person.
 
-## 🏆 Sample Projects
+## Contact
 
-- **Yorimichi** (Python, FastAPI, PostGIS, NetworkX, osmnx, postgresql, REACT) ): Scenic route optimization engine. _(Solo project, 2026)_
-- **Vrije Teid!** (Flutter, Dart, Firebase): Mobile app for community activity management. _(Group effort, 2024)_
-- **Search Infrastructure** (OpenSearch, Docker): Large-scale data retrieval optimization. _(Internship, 2025, classified)_
+[LinkedIn](https://www.linkedin.com/in/victoriaghoos/) · [GitHub](https://github.com/victoriaghoos) · [Email](mailto:ghoosvictoria@gmail.com)
 
-## 🧑‍💻 Skills Overview
-
-- **Programming Languages:** C#, Python, JavaScript, TypeScript, SQL, PHP
-- **Backend Development:** .NET, ASP.NET MVC, Laravel, REST APIs, SignalR, OpenSearch, Node.js, EF Core, JWT
-- **Frontend & UI Development:** React, Three.js, HTML, CSS, Tailwind CSS, Vue.js, SCSS, Blazor, .NET MAUI, WPF
-- **DevOps & Infrastructure:** Docker, Kubernetes, Linux, Virtual Machines, CI/CD, Terraform, Azure
-- **Tooling & Version Control:** Git, GitHub, GitLab, Postman, Swagger
-
-## 📬 Contact & Socials
-
-- [LinkedIn](https://www.linkedin.com/in/victoriaghoos/)
-- [GitHub](https://github.com/victoriaghoos)
-- [Email](mailto:ghoosvictoria@gmail.com)
-
----
-
-> © 2026 Victoria Ghoos. All rights reserved.
+© 2026 Victoria Ghoos. All rights reserved.
