@@ -24,11 +24,7 @@ import CanvasErrorBoundary from './webgl/CanvasErrorBoundary';
 import { useContextLossHandler } from './webgl/webgl';
 import type { ConstellationScales, ScalingConfig } from './hubTypes';
 
-import catPoints from '../catPoints.json';
-import cameraPoints from '../cameraPoints.json';
-import bookPoints from '../bookPoints.json';
-import flowerPoints from '../flowerPoints.json';
-import headsetPoints from '../headsetPoints.json';
+import type { ConstellationPoints } from './constellationPoints';
 
 const sunsetHdri = import('@pmndrs/assets/hdri/sunset.exr');
 
@@ -221,6 +217,26 @@ const HubScene = ({
   const [compiled, setCompiled] = useState(false);
   const handleCompiled = useCallback(() => setCompiled(true), []);
 
+  // The constellation point clouds are 1.8 MB of JSON and stay invisible until an icon is
+  // hovered, so they load in their own chunk once the hub is drawn instead of delaying it.
+  const [points, setPoints] = useState<ConstellationPoints | null>(null);
+  useEffect(() => {
+    if (!compiled) return undefined;
+    let cancelled = false;
+    const load = () =>
+      import('./constellationPoints').then((module) => {
+        if (!cancelled) setPoints(module.default);
+      });
+    const hasIdle = 'requestIdleCallback' in window;
+    const idleId = hasIdle ? window.requestIdleCallback(load, { timeout: 2000 }) : undefined;
+    const timeoutId = hasIdle ? undefined : window.setTimeout(load, 500);
+    return () => {
+      cancelled = true;
+      if (idleId !== undefined) window.cancelIdleCallback(idleId);
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
+  }, [compiled]);
+
   return (
     <CanvasErrorBoundary onError={onWebglFailure}>
       <Canvas
@@ -273,36 +289,36 @@ const HubScene = ({
             />
           </MotionGroup>
 
-          {navEnabled && (
+          {navEnabled && points && (
             <>
               <OutlineStars
                 active={active === 'About'}
                 position={[-scalingConfig.radius + 1, 0, 0]}
-                pointsData={catPoints}
+                pointsData={points.cat}
                 scale={constellationScales.about}
               />
               <OutlineStars
                 active={active === 'Socials'}
                 position={[-scalingConfig.radius - 3, -scalingConfig.radius * 0.6, 0]}
-                pointsData={cameraPoints}
+                pointsData={points.camera}
                 scale={constellationScales.socials}
               />
               <OutlineStars
                 active={active === 'Resume'}
                 position={[-scalingConfig.radius - 2, scalingConfig.radius * 0.4, 0]}
-                pointsData={bookPoints}
+                pointsData={points.book}
                 scale={constellationScales.resume}
               />
               <OutlineStars
                 active={active === 'Skills'}
                 position={[scalingConfig.radius + 2, scalingConfig.radius * 0.4, 0]}
-                pointsData={flowerPoints}
+                pointsData={points.flower}
                 scale={constellationScales.skills}
               />
               <OutlineStars
                 active={active === 'Projects'}
                 position={[scalingConfig.radius - 1, -scalingConfig.radius * 0.6, 0]}
-                pointsData={headsetPoints}
+                pointsData={points.headset}
                 scale={constellationScales.projects}
               />
             </>
