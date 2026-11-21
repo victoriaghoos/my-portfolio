@@ -50,10 +50,18 @@ const useCanvasAnimationLoop = (
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    const getSize = () => ({
+    const readSize = () => ({
       width: canvas.clientWidth,
       height: canvas.clientHeight,
     });
+    // Cached instead of read every frame: reading clientWidth after the page changed (an
+    // animation, a section mounting) forces the browser to lay out the page right then.
+    // The ResizeObserver below fills it in and keeps it current: its callbacks run right after
+    // the browser's own layout, so reading the size there is free. Only without
+    // ResizeObserver (old browsers) is it read straight away.
+    const hasResizeObserver = typeof ResizeObserver !== 'undefined';
+    let size = hasResizeObserver ? { width: 0, height: 0 } : readSize();
+    const getSize = () => size;
 
     // A canvas that is hidden or not laid out yet reports 0x0. Drawing then is pointless, and
     // callbacks that divide by the size (AboutSection's orbs) end up with Infinity/NaN
@@ -116,18 +124,37 @@ const useCanvasAnimationLoop = (
     const handleResize = () => {
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
+        size = readSize();
         resizeCanvas();
         syncLoop();
       }, 100);
     };
+
+    // Its first callback comes right after the canvas is laid out and gives the initial size;
+    // later ones catch size changes without a window resize (a section that becomes visible
+    // or changes layout). syncLoop then redraws a canvas that stands still, or restarts the
+    // animation.
+    const resizeObserver = hasResizeObserver
+      ? new ResizeObserver(() => {
+          const next = readSize();
+          if (next.width === size.width && next.height === size.height) return;
+          size = next;
+          resizeCanvas();
+          syncLoop();
+        })
+      : null;
 
     const handleMotionChange = () => syncLoop();
 
     window.addEventListener('resize', handleResize);
     reducedMotionQuery.addEventListener('change', handleMotionChange);
 
-    resizeCanvas();
-    syncLoop();
+    if (resizeObserver) {
+      resizeObserver.observe(canvas);
+    } else {
+      resizeCanvas();
+      syncLoop();
+    }
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -137,6 +164,7 @@ const useCanvasAnimationLoop = (
         cancelAnimationFrame(animationFrameId);
       }
       observer.disconnect();
+      resizeObserver?.disconnect();
       syncRef.current = null;
     };
   }, [canvasRef, rootRef, threshold]);
