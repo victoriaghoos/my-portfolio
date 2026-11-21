@@ -217,25 +217,20 @@ const HubScene = ({
   const [compiled, setCompiled] = useState(false);
   const handleCompiled = useCallback(() => setCompiled(true), []);
 
-  // The constellation point clouds are 1.8 MB of JSON and stay invisible until an icon is
-  // hovered, so they load in their own chunk once the hub is drawn instead of delaying it.
+  // The constellation point clouds are 1.8 MB of JSON and only show while an icon is hovered,
+  // so their chunk loads on the first hover (they fade in slowly anyway) instead of with the hub
   const [points, setPoints] = useState<ConstellationPoints | null>(null);
+  const wantsPoints = active !== null;
   useEffect(() => {
-    if (!compiled) return undefined;
+    if (!wantsPoints || points) return undefined;
     let cancelled = false;
-    const load = () =>
-      import('./constellationPoints').then((module) => {
-        if (!cancelled) setPoints(module.default);
-      });
-    const hasIdle = 'requestIdleCallback' in window;
-    const idleId = hasIdle ? window.requestIdleCallback(load, { timeout: 2000 }) : undefined;
-    const timeoutId = hasIdle ? undefined : window.setTimeout(load, 500);
+    import('./constellationPoints').then((module) => {
+      if (!cancelled) setPoints(module.default);
+    });
     return () => {
       cancelled = true;
-      if (idleId !== undefined) window.cancelIdleCallback(idleId);
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
     };
-  }, [compiled]);
+  }, [wantsPoints, points]);
 
   return (
     <CanvasErrorBoundary onError={onWebglFailure}>
