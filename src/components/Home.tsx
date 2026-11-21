@@ -48,6 +48,39 @@ import { scrollToSection, scrollToSectionById } from '../utils/scrollToSection';
 // (desktop with a mouse). Phones and tablets never download them.
 const HubScene = lazy(() => import('./HubScene'));
 
+// The 3D hub costs a desktop ~0.6 s of main thread to start (three.js, shaders, environment
+// map). It is loaded at the first sign of a visitor (mouse, scroll, a key) or after
+// HUB_FALLBACK_MS regardless, so every desktop visitor gets it. Until then the photo and the 2D
+// menu are shown, so the page paints and responds right away instead of showing an empty hub.
+const HUB_WAKE_EVENTS = ['pointermove', 'pointerdown', 'wheel', 'keydown', 'scroll'] as const;
+const HUB_FALLBACK_MS = 5000;
+// how long the photo stays after the 3D scene is ready: it fades out in step with the 3D
+// hologram fading in (HubScene: 1.2 s delay + 1.5 s), see .is-fading in home.scss
+const STATIC_FADE_MS = 2800;
+
+const useHubRequest = (enabled: boolean) => {
+  const [requested, setRequested] = useState(false);
+
+  useEffect(() => {
+    if (!enabled || requested) return undefined;
+
+    const request = () => setRequested(true);
+    const timer = window.setTimeout(request, HUB_FALLBACK_MS);
+    HUB_WAKE_EVENTS.forEach((type) =>
+      window.addEventListener(type, request, { once: true, passive: true, capture: true }),
+    );
+
+    return () => {
+      window.clearTimeout(timer);
+      HUB_WAKE_EVENTS.forEach((type) =>
+        window.removeEventListener(type, request, { capture: true }),
+      );
+    };
+  }, [enabled, requested]);
+
+  return requested;
+};
+
 const MENU_IMAGES: Record<string, string> = {
   Socials: socialsMenuImg,
   Resume: resumeMenuImg,
@@ -78,6 +111,10 @@ const SceneContent = memo(function SceneContent({
   eventSource,
   nightSkyRef,
   show3DNav,
+  hubReady,
+  onHubReady,
+  showStatic,
+  nightSkyLite,
   initialRotationComplete,
   hasDragged,
   icons,
@@ -97,6 +134,10 @@ const SceneContent = memo(function SceneContent({
   eventSource: RefObject<HTMLElement>;
   nightSkyRef: RefObject<NightSkyHandle>;
   show3DNav: boolean;
+  hubReady: boolean;
+  onHubReady: () => void;
+  showStatic: boolean;
+  nightSkyLite: boolean;
   initialRotationComplete: boolean;
   hasDragged: boolean;
   icons: PanelIcon[];
@@ -114,17 +155,17 @@ const SceneContent = memo(function SceneContent({
   onWebglFailure: () => void;
 }) {
   const { t } = useTranslation();
-  const navEnabled = show3DNav && isInView;
+  const navEnabled = show3DNav && hubReady && isInView;
+  // the 3D scene is drawn and fading in: the photo and 2D menu fade out on top of it
+  const staticFading = show3DNav && hubReady;
 
   return (
     <div id="home-3d" className="home-3d-content">
-      <NightSkyBackground ref={nightSkyRef} isVisible={isInView} lite={!show3DNav} />
+      <NightSkyBackground ref={nightSkyRef} isVisible={isInView} lite={nightSkyLite} />
 
       {navEnabled && initialRotationComplete && !hasDragged && <DragHint isVisible={!hasDragged} />}
 
-      {show3DNav ? (
-        // a static photo would jump to a different size when the 3D one appears, so the 3D
-        // hub shows nothing while its chunk loads (it's quick on a desktop)
+      {show3DNav && (
         <Suspense fallback={null}>
           <HubScene
             eventSource={eventSource}
@@ -143,22 +184,27 @@ const SceneContent = memo(function SceneContent({
             rotationYRef={rotationYRef}
             targetRotationYRef={targetRotationYRef}
             onWebglFailure={onWebglFailure}
+            onReady={onHubReady}
           />
         </Suspense>
-      ) : (
-        // Phones, tablets and browsers without WebGL: the same photo as a plain image. It's the
-        // largest thing on screen (the LCP element), so the browser fetches it first.
-        <div className="hub-static-hologram">
+      )}
+
+      {showStatic && (
+        // The photo as a plain image: always on phones, tablets and without WebGL, and on
+        // desktop until the 3D hub has loaded (it sits on top of the canvas and fades out).
+        // It's the largest thing on screen (the LCP element), so index.html preloads it.
+        <div className={`hub-static-hologram${staticFading ? ' is-fading' : ''}`}>
           {/* React 18 doesn't know the camelCase fetchPriority prop yet (React 19 does), so it is
               passed as the lowercase HTML attribute; the spread keeps TypeScript happy */}
           <img src={hologramImage} alt="" {...{ fetchpriority: 'high' }} width={392} height={440} />
         </div>
       )}
 
-      {!show3DNav && (
+      {showStatic && (
         <motion.nav
-          className="static-menu-overlay mobile-home-layout"
+          className={`static-menu-overlay mobile-home-layout${staticFading ? ' is-fading' : ''}`}
           aria-label={t('a11y.sections_nav')}
+          aria-hidden={staticFading || undefined}
           // Visible from the first frame (only a short slide): its icons are the LCP element on
           // phones, and a fade from opacity 0 made that paint wait for the animation.
           initial={{ y: 24 }}
@@ -186,7 +232,7 @@ const SceneContent = memo(function SceneContent({
         </motion.nav>
       )}
 
-      {show3DNav && (
+      {show3DNav && hubReady && (
         // The 3D icons live in a WebGL canvas, which keyboards and screen readers can't reach.
         // This menu offers the same five destinations; it stays hidden until it gets focus.
         <nav className="hub-keyboard-nav" aria-label={t('a11y.sections_nav')}>
@@ -324,10 +370,27 @@ const Home = () => {
   const isDesktop = dimensions.width >= 1024;
   const isTablet = !isDesktop && dimensions.width < 1024 && dimensions.width >= 600;
   const canShow3DNav = isDesktop && isDragCapable;
-  // Only probe for WebGL where the 3D hub can appear: the probe creates a real WebGL context,
-  // which costs a phone tens of milliseconds for a hub it never shows
-  const webglUnavailable = useMemo(() => canShow3DNav && !isWebGLAvailable(), [canShow3DNav]);
-  const show3DNav = canShow3DNav && !webglUnavailable && !webglFailed;
+  const hubRequested = useHubRequest(canShow3DNav);
+  // Only probe for WebGL once the 3D hub is about to load: the probe creates a real WebGL
+  // context, which costs tens of milliseconds (and phones never show the hub at all)
+  const webglUnavailable = useMemo(() => hubRequested && !isWebGLAvailable(), [hubRequested]);
+  const show3DNav = canShow3DNav && hubRequested && !webglUnavailable && !webglFailed;
+
+  const [hubReady, setHubReady] = useState(false);
+  const [staticGone, setStaticGone] = useState(false);
+  const handleHubReady = useCallback(() => setHubReady(true), []);
+  useEffect(() => {
+    if (!show3DNav) {
+      // window made smaller, or WebGL failed: back to the photo and 2D menu
+      setHubReady(false);
+      setStaticGone(false);
+      return undefined;
+    }
+    if (!hubReady) return undefined;
+    const timer = window.setTimeout(() => setStaticGone(true), STATIC_FADE_MS);
+    return () => window.clearTimeout(timer);
+  }, [show3DNav, hubReady]);
+  const showStatic = !(show3DNav && hubReady && staticGone);
 
   const scalingConfig: ScalingConfig = useMemo(() => {
     if (isDesktop) {
@@ -504,7 +567,7 @@ const Home = () => {
             ref={homeRef}
             className="home-3d"
             onMouseDown={
-              show3DNav && isInView
+              show3DNav && hubReady && isInView
                 ? (e) => {
                     if (!initialRotationComplete) return;
                     dragRef.current.dragging = true;
@@ -518,13 +581,17 @@ const Home = () => {
                 : undefined
             }
             style={{
-              cursor: show3DNav ? (isDragging ? 'grabbing' : 'grab') : 'default',
+              cursor: show3DNav && hubReady ? (isDragging ? 'grabbing' : 'grab') : 'default',
             }}
           >
             <SceneContent
               eventSource={homeRef}
               nightSkyRef={nightSkyRef}
               show3DNav={show3DNav}
+              hubReady={hubReady}
+              onHubReady={handleHubReady}
+              showStatic={showStatic}
+              nightSkyLite={!canShow3DNav}
               initialRotationComplete={initialRotationComplete}
               hasDragged={hasDragged}
               icons={icons}
