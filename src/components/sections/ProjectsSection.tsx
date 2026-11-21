@@ -15,8 +15,8 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import '../../styles/sections/ProjectsSection.scss';
-import yorimichiImg from '../../assets/images/yorimichi.png';
-import flutterImg from '../../assets/images/VrijeTeid.png';
+import yorimichiImg from '../../assets/images/yorimichi.webp';
+import flutterImg from '../../assets/images/VrijeTeid.webp';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

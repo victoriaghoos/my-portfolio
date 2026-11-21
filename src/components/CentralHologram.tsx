@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
-import circularImage from '../assets/images/hologram.png';
+import circularImage from '../assets/images/hologram.webp';
 
 interface CentralHologramProps {
   scale?: number;
