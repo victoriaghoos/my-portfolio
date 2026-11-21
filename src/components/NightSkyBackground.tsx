@@ -117,10 +117,16 @@ export interface NightSkyHandle {
 
 interface NightSkyBackgroundProps {
   isVisible?: boolean;
+  /**
+   * Cheaper version for phones and tablets: no bloom pass (a blurred full-screen copy every
+   * frame), 20 instead of 30 frames per second and a smaller nebula texture. On a slow phone
+   * the full version takes longer than 50 ms per frame, which blocks taps and scrolling.
+   */
+  lite?: boolean;
 }
 
 const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
-  function NightSkyBackground({ isVisible = true }, ref) {
+  function NightSkyBackground({ isVisible = true, lite = false }, ref) {
     const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
     const animationFrameRef = useRef<number | null>(null);
     const drawFrameRef = useRef<((time: number) => void) | null>(null);
@@ -231,8 +237,9 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
       if (!ctx) return;
 
       const buildNebulaTexture = () => {
-        const tw = Math.max(1, Math.floor(window.innerWidth / 2));
-        const th = Math.max(1, Math.floor(window.innerHeight / 2));
+        const textureScale = lite ? 3 : 2;
+        const tw = Math.max(1, Math.floor(window.innerWidth / textureScale));
+        const th = Math.max(1, Math.floor(window.innerHeight / textureScale));
         const off = document.createElement('canvas');
         off.width = tw;
         off.height = th;
@@ -276,8 +283,10 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
 
       const resize = () => {
         const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        canvas.width = Math.floor(window.innerWidth * dpr);
-        canvas.height = Math.floor(window.innerHeight * dpr);
+        // innerWidth/innerHeight can briefly be 0 (minimised window, hidden iframe, mobile
+        // rotation); a 0-sized canvas makes drawImage throw, so never go below 1px
+        canvas.width = Math.max(1, Math.floor(window.innerWidth * dpr));
+        canvas.height = Math.max(1, Math.floor(window.innerHeight * dpr));
         canvas.style.width = `${window.innerWidth}px`;
         canvas.style.height = `${window.innerHeight}px`;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -285,12 +294,27 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         canvasBoundsRef.current = { left: r.left, top: r.top };
         nebulaTexture = buildNebulaTexture();
         bloomCanvas = document.createElement('canvas');
-        bloomCanvas.width = Math.floor(window.innerWidth / 3);
-        bloomCanvas.height = Math.floor(window.innerHeight / 3);
+        bloomCanvas.width = Math.max(1, Math.floor(window.innerWidth / 3));
+        bloomCanvas.height = Math.max(1, Math.floor(window.innerHeight / 3));
         bloomCtx = bloomCanvas.getContext('2d');
       };
+      // With reduced motion the sky is drawn once and then stands still (WCAG 2.3.3 / 2.2.2)
+      const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const requestStillFrame = () => {
+        if (isVisibleRef.current && !animationFrameRef.current && drawFrameRef.current) {
+          animationFrameRef.current = requestAnimationFrame(drawFrameRef.current);
+        }
+      };
+      const handleResize = () => {
+        resize();
+        // resizing clears the canvas, so a sky that stands still needs one new frame
+        requestStillFrame();
+      };
+      const handleMotionChange = () => requestStillFrame();
+
       resize();
-      window.addEventListener('resize', resize);
+      window.addEventListener('resize', handleResize);
+      reducedMotionQuery.addEventListener('change', handleMotionChange);
 
       // Depth layers
       // Three layers with different size/brightness/parallax response.
@@ -476,45 +500,31 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         });
       };
 
-      const draw = (time: number) => {
-        if (!isVisibleRef.current) {
-          animationFrameRef.current = null;
-          return;
-        }
-
-        if (time - lastTime < 1000 / 30) {
-          animationFrameRef.current = requestAnimationFrame(draw);
-          return;
-        }
-
-        const t = time * 0.001;
-        const dt = Math.min((time - lastTime) * 0.001, 0.05);
-        lastTime = time;
-
-        parallax.x += (parallax.tx - parallax.x) * Math.min(1, dt * 2);
-        parallax.y += (parallax.ty - parallax.y) * Math.min(1, dt * 2);
-
-        const W = window.innerWidth;
-        const H = window.innerHeight;
-
-        const bg = ctx.createLinearGradient(0, 0, 0, H);
+      // Background gradient, nebula and the glow of the galactic band. Only the nebula moves (a
+      // slow drift), so the lite version paints this once and reuses it every frame.
+      const drawBackdrop = (
+        c: CanvasRenderingContext2D,
+        W: number,
+        H: number,
+        driftX: number,
+        driftY: number,
+      ) => {
+        c.globalCompositeOperation = 'source-over';
+        const bg = c.createLinearGradient(0, 0, 0, H);
         const colors = ['#020112', '#050c22', '#08173f', '#0f2050', '#1a2870'];
-        colors.forEach((c, i) => bg.addColorStop(i / (colors.length - 1), c));
-        ctx.fillStyle = bg;
-        ctx.fillRect(0, 0, W, H);
+        colors.forEach((color, i) => bg.addColorStop(i / (colors.length - 1), color));
+        c.fillStyle = bg;
+        c.fillRect(0, 0, W, H);
 
-        // Drift a pre-baked fBm texture for nebula motion at low runtime cost
-        const driftX = Math.sin(t * 0.015) * 40;
-        const driftY = Math.cos(t * 0.012) * 25;
         if (nebulaTexture) {
-          ctx.save();
-          ctx.globalCompositeOperation = 'lighter';
-          ctx.globalAlpha = 1;
-          ctx.drawImage(nebulaTexture, -20 + driftX, -20 + driftY, W + 40, H + 40);
-          ctx.restore();
+          c.save();
+          c.globalCompositeOperation = 'lighter';
+          c.globalAlpha = 1;
+          c.drawImage(nebulaTexture, -20 + driftX, -20 + driftY, W + 40, H + 40);
+          c.restore();
         }
 
-        ctx.globalCompositeOperation = 'lighter';
+        c.globalCompositeOperation = 'lighter';
 
         // Galactic band glow, drawn before stars so the band starfield sits on top of it
         const bandNoiseScale = 0.006;
@@ -532,12 +542,67 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
           const py = bandCenter.y + alongPos * sin;
           const puffRadius = 130;
 
-          const grd = ctx.createRadialGradient(px, py, 0, px, py, puffRadius);
+          const grd = c.createRadialGradient(px, py, 0, px, py, puffRadius);
           grd.addColorStop(0, `rgba(210, 215, 255, ${0.22 * density})`);
           grd.addColorStop(1, 'rgba(210, 215, 255, 0)');
-          ctx.fillStyle = grd;
-          ctx.fillRect(px - puffRadius, py - puffRadius, puffRadius * 2, puffRadius * 2);
+          c.fillStyle = grd;
+          c.fillRect(px - puffRadius, py - puffRadius, puffRadius * 2, puffRadius * 2);
         }
+      };
+
+      let backdrop: HTMLCanvasElement | null = null;
+      const buildBackdrop = (W: number, H: number) => {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        const off = document.createElement('canvas');
+        off.width = Math.max(1, Math.floor(W * dpr));
+        off.height = Math.max(1, Math.floor(H * dpr));
+        const octx = off.getContext('2d');
+        if (octx) {
+          octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          drawBackdrop(octx, W, H, 0, 25);
+        }
+        return off;
+      };
+
+      const draw = (time: number) => {
+        if (!isVisibleRef.current) {
+          animationFrameRef.current = null;
+          return;
+        }
+
+        if (time - lastTime < 1000 / (lite ? 20 : 30)) {
+          animationFrameRef.current = requestAnimationFrame(draw);
+          return;
+        }
+
+        const t = time * 0.001;
+        const dt = Math.min((time - lastTime) * 0.001, 0.05);
+        lastTime = time;
+
+        parallax.x += (parallax.tx - parallax.x) * Math.min(1, dt * 2);
+        parallax.y += (parallax.ty - parallax.y) * Math.min(1, dt * 2);
+
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+
+        // Nothing to draw while the viewport has no size; try again next frame
+        if (W === 0 || H === 0) {
+          animationFrameRef.current = requestAnimationFrame(draw);
+          return;
+        }
+
+        if (lite) {
+          if (!backdrop || backdrop.dataset.size !== `${W}x${H}`) {
+            backdrop = buildBackdrop(W, H);
+            backdrop.dataset.size = `${W}x${H}`;
+          }
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.drawImage(backdrop, 0, 0, W, H);
+        } else {
+          // Drift a pre-baked fBm texture for nebula motion at low runtime cost
+          drawBackdrop(ctx, W, H, Math.sin(t * 0.015) * 40, Math.cos(t * 0.012) * 25);
+        }
+        ctx.globalCompositeOperation = 'lighter';
 
         auroraParams.forEach((ap, idx) => {
           ctx.save();
@@ -634,8 +699,8 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         ctx.fillStyle = vignette;
         ctx.fillRect(0, 0, W, H);
 
-        // Cheap bloom
-        if (bloomCanvas && bloomCtx) {
+        // Cheap bloom (skipped in the lite version)
+        if (!lite && bloomCanvas && bloomCtx) {
           bloomCtx.clearRect(0, 0, bloomCanvas.width, bloomCanvas.height);
           bloomCtx.filter = 'brightness(0.4) contrast(2.2) blur(3px)';
           bloomCtx.drawImage(canvas, 0, 0, bloomCanvas.width, bloomCanvas.height);
@@ -648,6 +713,11 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
           ctx.restore();
         }
 
+        if (reducedMotionQuery.matches) {
+          animationFrameRef.current = null;
+          return;
+        }
+
         animationFrameRef.current = requestAnimationFrame(draw);
       };
 
@@ -658,13 +728,14 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
       }
 
       return () => {
-        window.removeEventListener('resize', resize);
+        window.removeEventListener('resize', handleResize);
+        reducedMotionQuery.removeEventListener('change', handleMotionChange);
         window.removeEventListener('mousemove', onMouseMoveParallax);
         if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = null;
         drawFrameRef.current = null;
       };
-    }, [perlinNoise, pickStarColor]);
+    }, [perlinNoise, pickStarColor, lite]);
 
     return <canvas ref={backgroundCanvasRef} className="night-sky-canvas" />;
   },
