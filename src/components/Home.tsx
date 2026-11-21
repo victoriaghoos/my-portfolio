@@ -5,76 +5,41 @@ import {
   useMemo,
   useCallback,
   memo,
+  lazy,
   Suspense,
   type RefObject,
   type MutableRefObject,
   type CSSProperties,
 } from 'react';
-import { suspend } from 'suspend-react';
-import { Canvas, useFrame } from '@react-three/fiber';
 import { useTranslation } from 'react-i18next';
-import { Environment, Preload } from '@react-three/drei';
-import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
-import * as THREE from 'three';
 import '../styles/home.scss';
 
 import MusicPlayer from './MusicPlayer';
 import LanguageSelector from './LanguageSelector';
 
 import avatarVideo from '../assets/images/avatar.webm';
-import avatarPng from '../assets/images/avatar.png';
+import avatarImg from '../assets/images/avatar.webp';
 import skillVideo from '../assets/images/think.webm';
-import skillPng from '../assets/images/think.png';
+import skillImg from '../assets/images/think.webp';
 import codeVideo from '../assets/images/web-developer.webm';
-import codePng from '../assets/images/web-developer.png';
+import codeImg from '../assets/images/web-developer.webp';
 import resumeVideo from '../assets/images/resume.webm';
-import resumePng from '../assets/images/resume.png';
+import resumeImg from '../assets/images/resume.webp';
 import socialsVideo from '../assets/images/social-media.webm';
-import socialsPng from '../assets/images/social-media.png';
+import socialsImg from '../assets/images/social-media.webp';
+import hologramImage from '../assets/images/hologram.webp';
 import NightSkyBackground, { type NightSkyHandle } from './NightSkyBackground';
-import InteractivePanel, { type PanelIcon } from './InteractivePanel';
-import CentralHologram from './CentralHologram';
-import CanvasErrorBoundary from './webgl/CanvasErrorBoundary';
-import { isWebGLAvailable, useContextLossHandler } from './webgl/webgl';
-import hologramImage from '../assets/images/hologram.png';
-import OutlineStars from './OutlineStars';
+import type { PanelIcon } from './InteractivePanel';
+import type { ConstellationScales, ScalingConfig } from './hubTypes';
+import { isWebGLAvailable } from './webgl/webgl';
 import SectionsContainer from './sections/SectionsContainer';
-import { scrollToSection } from '../utils/scrollToSection';
+import { scrollToSection, scrollToSectionById } from '../utils/scrollToSection';
 
-import catPoints from '../catPoints.json';
-import cameraPoints from '../cameraPoints.json';
-import bookPoints from '../bookPoints.json';
-import flowerPoints from '../flowerPoints.json';
-import headsetPoints from '../headsetPoints.json';
-
-const sunsetHdri = import('@pmndrs/assets/hdri/sunset.exr');
-
-// framer-motion's DOM types don't model react-three-fiber's `group` primitive, but the
-// resulting element is interpreted by whichever reconciler renders it (r3f's, here), so this
-// animates the underlying THREE.Group exactly like motion.div animates a real DOM element.
-const MotionGroup = (motion as unknown as { group: typeof motion.div }).group;
-
-interface ScalingConfig {
-  radius: number;
-  iconScale: number;
-  iconPlaneSize: number;
-  ringInner: number;
-  ringOuter: number;
-  labelMargin: number;
-  hologramScale: number;
-  hologramRadius: number;
-  hologramHalo: [number, number];
-  hologramY: number;
-}
-
-interface ConstellationScales {
-  about: number;
-  socials: number;
-  resume: number;
-  skills: number;
-  projects: number;
-}
+// three.js, the 3D icons and the constellations only load when the 3D hub is actually shown
+// (desktop with a mouse). Phones and tablets never download them.
+const HubScene = lazy(() => import('./HubScene'));
 
 const DragHint = ({ isVisible }: { isVisible: boolean }) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
@@ -94,116 +59,6 @@ const DragHint = ({ isVisible }: { isVisible: boolean }) => {
   return <div className={`drag-hint ${!isVisible ? 'fade-out' : ''}`}>{t('drag_hint')}</div>;
 };
 
-const RotatingPanels = memo(function RotatingPanels({
-  navEnabled,
-  icons,
-  scalingConfig,
-  setActive,
-  panelPositions,
-  handleIconClick,
-  onPanelPointerUp,
-  isInView,
-  initialRotationComplete,
-  onInitialRotationComplete,
-  rotationYRef,
-  targetRotationYRef,
-}: {
-  navEnabled: boolean;
-  icons: PanelIcon[];
-  scalingConfig: ScalingConfig;
-  setActive: (id: string | null) => void;
-  panelPositions: [number, number, number][];
-  handleIconClick: (id: string) => void;
-  onPanelPointerUp: () => void;
-  isInView: boolean;
-  initialRotationComplete: boolean;
-  onInitialRotationComplete: () => void;
-  rotationYRef: MutableRefObject<number>;
-  targetRotationYRef: MutableRefObject<number>;
-}) {
-  const panelsGroupRef = useRef<THREE.Group>(null);
-  const introStartTimeRef = useRef<number | null>(null);
-  const introSpeedRef = useRef(0.6);
-  const reduceMotion = useReducedMotion();
-
-  useFrame(({ clock }, delta) => {
-    if (!panelsGroupRef.current) {
-      return;
-    }
-
-    if (!navEnabled || !isInView) {
-      panelsGroupRef.current.rotation.y = rotationYRef.current;
-      return;
-    }
-
-    if (!initialRotationComplete && reduceMotion) {
-      // no spinning intro for visitors who prefer reduced motion
-      onInitialRotationComplete();
-    } else if (!initialRotationComplete) {
-      if (introStartTimeRef.current === null) {
-        introStartTimeRef.current = clock.getElapsedTime();
-      }
-
-      const introElapsed = clock.getElapsedTime() - introStartTimeRef.current;
-      if (introElapsed >= 0.2) {
-        const frameFactor = delta * 60;
-        rotationYRef.current += introSpeedRef.current * frameFactor;
-        introSpeedRef.current *= Math.pow(0.96, frameFactor);
-        targetRotationYRef.current = rotationYRef.current;
-
-        if (introSpeedRef.current < 0.001) {
-          onInitialRotationComplete();
-        }
-      }
-    } else {
-      rotationYRef.current = THREE.MathUtils.lerp(
-        rotationYRef.current,
-        targetRotationYRef.current,
-        0.35,
-      );
-    }
-
-    panelsGroupRef.current.rotation.y = rotationYRef.current;
-  });
-
-  if (!navEnabled) {
-    return null;
-  }
-
-  return (
-    <group ref={panelsGroupRef}>
-      {icons.map((icon, i) => (
-        <MotionGroup
-          key={i}
-          initial={{ opacity: 0, scale: scalingConfig.iconScale, y: 1 }}
-          animate={{ opacity: 1, scale: scalingConfig.iconScale, y: 0 }}
-          transition={{
-            duration: 1.2,
-            delay: 0.5 + i * 0.15,
-            ease: [0.6, 0.01, 0.05, 0.95],
-          }}
-        >
-          <InteractivePanel
-            icon={icon}
-            setActive={setActive}
-            index={i}
-            position={panelPositions[i]}
-            orbitRotationYRef={rotationYRef}
-            onIconClick={() => handleIconClick(icon.id)}
-            onPanelPointerUp={onPanelPointerUp}
-            isParentVisible={isInView}
-            iconScale={scalingConfig.iconScale}
-            iconPlaneSize={scalingConfig.iconPlaneSize}
-            ringInner={scalingConfig.ringInner}
-            ringOuter={scalingConfig.ringOuter}
-            labelMargin={scalingConfig.labelMargin}
-          />
-        </MotionGroup>
-      ))}
-    </group>
-  );
-});
-
 const SceneContent = memo(function SceneContent({
   eventSource,
   nightSkyRef,
@@ -222,7 +77,6 @@ const SceneContent = memo(function SceneContent({
   onInitialRotationComplete,
   rotationYRef,
   targetRotationYRef,
-  webglFailed,
   onWebglFailure,
 }: {
   eventSource: RefObject<HTMLElement>;
@@ -242,121 +96,65 @@ const SceneContent = memo(function SceneContent({
   onInitialRotationComplete: () => void;
   rotationYRef: MutableRefObject<number>;
   targetRotationYRef: MutableRefObject<number>;
-  webglFailed: boolean;
   onWebglFailure: () => void;
 }) {
   const { t } = useTranslation();
   const navEnabled = show3DNav && isInView;
-  const handleCanvasCreated = useContextLossHandler(onWebglFailure);
 
   return (
     <div id="home-3d" className="home-3d-content">
-      <NightSkyBackground ref={nightSkyRef} isVisible={isInView} />
+      <NightSkyBackground ref={nightSkyRef} isVisible={isInView} lite={!show3DNav} />
 
       {navEnabled && initialRotationComplete && !hasDragged && <DragHint isVisible={!hasDragged} />}
 
-      {webglFailed ? (
-        <img className="hub-fallback-hologram" src={hologramImage} alt="" aria-hidden="true" />
+      {show3DNav ? (
+        // a static photo would jump to a different size when the 3D one appears, so the 3D
+        // hub shows nothing while its chunk loads (it's quick on a desktop)
+        <Suspense fallback={null}>
+          <HubScene
+            eventSource={eventSource}
+            navEnabled={navEnabled}
+            isInView={isInView}
+            icons={icons}
+            scalingConfig={scalingConfig}
+            active={active}
+            setActive={setActive}
+            panelPositions={panelPositions}
+            handleIconClick={handleIconClick}
+            onPanelPointerUp={onPanelPointerUp}
+            constellationScales={constellationScales}
+            initialRotationComplete={initialRotationComplete}
+            onInitialRotationComplete={onInitialRotationComplete}
+            rotationYRef={rotationYRef}
+            targetRotationYRef={targetRotationYRef}
+            onWebglFailure={onWebglFailure}
+          />
+        </Suspense>
       ) : (
-        <CanvasErrorBoundary onError={onWebglFailure}>
-          <Canvas
-            frameloop={isInView ? 'always' : 'never'}
-            camera={{ position: [0, 5, 20], fov: 45 }}
-            eventSource={eventSource as MutableRefObject<HTMLElement>}
-            eventPrefix="client"
-            className="webgl-canvas"
-            dpr={[1, 1.5]}
-            style={{ pointerEvents: navEnabled ? 'auto' : 'none' }}
-            onCreated={handleCanvasCreated}
-          >
-            <Suspense fallback={null}>
-              <group>
-                <Environment files={(suspend(sunsetHdri) as { default: string }).default} />
-
-                <RotatingPanels
-                  navEnabled={navEnabled}
-                  icons={icons}
-                  scalingConfig={scalingConfig}
-                  setActive={setActive}
-                  panelPositions={panelPositions}
-                  handleIconClick={handleIconClick}
-                  onPanelPointerUp={onPanelPointerUp}
-                  isInView={isInView}
-                  initialRotationComplete={initialRotationComplete}
-                  onInitialRotationComplete={onInitialRotationComplete}
-                  rotationYRef={rotationYRef}
-                  targetRotationYRef={targetRotationYRef}
-                />
-              </group>
-
-              <MotionGroup
-                initial={{ opacity: 0, scale: scalingConfig.hologramScale * 0.85, y: -0.5 }}
-                animate={{
-                  opacity: 1,
-                  scale: scalingConfig.hologramScale,
-                  y: scalingConfig.hologramY,
-                }}
-                transition={{
-                  duration: 1.5,
-                  delay: 1.2,
-                  ease: [0.6, 0.01, 0.05, 0.95],
-                }}
-              >
-                <CentralHologram
-                  scale={scalingConfig.hologramScale}
-                  radius={scalingConfig.hologramRadius}
-                  halo={scalingConfig.hologramHalo}
-                />
-              </MotionGroup>
-
-              {navEnabled && (
-                <>
-                  <OutlineStars
-                    active={active === 'About'}
-                    position={[-scalingConfig.radius + 1, 0, 0]}
-                    pointsData={catPoints}
-                    scale={constellationScales.about}
-                  />
-                  <OutlineStars
-                    active={active === 'Socials'}
-                    position={[-scalingConfig.radius - 3, -scalingConfig.radius * 0.6, 0]}
-                    pointsData={cameraPoints}
-                    scale={constellationScales.socials}
-                  />
-                  <OutlineStars
-                    active={active === 'Resume'}
-                    position={[-scalingConfig.radius - 2, scalingConfig.radius * 0.4, 0]}
-                    pointsData={bookPoints}
-                    scale={constellationScales.resume}
-                  />
-                  <OutlineStars
-                    active={active === 'Skills'}
-                    position={[scalingConfig.radius + 2, scalingConfig.radius * 0.4, 0]}
-                    pointsData={flowerPoints}
-                    scale={constellationScales.skills}
-                  />
-                  <OutlineStars
-                    active={active === 'Projects'}
-                    position={[scalingConfig.radius - 1, -scalingConfig.radius * 0.6, 0]}
-                    pointsData={headsetPoints}
-                    scale={constellationScales.projects}
-                  />
-                </>
-              )}
-
-              <Preload all />
-            </Suspense>
-          </Canvas>
-        </CanvasErrorBoundary>
+        // Phones, tablets and browsers without WebGL: the same photo as a plain image. It's the
+        // largest thing on screen (the LCP element), so the browser fetches it first.
+        <div className="hub-static-hologram">
+          {/* React 18 doesn't know the camelCase fetchPriority prop yet (React 19 does), so it is
+              passed as the lowercase HTML attribute; the spread keeps TypeScript happy */}
+          <img
+            src={hologramImage}
+            alt=""
+            {...{ fetchpriority: 'high' }}
+            width={392}
+            height={440}
+          />
+        </div>
       )}
 
       {!show3DNav && (
         <motion.nav
           className="static-menu-overlay mobile-home-layout"
           aria-label={t('a11y.sections_nav')}
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          // Visible from the first frame (only a short slide): its icons are the LCP element on
+          // phones, and a fade from opacity 0 made that paint wait for the animation.
+          initial={{ y: 24 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.6 }}
         >
           <div className="menu-grid">
             {icons.map((icon) => (
@@ -364,7 +162,7 @@ const SceneContent = memo(function SceneContent({
                 key={icon.id}
                 className="menu-item"
                 onClick={() => handleIconClick(icon.id)}
-                style={{ '--item-color': `#${icon.color.getHexString()}` } as CSSProperties}
+                style={{ '--item-color': icon.color } as CSSProperties}
               >
                 <div className="icon-wrapper">
                   {/* decorative: the label below already names the button */}
@@ -430,37 +228,37 @@ const Home = () => {
       {
         id: 'Socials',
         label: t('nav.socials'),
-        png: socialsPng,
+        png: socialsImg,
         video: socialsVideo,
-        color: new THREE.Color(0.4, 0.7, 0.9),
+        color: '#aadaf3',
       },
       {
         id: 'Resume',
         label: t('nav.resume'),
-        png: resumePng,
+        png: resumeImg,
         video: resumeVideo,
-        color: new THREE.Color(0.9, 0.6, 0.4),
+        color: '#f3cbaa',
       },
       {
         id: 'Projects',
         label: t('nav.projects'),
-        png: codePng,
+        png: codeImg,
         video: codeVideo,
-        color: new THREE.Color(0.4, 0.8, 0.6),
+        color: '#aae7cb',
       },
       {
         id: 'About',
         label: t('nav.about'),
-        png: avatarPng,
+        png: avatarImg,
         video: avatarVideo,
-        color: new THREE.Color(0.8, 0.5, 0.9),
+        color: '#e7bcf3',
       },
       {
         id: 'Skills',
         label: t('nav.skills'),
-        png: skillPng,
+        png: skillImg,
         video: skillVideo,
-        color: new THREE.Color(0.7, 0.5, 0.9),
+        color: '#dabcf3',
       },
     ],
     [t],
@@ -598,7 +396,7 @@ const Home = () => {
       Resume: 'resume-section',
       Socials: 'socials-section',
     };
-    scrollToSection(document.getElementById(sectionMap[iconId]));
+    scrollToSectionById(sectionMap[iconId]);
   }, []);
 
   // pointerup fires before native mouseup, so this beats the shockwave check
@@ -728,7 +526,6 @@ const Home = () => {
               onInitialRotationComplete={markInitialRotationComplete}
               rotationYRef={rotationYRef}
               targetRotationYRef={targetRotationYRef}
-              webglFailed={webglFailed}
               onWebglFailure={handleWebglFailure}
             />
           </section>

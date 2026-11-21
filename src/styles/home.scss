@@ -694,17 +694,41 @@ body {
   }
 }
 
-// Shown in place of the 3D hologram when WebGL is unavailable, so the hub never looks empty.
-.hub-fallback-hologram {
+// The hub photo as a plain image: on phones, tablets and without WebGL. It fills the same spot
+// as the 3D canvas, so the menu below stays where it was.
+.hub-static-hologram {
   position: absolute;
-  top: 45%;
-  left: 50%;
-  width: min(42vh, 70vw);
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 60px rgba(124, 158, 255, 0.25);
-  pointer-events: none;
+  inset: 0;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+
+  img {
+    width: min(46vh, 82vw);
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 6vh;
+    // a thin halo ring like the 3D version, plus a soft glow
+    box-shadow:
+      0 0 0 6px rgba(124, 158, 255, 0.12),
+      0 0 60px rgba(124, 158, 255, 0.25);
+  }
+}
+
+@media (max-width: 599px) {
+  .hub-static-hologram {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+
+    img {
+      margin-bottom: 0;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, type RefObject } from 'react';
+import { useState, useRef, useEffect, useMemo, type RefObject } from 'react';
 import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { Html, useTexture, Float, useCursor } from '@react-three/drei';
 import * as THREE from 'three';
@@ -9,7 +9,8 @@ export interface PanelIcon {
   label: string;
   png: string;
   video: string;
-  color: THREE.Color;
+  /** CSS hex colour, e.g. '#aadaf3' (a string, so the 2D menu doesn't need three.js) */
+  color: string;
 }
 
 interface PanelLabelProps {
@@ -240,6 +241,7 @@ const InteractivePanel = ({
   const pngTexture = useTexture(icon.png);
   const [hovered, setHovered] = useState(false);
   const reduceMotion = useReducedMotion();
+  const color = useMemo(() => new THREE.Color(icon.color), [icon.color]);
   const { camera } = useThree();
   const { labelVisible, updateLabelVisibility } = useLabelVisibility(camera);
   const { playVideo, resetVideo, updateVideoTexture, videoTexture } = usePanelVideoTexture(
@@ -318,7 +320,7 @@ const InteractivePanel = ({
         <mesh ref={ringRef}>
           <ringGeometry args={[ringInner, ringOuter, 32]} />
           <meshBasicMaterial
-            color={icon.color}
+            color={color}
             transparent
             opacity={hovered ? 0 : 0.3}
             side={THREE.DoubleSide}
@@ -343,7 +345,7 @@ const InteractivePanel = ({
               map={hovered && videoTexture ? videoTexture : pngTexture}
               transparent={true}
               opacity={hovered ? 1 : 0.9}
-              emissive={icon.color}
+              emissive={color}
               emissiveIntensity={hovered ? 0.1 : 0.2}
               side={THREE.DoubleSide}
             />
@@ -351,7 +353,7 @@ const InteractivePanel = ({
         </group>
 
         <PanelLabel
-          color={icon.color}
+          color={color}
           hovered={hovered}
           isParentVisible={isParentVisible}
           label={icon.label}
