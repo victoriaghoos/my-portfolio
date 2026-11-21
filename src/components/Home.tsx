@@ -30,6 +30,13 @@ import resumeImg from '../assets/images/resume.webp';
 import socialsVideo from '../assets/images/social-media.webm';
 import socialsImg from '../assets/images/social-media.webp';
 import hologramImage from '../assets/images/hologram.webp';
+// 96px copies for the 2D menu on phones and tablets (shown at 30-48px). The 256px versions above
+// are textures for the 3D hub, and downloading those on a phone competed with the hologram photo.
+import avatarMenuImg from '../assets/images/menu/avatar.webp';
+import skillMenuImg from '../assets/images/menu/think.webp';
+import codeMenuImg from '../assets/images/menu/web-developer.webp';
+import resumeMenuImg from '../assets/images/menu/resume.webp';
+import socialsMenuImg from '../assets/images/menu/social-media.webp';
 import NightSkyBackground, { type NightSkyHandle } from './NightSkyBackground';
 import type { PanelIcon } from './InteractivePanel';
 import type { ConstellationScales, ScalingConfig } from './hubTypes';
@@ -40,6 +47,14 @@ import { scrollToSection, scrollToSectionById } from '../utils/scrollToSection';
 // three.js, the 3D icons and the constellations only load when the 3D hub is actually shown
 // (desktop with a mouse). Phones and tablets never download them.
 const HubScene = lazy(() => import('./HubScene'));
+
+const MENU_IMAGES: Record<string, string> = {
+  Socials: socialsMenuImg,
+  Resume: resumeMenuImg,
+  Projects: codeMenuImg,
+  About: avatarMenuImg,
+  Skills: skillMenuImg,
+};
 
 const DragHint = ({ isVisible }: { isVisible: boolean }) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
@@ -136,13 +151,7 @@ const SceneContent = memo(function SceneContent({
         <div className="hub-static-hologram">
           {/* React 18 doesn't know the camelCase fetchPriority prop yet (React 19 does), so it is
               passed as the lowercase HTML attribute; the spread keeps TypeScript happy */}
-          <img
-            src={hologramImage}
-            alt=""
-            {...{ fetchpriority: 'high' }}
-            width={392}
-            height={440}
-          />
+          <img src={hologramImage} alt="" {...{ fetchpriority: 'high' }} width={392} height={440} />
         </div>
       )}
 
@@ -166,7 +175,7 @@ const SceneContent = memo(function SceneContent({
               >
                 <div className="icon-wrapper">
                   {/* decorative: the label below already names the button */}
-                  <img src={icon.png} alt="" decoding="async" />
+                  <img src={MENU_IMAGES[icon.id] ?? icon.png} alt="" width={96} height={96} />
                 </div>
                 <span className="label" style={{ userSelect: 'none' }}>
                   {icon.label}
@@ -309,12 +318,16 @@ const Home = () => {
   }, []);
 
   // Without WebGL (unsupported, crashed or lost context) the hub switches to the static menu.
-  const [webglFailed, setWebglFailed] = useState(() => !isWebGLAvailable());
+  const [webglFailed, setWebglFailed] = useState(false);
   const handleWebglFailure = useCallback(() => setWebglFailed(true), []);
 
   const isDesktop = dimensions.width >= 1024;
   const isTablet = !isDesktop && dimensions.width < 1024 && dimensions.width >= 600;
-  const show3DNav = isDesktop && isDragCapable && !webglFailed;
+  const canShow3DNav = isDesktop && isDragCapable;
+  // Only probe for WebGL where the 3D hub can appear: the probe creates a real WebGL context,
+  // which costs a phone tens of milliseconds for a hub it never shows
+  const webglUnavailable = useMemo(() => canShow3DNav && !isWebGLAvailable(), [canShow3DNav]);
+  const show3DNav = canShow3DNav && !webglUnavailable && !webglFailed;
 
   const scalingConfig: ScalingConfig = useMemo(() => {
     if (isDesktop) {
