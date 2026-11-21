@@ -214,7 +214,13 @@ const AboutSection = ({ id }: { id: string }) => {
               <div className="hologram-avatar">
                 <div className="avatar-glitch"></div>
                 <div className="avatar-glow"></div>
-                <img src={foto1} alt={t('a11y.photo_alt')} className="avatar-image" />
+                <img
+                  src={foto1}
+                  alt={t('a11y.photo_alt')}
+                  className="avatar-image"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <div className="avatar-orbits">
                 <div className="orbit-ring ring-1"></div>
