@@ -119,8 +119,9 @@ interface NightSkyBackgroundProps {
   isVisible?: boolean;
   /**
    * Cheaper version for phones and tablets: no bloom pass (a blurred full-screen copy every
-   * frame), 20 instead of 30 frames per second and a smaller nebula texture. On a slow phone
-   * the full version takes longer than 50 ms per frame, which blocks taps and scrolling.
+   * frame), 20 instead of 30 frames per second, a smaller nebula texture and the faint
+   * background stars painted once into the cached backdrop instead of every frame. On a slow
+   * phone the full version takes longer than 50 ms per frame, which blocks taps and scrolling.
    */
   lite?: boolean;
 }
@@ -132,7 +133,6 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
     const drawFrameRef = useRef<((time: number) => void) | null>(null);
     const isVisibleRef = useRef(isVisible);
     const triggerShockwaveRef = useRef<(x: number, y: number) => void>(() => {});
-    const canvasBoundsRef = useRef({ left: 0, top: 0 });
 
     const perlinNoise = useMemo(() => {
       const p = new Uint8Array(512);
@@ -209,10 +209,12 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
 
     useImperativeHandle(ref, () => ({
       triggerShockwave: (clientX: number, clientY: number) => {
-        if (triggerShockwaveRef.current) {
-          const x = clientX - canvasBoundsRef.current.left;
-          const y = clientY - canvasBoundsRef.current.top;
-          triggerShockwaveRef.current(x, y);
+        const canvas = backgroundCanvasRef.current;
+        if (triggerShockwaveRef.current && canvas) {
+          // measured on click rather than on every resize: reading it right after resizing the
+          // canvas forced the browser to lay out the page early
+          const bounds = canvas.getBoundingClientRect();
+          triggerShockwaveRef.current(clientX - bounds.left, clientY - bounds.top);
         }
       },
     }));
@@ -237,7 +239,7 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
       if (!ctx) return;
 
       const buildNebulaTexture = () => {
-        const textureScale = lite ? 3 : 2;
+        const textureScale = lite ? 4 : 2;
         const tw = Math.max(1, Math.floor(window.innerWidth / textureScale));
         const th = Math.max(1, Math.floor(window.innerHeight / textureScale));
         const off = document.createElement('canvas');
@@ -280,8 +282,14 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
       let nebulaTexture: HTMLCanvasElement | null = null;
       let bloomCanvas: HTMLCanvasElement | null = null;
       let bloomCtx: CanvasRenderingContext2D | null = null;
+      // Kept up to date by resize(): reading window.innerWidth in every frame forces a layout
+      // whenever something else on the page changed (framer-motion, sections mounting)
+      let viewW = window.innerWidth;
+      let viewH = window.innerHeight;
 
       const resize = () => {
+        viewW = window.innerWidth;
+        viewH = window.innerHeight;
         const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         // innerWidth/innerHeight can briefly be 0 (minimised window, hidden iframe, mobile
         // rotation); a 0-sized canvas makes drawImage throw, so never go below 1px
@@ -290,8 +298,6 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         canvas.style.width = `${window.innerWidth}px`;
         canvas.style.height = `${window.innerHeight}px`;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        const r = canvas.getBoundingClientRect();
-        canvasBoundsRef.current = { left: r.left, top: r.top };
         nebulaTexture = buildNebulaTexture();
         bloomCanvas = document.createElement('canvas');
         bloomCanvas.width = Math.max(1, Math.floor(window.innerWidth / 3));
@@ -366,11 +372,9 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         }),
       );
 
-      const layers: StarLayer[] = [
-        { stars: distantStars, parallax: 0.012 },
-        { stars: midStars, parallax: 0.035 },
-        { stars: heroStars, parallax: 0.07 },
-      ];
+      const distantLayer: StarLayer = { stars: distantStars, parallax: 0.012 };
+      const midLayer: StarLayer = { stars: midStars, parallax: 0.035 };
+      const heroLayer: StarLayer = { stars: heroStars, parallax: 0.07 };
 
       // Galactic band
       // A soft tilted glow band plus its own denser faint-star scatter along it
@@ -402,20 +406,29 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
           };
         },
       );
-      layers.push({ stars: bandStars, parallax: 0.008 });
+      const bandLayer: StarLayer = { stars: bandStars, parallax: 0.008 };
+
+      // The lite version (phones, tablets) has no parallax and no shockwaves, so its faint
+      // distant and band stars never move: they are painted once into the cached backdrop and
+      // only the brighter stars are redrawn (and twinkle) every frame. ~80% fewer arcs per frame.
+      const liveLayers: StarLayer[] = lite
+        ? [midLayer, heroLayer]
+        : [distantLayer, midLayer, heroLayer, bandLayer];
+      const bakedLayers: StarLayer[] = lite ? [distantLayer, bandLayer] : [];
 
       const parallax = { x: 0, y: 0, tx: 0, ty: 0 };
       const onMouseMoveParallax = (e: MouseEvent) => {
-        parallax.tx = (e.clientX / window.innerWidth - 0.5) * 2;
-        parallax.ty = (e.clientY / window.innerHeight - 0.5) * 2;
+        parallax.tx = (e.clientX / viewW - 0.5) * 2;
+        parallax.ty = (e.clientY / viewH - 0.5) * 2;
       };
-      window.addEventListener('mousemove', onMouseMoveParallax, { passive: true });
+      // touch screens send a mousemove on every tap, which would nudge the sky
+      if (!lite) window.addEventListener('mousemove', onMouseMoveParallax, { passive: true });
 
       const shooting: ShootingStar[] = [];
       const maxShooting = 4;
       const spawnShootingStar = () => {
-        const startX = Math.random() * window.innerWidth * 0.8;
-        const startY = Math.random() * window.innerHeight * 0.2;
+        const startX = Math.random() * viewW * 0.8;
+        const startY = Math.random() * viewH * 0.2;
         const angle = Math.PI / 4 + (Math.random() - 0.5) * 0.4;
         const speed = 30 + Math.random() * 25;
         const length = 80 + Math.random() * 150;
@@ -442,7 +455,7 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
           x,
           y,
           r: 0,
-          maxR: Math.max(window.innerWidth, window.innerHeight) * 0.9,
+          maxR: Math.max(viewW, viewH) * 0.9,
           strength: 1 + Math.random() * 1.2,
           life: 1.0,
         });
@@ -486,7 +499,7 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
           ctx.arc(drawX, drawY, s.size * 0.9, 0, Math.PI * 2);
           ctx.fill();
 
-          if (layer === layers[2]) {
+          if (layer === heroLayer) {
             const ray = s.size * 5;
             ctx.strokeStyle = `rgba(${s.color.r},${s.color.g},${s.color.b},${alpha * 0.4})`;
             ctx.lineWidth = 1;
@@ -550,6 +563,21 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         }
       };
 
+      // Painted at the average twinkle brightness, so they look the same as when animated
+      const drawBakedStars = (c: CanvasRenderingContext2D) => {
+        c.globalCompositeOperation = 'lighter';
+        bakedLayers.forEach((layer) =>
+          layer.stars.forEach((s) => {
+            c.globalAlpha = s.brightness * 0.8 * 0.96;
+            c.fillStyle = `rgb(${s.color.r},${s.color.g},${s.color.b})`;
+            c.beginPath();
+            c.arc(s.baseX, s.baseY, s.size * 0.9, 0, Math.PI * 2);
+            c.fill();
+          }),
+        );
+        c.globalAlpha = 1;
+      };
+
       let backdrop: HTMLCanvasElement | null = null;
       const buildBackdrop = (W: number, H: number) => {
         const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -560,6 +588,7 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         if (octx) {
           octx.setTransform(dpr, 0, 0, dpr, 0, 0);
           drawBackdrop(octx, W, H, 0, 25);
+          drawBakedStars(octx);
         }
         return off;
       };
@@ -582,8 +611,8 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
         parallax.x += (parallax.tx - parallax.x) * Math.min(1, dt * 2);
         parallax.y += (parallax.ty - parallax.y) * Math.min(1, dt * 2);
 
-        const W = window.innerWidth;
-        const H = window.innerHeight;
+        const W = viewW;
+        const H = viewH;
 
         // Nothing to draw while the viewport has no size; try again next frame
         if (W === 0 || H === 0) {
@@ -654,7 +683,7 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
 
         const px0 = parallax.x,
           py0 = parallax.y;
-        layers.forEach((layer) => {
+        liveLayers.forEach((layer) => {
           drawStarLayer(layer, t, dt, px0 * layer.parallax * 180, py0 * layer.parallax * 150);
         });
         ctx.globalAlpha = 1;
@@ -730,7 +759,7 @@ const NightSkyBackground = forwardRef<NightSkyHandle, NightSkyBackgroundProps>(
       return () => {
         window.removeEventListener('resize', handleResize);
         reducedMotionQuery.removeEventListener('change', handleMotionChange);
-        window.removeEventListener('mousemove', onMouseMoveParallax);
+        if (!lite) window.removeEventListener('mousemove', onMouseMoveParallax);
         if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = null;
         drawFrameRef.current = null;
