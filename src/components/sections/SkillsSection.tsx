@@ -230,10 +230,10 @@ const SkillsSection = ({ id }: { id: string }) => {
 
       <div className="trees-layer">
         <div className="tree-wrapper left">
-          <img src={sakuraTree} alt="" className="tree-img" />
+          <img src={sakuraTree} alt="" className="tree-img" loading="lazy" decoding="async" />
         </div>
         <div className="tree-wrapper right">
-          <img src={sakuraTree} alt="" className="tree-img" />
+          <img src={sakuraTree} alt="" className="tree-img" loading="lazy" decoding="async" />
         </div>
       </div>
 
