@@ -280,7 +280,7 @@ $page-color: #0d0d2b;
       }
 
       .mobile-title {
-        font-family: 'Playfair Display', serif;
+        font-family: 'Cormorant Garamond', 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
         font-weight: 700;
         font-size: clamp(2.5rem, 5vw, 4rem);
         background: linear-gradient(135deg, #8a6d3b 0%, #c5a059 50%, #f1d399 100%);
@@ -368,16 +368,35 @@ $page-color: #0d0d2b;
     }
   }
 
+  // ───────────────────────── The book ─────────────────────────
+  // Covers, page frames and page edges are baked WebP images (src/assets/textures, made with
+  // procedural SVG filigree), so the browser only draws a few backgrounds.
+
+  $ink: #2a1708;
+  $ink-soft: #5a3a1a;
+  $rubric: #8a2414;
+  $gold-light: #f3d68c;
+  $serif:
+    'Cormorant Garamond', 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', Georgia, serif;
+  $display: 'Cinzel', $serif;
+  $decorative: 'Cinzel Decorative', 'Cinzel', $serif;
+  $gold-text: linear-gradient(
+    170deg,
+    #9c6f22 0%,
+    #f2cf74 30%,
+    #fff0bf 45%,
+    #d9a748 62%,
+    #a5741f 82%,
+    #e8c062 100%
+  );
+  $thickness: 56px;
+  $move: 0.8s cubic-bezier(0.45, 0, 0.25, 1);
+
   .book-container {
     position: relative;
     width: 900px;
     height: 600px;
-    perspective: 2500px;
     display: block;
-
-    .stellar-book.portrait {
-      width: 450px !important;
-    }
 
     &:hover {
       cursor: grab;
@@ -387,364 +406,655 @@ $page-color: #0d0d2b;
       cursor: grabbing;
     }
 
+    // the fold in the middle of an open spread
     &::after {
       content: '';
       position: absolute;
       left: 50%;
       top: 0;
       bottom: 0;
-      width: 12px;
+      width: 60px;
       transform: translateX(-50%);
       background: linear-gradient(
-        to right,
-        rgba(0, 0, 0, 0.4) 0%,
-        rgba(255, 255, 255, 0.1) 50%,
-        rgba(0, 0, 0, 0.4) 100%
+        90deg,
+        transparent,
+        rgba(40, 18, 0, 0.3) 40%,
+        rgba(15, 5, 0, 0.55) 50%,
+        rgba(40, 18, 0, 0.3) 60%,
+        transparent
       );
       z-index: 10;
       pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    &.is-open::after {
+      opacity: 1;
     }
   }
 
-  .stellar-book {
-    border-radius: 4px;
+  // Floats gently while the closed book is tilted
+  .book-float {
+    position: absolute;
+    inset: 0;
+    perspective: 2200px;
+    perspective-origin: 50% 35%;
+  }
 
+  .book-container.is-tilted .book-float {
+    animation: bookFloat 6s ease-in-out infinite;
+  }
+
+  @keyframes bookFloat {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+
+  // The book is centred while closed (page-flip keeps the cover in the right half) and, while
+  // nobody is near it, turned so its thickness shows. Coming near or opening it straightens it.
+  .book-3d {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform-origin: 675px 300px;
+    transition: transform $move;
+
+    .stellar-book {
+      position: relative;
+    }
+  }
+
+  .book-container.is-front .book-3d {
+    transform: translateX(-225px);
+  }
+
+  .book-container.is-back .book-3d {
+    transform: translateX(225px);
+  }
+
+  .book-container.is-tilted .book-3d {
+    transform: translateX(-225px) rotateX(16deg) rotateY(-26deg) rotateZ(1.5deg);
+  }
+
+  .book-shadow {
+    position: absolute;
+    left: 210px;
+    width: 480px;
+    top: 545px;
+    height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0, 0, 8, 0.85), transparent);
+    filter: blur(14px);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+  }
+
+  .book-container.is-tilted .book-shadow {
+    opacity: 1;
+  }
+
+  // Thickness of the closed book: the pages' edges and the back board, as 3D faces behind the cover
+  .book-edges {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    .edge {
+      position: absolute;
+      backface-visibility: hidden;
+    }
+
+    .back-board {
+      left: 450px;
+      top: 0;
+      width: 450px;
+      height: 600px;
+      border-radius: 3px 8px 8px 3px;
+      background: #070a15 url('../../assets/textures/leather-plain.webp') center / cover;
+      transform: translateZ(-($thickness + 4px));
+    }
+
+    // fore-edge: x = 896, from the cover back to the back board
+    .pages-fore {
+      left: 896px - $thickness * 0.5;
+      top: 5px;
+      width: $thickness;
+      height: 590px;
+      background: url('../../assets/textures/page-edge.webp') center / 100% 100%;
+      transform: translateZ(-$thickness * 0.5) rotateY(90deg);
+    }
+
+    .pages-bottom {
+      left: 454px;
+      top: 595px - $thickness * 0.5;
+      width: 442px;
+      height: $thickness;
+      background: url('../../assets/textures/page-edge-h.webp') center / 100% 100%;
+      transform: translateZ(-$thickness * 0.5) rotateX(-90deg);
+    }
+
+    // the clasp's leather strap, wrapping round the fore-edge
+    .strap {
+      left: 901px - ($thickness + 4px) * 0.5;
+      top: 258px;
+      width: $thickness + 4px;
+      height: 84px;
+      background: linear-gradient(180deg, #2a2a33, #1b1b22 50%, #101015);
+      transform: translateZ(-($thickness + 4px) * 0.5) rotateY(90deg);
+    }
+  }
+
+  .book-container.is-front .book-edges {
+    opacity: 1;
+  }
+
+  // Boards round an open spread and the page edges peeking out, flat (no 3D needed there)
+  .book-body {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transform: translateZ(-2px);
+
+    .book-board,
+    .page-block {
+      position: absolute;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .book-board {
+      left: -14px;
+      top: -10px;
+      width: 928px;
+      height: 624px;
+      border-radius: 10px;
+      background: #070a15 url('../../assets/textures/leather-plain.webp') center / 100% 100%;
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.6),
+        0 8px 18px rgba(0, 0, 0, 0.5);
+    }
+
+    .page-block {
+      top: 3px;
+      width: 450px;
+      height: 602px;
+      background: #c8964a;
+
+      &.left {
+        left: -6px;
+        border-radius: 3px 0 0 3px;
+        box-shadow:
+          -1px 1px 0 #e8c47a,
+          -2px 2px 0 #9a6a2c,
+          -3px 3px 0 #e2bb6c,
+          -4px 4px 0 #8a5c22;
+      }
+
+      &.right {
+        left: 456px;
+        border-radius: 0 3px 3px 0;
+        box-shadow:
+          1px 1px 0 #e8c47a,
+          2px 2px 0 #9a6a2c,
+          3px 3px 0 #e2bb6c,
+          4px 4px 0 #8a5c22;
+      }
+    }
+  }
+
+  .book-container.is-open .book-body {
+    .book-board,
+    .page-block {
+      opacity: 1;
+      transition-delay: 0.3s;
+    }
+  }
+
+  // closed, facing you: only the page edges under the cover
+  .book-container.is-front:not(.is-tilted) .book-body .page-block.right,
+  .book-container.is-back .book-body .page-block.left {
+    opacity: 1;
+  }
+
+  .book-container.is-front .book-body .page-block.right {
+    left: 452px;
+  }
+
+  .book-container.is-back .book-body .page-block.left {
+    left: -2px;
+  }
+
+  .stellar-book {
     .page {
-      background-color: #05071a;
+      background: transparent;
+      overflow: hidden;
       cursor: grab;
 
       &:active {
         cursor: grabbing;
       }
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('../../assets/textures/pinstriped-suit.webp');
-        opacity: 0.05;
-        pointer-events: none;
-        z-index: 10;
-      }
     }
   }
 
+  // ───────── Covers ─────────
   .is-cover {
-    &[data-density='hard'] {
-      background-color: #080a1a;
+    .page-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 0 !important;
+      overflow: hidden;
+      border: none !important;
+      box-shadow: none !important;
+      background: #0a0e1c url('../../assets/textures/cover-front.webp') center / 100% 100% !important;
 
-      .page-content {
-        border: 2px solid rgba($book-gold, 0.2);
-        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+      // light falling across the leather
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0.07) 0%,
+          transparent 35%,
+          rgba(0, 0, 0, 0.22) 100%
+        );
+        pointer-events: none;
       }
     }
-    .page-content {
-      background:
-        radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 70%),
-        linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.12) 0%,
-          rgba(0, 0, 0, 0.6) 1.5%,
-          transparent 10%
-        ),
-        linear-gradient(rgba(8, 10, 26, 0.88), rgba(5, 6, 20, 0.92)),
-        url('../../assets/textures/leather.webp') !important;
 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 40px !important;
-      width: 100%;
-      .seal-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: auto;
-        margin-right: auto;
-      }
+    .book-title,
+    .book-subtitle,
+    .edition-badge,
+    .copyright,
+    .tech-badge {
+      margin: 0;
+      background: $gold-text;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.9))
+        drop-shadow(0 0 10px rgba(242, 207, 116, 0.18));
+    }
 
-      $gold-gradient: linear-gradient(
-        135deg,
-        #8a6d3b 0%,
-        #c5a059 25%,
-        #f1d399 50%,
-        #c5a059 75%,
-        #8a6d3b 100%
-      );
+    .cover-text-group {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 300px;
+      text-align: center;
+    }
 
-      .corner-ornament {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        pointer-events: none;
-        opacity: 0.8;
+    .book-title {
+      font-family: $decorative;
+      font-weight: 700;
+      font-size: 2.7rem;
+      line-height: 1;
+    }
 
-        &::before {
-          content: '✦';
-          position: absolute;
-          color: $book-gold;
-          font-size: 10px;
-          filter: blur(0.3px) drop-shadow(0 0 3px rgba($book-gold, 0.8));
-          text-shadow: 0 0 10px rgba($book-gold, 0.5);
-        }
+    .book-subtitle {
+      margin-top: 18px;
+      font-family: $display;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
 
-        &.top-left {
-          top: 30px;
-          left: 30px;
-          border-left: 1px solid $book-gold;
-          border-top: 1px solid $book-gold;
-
-          &::before {
-            top: -7px;
-            left: -5px;
-          }
-        }
-
-        &.top-right {
-          top: 30px;
-          right: 30px;
-          border-right: 1px solid $book-gold;
-          border-top: 1px solid $book-gold;
-
-          &::before {
-            top: -7px;
-            right: -5px;
-          }
-        }
-
-        &.bottom-left {
-          bottom: 30px;
-          left: 30px;
-          border-left: 1px solid $book-gold;
-          border-bottom: 1px solid $book-gold;
-
-          &::before {
-            bottom: -7px;
-            left: -5px;
-          }
-        }
-
-        &.bottom-right {
-          bottom: 30px;
-          right: 30px;
-          border-right: 1px solid $book-gold;
-          border-bottom: 1px solid $book-gold;
-
-          &::before {
-            bottom: -7px;
-            right: -5px;
-          }
-        }
-      }
-
-      .seal-container {
-        width: 100px;
-        height: 100px;
-        border: 1px solid rgba($book-gold, 0.4);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 40px;
-        background: radial-gradient(circle, rgba($book-gold, 0.1) 0%, transparent 70%);
-        box-shadow:
-          inset 0 0 10px rgba(0, 0, 0, 0.5),
-          0 0 20px rgba($book-gold, 0.1);
-        overflow: hidden;
-        .seal-icon {
-          color: $book-gold;
-          filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
-          display: block;
-          margin: 0 auto;
-        }
-      }
-
-      .book-title {
-        margin-top: 0.67em;
-        font-size: 4.8rem;
-        font-family: 'Playfair Display', serif;
-        font-weight: 700;
-        margin-bottom: 0px;
-        background: $gold-gradient;
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 1px rgba($book-gold, 0.3));
-        letter-spacing: -1px;
-      }
-
-      .title-separator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        width: 200px;
-        margin: 0px auto 30px auto;
-
-        .line {
-          height: 1px;
-          flex: 1;
-          background: $gold-gradient;
-          opacity: 0.6;
-        }
-
-        .dot {
-          width: 6px;
-          height: 6px;
-          background: #f1d399;
-          transform: rotate(45deg);
-          filter: blur(0.3px);
-          box-shadow: 0 0 12px rgba($book-gold, 0.9);
-        }
-      }
-
-      .book-subtitle {
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 8px;
-        font-size: 0.85rem !important;
-        color: #f1d399;
-        font-weight: 600;
-        opacity: 1;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        margin-top: 0.83em;
-        margin-bottom: 0;
-      }
-
-      .edition-badge {
-        margin-top: 25px;
-        font-family: 'VT323', monospace;
-        font-size: 1rem;
-        letter-spacing: 1px;
-        border: 1px solid rgba(241, 211, 153, 0.4);
-        padding: 5px 22px;
-        border-radius: 30px;
-        color: #f1d399;
-        background: rgba(0, 0, 0, 0.3);
-        box-shadow:
-          0 0 15px rgba(0, 0, 0, 0.5),
-          inset 0 0 5px rgba($book-gold, 0.1);
-
-        text-shadow: 0 0 5px rgba($book-gold, 0.3);
-      }
+    .edition-badge {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 452px;
+      text-align: center;
+      font-family: $serif;
+      font-style: italic;
+      font-weight: 500;
+      font-size: 1.2rem;
     }
   }
 
   .is-back-cover {
     .page-content {
-      background:
-        linear-gradient(
-          -90deg,
-          rgba(255, 255, 255, 0.1) 0%,
-          rgba(0, 0, 0, 0.6) 1.5%,
-          rgba(255, 255, 255, 0.03) 3%,
-          transparent 12%
-        ),
-        linear-gradient(rgba(8, 10, 26, 0.92), rgba(5, 6, 20, 0.96)),
-        url('../../assets/textures/leather.webp') !important;
+      background-image: url('../../assets/textures/cover-back.webp') !important;
 
-      .corner-ornament {
-        opacity: 0.4;
+      &::after {
+        background: linear-gradient(
+          240deg,
+          rgba(255, 255, 255, 0.07) 0%,
+          transparent 35%,
+          rgba(0, 0, 0, 0.22) 100%
+        );
       }
+    }
 
-      .back-cover-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        gap: 60px;
-      }
+    .back-cover-content {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 295px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
 
-      .back-seal {
-        filter: drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.1))
-          drop-shadow(0 2px 2px rgba(0, 0, 0, 0.8));
-        opacity: 0.7;
+    .copyright {
+      font-family: $display;
+      font-weight: 700;
+      max-width: 170px;
+      font-size: 0.68rem;
+      line-height: 1.7;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
 
-        .back-logo-icon {
-          color: $book-gold;
-        }
-      }
-
-      .back-text-group {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 25px;
-
-        .title-separator.small {
-          width: 100px;
-          opacity: 0.4;
-
-          .dot {
-            width: 4px;
-            height: 4px;
-            filter: blur(0.3px);
-            box-shadow: 0 0 10px rgba($book-gold, 0.8);
-          }
-        }
-
-        .copyright {
-          font-family: 'Montserrat', sans-serif;
-          text-transform: uppercase;
-          letter-spacing: 5px;
-          font-size: 0.75rem;
-          color: #f1d399;
-          font-weight: 500;
-        }
-
-        .tech-badge {
-          font-family: 'VT323', monospace;
-          font-size: 0.9rem;
-          color: #f1d399;
-          padding: 4px 16px;
-          border: 1px solid rgba($book-gold, 0.3);
-          border-radius: 20px;
-          background: rgba(0, 0, 0, 0.2);
-          opacity: 0.8;
-          letter-spacing: 1px;
-        }
-      }
-
-      .back-credits {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-
-        .gold-line-h {
-          width: 30px;
-          height: 1px;
-          background: $book-gold;
-          opacity: 0.3;
-          margin-bottom: 10px;
-        }
-
-        .tech-stack {
-          font-family: 'VT323', monospace;
-          font-size: 0.85rem;
-          color: rgba($book-gold, 0.4);
-          letter-spacing: 1px;
-        }
-      }
+    .tech-badge {
+      font-family: $serif;
+      font-style: italic;
+      font-size: 1.05rem;
     }
   }
 
-  .page {
-    background-color: #05071a;
-    overflow: hidden;
-
-    .page-inner-centered {
-      flex-grow: 1;
+  // ───────── Parchment pages ─────────
+  .page:not(.is-cover) {
+    .page-content {
+      margin: 0;
+      padding: 54px 50px 66px !important;
+      height: 100%;
+      width: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      box-sizing: border-box;
+      position: relative;
+      background: #e6c78a url('../../assets/textures/page-left.webp') center / 100% 100%;
+      // a hairline round the sheet, so a page in mid-turn stands out from the one under it
+      box-shadow: inset 0 0 0 1px rgba(90, 50, 12, 0.35);
+      border: none;
+      color: $ink;
+      font-family: $serif;
+      font-weight: 500;
+      line-height: 1.45;
+
+      // the page curving into the spine
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 60px;
+        height: 100%;
+        pointer-events: none;
+      }
     }
 
+    &.page-left .page-content {
+      padding-right: 58px !important;
+
+      &::after {
+        right: 0;
+        background: linear-gradient(
+          to left,
+          rgba(40, 20, 4, 0.55),
+          rgba(90, 50, 15, 0.16) 45%,
+          transparent
+        );
+      }
+    }
+
+    &.page-right .page-content {
+      padding-left: 58px !important;
+      background-image: url('../../assets/textures/page-right.webp');
+
+      &::after {
+        left: 0;
+        background: linear-gradient(
+          to right,
+          rgba(40, 20, 4, 0.55),
+          rgba(90, 50, 15, 0.16) 45%,
+          transparent
+        );
+      }
+    }
+
+    .chapter-heading {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .chapter-label {
+      margin: 0;
+      font-family: $serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-variant-numeric: lining-nums;
+      color: $rubric;
+    }
+
+    h2.page-header {
+      margin: 4px 0 0;
+      font-family: $display;
+      font-weight: 700;
+      font-size: 1.45rem;
+      line-height: 1.15;
+      color: $ink;
+    }
+
+    .ink-divider {
+      display: block;
+      width: 170px;
+      height: 16px;
+      margin: 8px auto 0;
+      color: #7a4a14;
+
+      .ink-divider-star {
+        fill: $rubric;
+      }
+    }
+
+    .page-inner,
+    .page-inner-centered {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-content {
+      margin-top: 12px;
+      flex: 1;
+      text-align: left;
+
+      h3 {
+        font-family: $serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: $ink;
+        margin: 0 0 2px;
+        line-height: 1.15;
+      }
+    }
+
+    .summary-text {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.48;
+      color: $ink;
+
+      // Japanese has no Cormorant glyphs and sets wider in the Mincho fallback
+      &:lang(ja) {
+        font-size: 0.92rem;
+        line-height: 1.6;
+      }
+
+      // an illuminated initial: gold frame, night-blue field like the cover
+      &::first-letter {
+        float: left;
+        font-family: $decorative;
+        font-weight: 700;
+        font-size: 2.9rem;
+        line-height: 1;
+        padding: 10px 13px 8px;
+        margin: 4px 12px 0 0;
+        color: $gold-light;
+        text-shadow: 0 2px 0 #3a2508;
+        background:
+          radial-gradient(circle at 20% 22%, #f2cf74 0 1px, transparent 1.5px),
+          radial-gradient(circle at 82% 18%, #f2cf74 0 1px, transparent 1.5px),
+          radial-gradient(circle at 78% 80%, #f2cf74 0 1.2px, transparent 1.8px), #121a3a;
+        border: 4px solid #c9952f;
+        box-shadow:
+          0 0 0 1px #6e4512,
+          0 1px 2px rgba(60, 35, 10, 0.5);
+      }
+    }
+
+    .year-label {
+      display: block;
+      margin-bottom: 4px;
+      font-family: $serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 3px;
+      font-variant-numeric: lining-nums;
+      color: $rubric;
+    }
+
+    .subtitle-text {
+      display: block;
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: $ink-soft;
+    }
+
+    .subtitle-gold {
+      margin: 16px 0 6px;
+      font-family: $serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: $rubric;
+    }
+
+    .goal-section p {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+
+      li {
+        position: relative;
+        padding-left: 22px;
+        margin-bottom: 7px;
+        font-size: 1.04rem;
+        line-height: 1.33;
+        color: $ink;
+
+        &::before {
+          content: '✦';
+          position: absolute;
+          left: 0;
+          top: 1px;
+          color: $rubric;
+          font-size: 0.75rem;
+        }
+
+        strong {
+          color: $ink;
+          font-weight: 700;
+        }
+      }
+    }
+
+    // the high-distinction line, under a red wax seal
+    .distinction {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 12px 0 4px;
+
+      .wax-seal {
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        display: grid;
+        place-items: center;
+        color: #e9b8a0;
+        border-radius: 48% 52% 44% 56% / 54% 44% 56% 46%;
+        background: radial-gradient(circle at 36% 30%, #c8473a, #8c2418 50%, #5a110a);
+        box-shadow:
+          0 3px 5px rgba(60, 20, 10, 0.45),
+          inset 0 -3px 6px rgba(0, 0, 0, 0.35),
+          inset 0 2px 4px rgba(255, 200, 170, 0.3);
+        transform: rotate(-8deg);
+
+        svg {
+          width: 38px;
+          height: 38px;
+          filter: drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.45));
+        }
+      }
+
+      .distinction-text {
+        margin: 0;
+        font-size: 1.1rem;
+        font-style: italic;
+        font-weight: 700;
+        color: $rubric;
+      }
+    }
+
+    .highlight-box {
+      margin: 10px 0;
+      padding: 8px 14px;
+      font-size: 1rem;
+      line-height: 1.33;
+      border: 1px solid rgba(110, 70, 25, 0.45);
+      border-left: 3px solid $rubric;
+      background: rgba(255, 245, 215, 0.25);
+
+      strong {
+        color: $rubric;
+        font-weight: 700;
+      }
+    }
+
+    .tech-tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+
+      span {
+        padding: 2px 12px;
+        font-family: $serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+        color: $ink;
+        border: 1px solid rgba(110, 70, 25, 0.5);
+        border-radius: 999px;
+        background: rgba(255, 245, 215, 0.2);
+      }
+    }
+
+    // the last page
     .page-inner-back {
       height: 100%;
       display: flex;
@@ -757,335 +1067,84 @@ $page-color: #0d0d2b;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 20px;
-
-        .faded-icon {
-          color: #fff;
-          opacity: 0.8;
-          margin-bottom: 10px;
-        }
-
-        h3 {
-          font-family: 'Playfair Display', serif;
-          font-size: 1.6rem;
-          font-weight: 700;
-          color: #fff;
-          margin: 0;
-        }
-
-        .divider-small {
-          width: 50px;
-          height: 1px;
-          background: $book-gold;
-          opacity: 0.5;
-        }
-
-        .sub-text {
-          font-size: 0.95rem;
-          color: rgba(255, 255, 255, 0.85);
-          line-height: 1.6;
-          max-width: 350px;
-          margin: 0;
-
-          strong {
-            color: #fff;
-            font-weight: 700;
-          }
-        }
-
-        .download-btn-styled {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          padding: 10px 20px;
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 6px;
-          color: #fff;
-          font-family: 'Montserrat', sans-serif;
-          font-size: 0.9rem;
-          transition: background 0.3s ease;
-          cursor: pointer;
-
-          &:hover {
-            background: rgba(255, 255, 255, 0.2);
-          }
-        }
-
-        .scroll-hint {
-          font-family: 'VT323', monospace;
-          font-size: 1rem;
-          color: rgba($book-gold, 0.6);
-          margin-top: 10px;
-          background: none;
-          border: none;
-          padding: 0;
-          cursor: pointer;
-        }
-      }
-    }
-
-    .page-left {
-      .page-content {
-        background: linear-gradient(
-          to right,
-          rgba(0, 0, 0, 0) 90%,
-          rgba(0, 0, 0, 0.2) 96%,
-          rgba(0, 0, 0, 0.4) 100%
-        );
-        border-right: 1px solid rgba(0, 0, 0, 0.5);
-      }
-    }
-
-    .page-right {
-      .page-content {
-        background: linear-gradient(
-          to left,
-          rgba(0, 0, 0, 0) 90%,
-          rgba(0, 0, 0, 0.15) 96%,
-          rgba(0, 0, 0, 0.35) 100%
-        );
-        border-left: 1px solid rgba(0, 0, 0, 0.5);
-      }
-    }
-
-    .page-content {
-      margin: 0;
-      padding: 40px 45px !important;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-sizing: border-box;
-      position: relative;
-      background: linear-gradient(145deg, rgba(13, 13, 43, 0.9), rgba(5, 5, 20, 0.95));
-      border: 1px solid rgba(197, 160, 89, 0.3);
-      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
-      color: #e0e0e0;
-      font-family: 'Montserrat', sans-serif;
-      line-height: 1.6;
-
-      &::before {
-        content: '✦';
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        color: #c5a059;
-        font-size: 0.7rem;
-        opacity: 0.4;
+        gap: 16px;
       }
 
-      &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        width: 50px;
-        height: 100%;
-        pointer-events: none;
-      }
-
-      .distinction-badge {
-        display: block;
-        text-align: center;
-        box-sizing: border-box;
-        width: 100%;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 600;
-        font-size: 0.9rem;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        color: #f1d399;
-        border: 1px solid rgba($book-gold, 0.35);
-        padding: 10px 15px;
-        border-radius: 30px;
-        margin: 15px 0 25px 0;
-        background: rgba(0, 0, 0, 0.2);
-      }
-
-      h2.page-header {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: $book-gold;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        border-bottom: 1px solid rgba($book-gold, 0.2);
-        padding-bottom: 12px;
-        width: 100%;
-
-        svg {
-          color: $book-gold;
-          opacity: 0.9;
-          filter: drop-shadow(0 0 5px rgba($book-gold, 0.3));
-        }
-      }
-
-      .section-content {
-        margin-top: 10px;
-        flex: 1;
-        text-align: left;
-
-        h3 {
-          font-family: 'Playfair Display', serif;
-          font-size: 1.25rem;
-          color: #fff;
-          margin: 0 0 5px 0;
-          line-height: 1.3;
-        }
-
-        .location-sub {
-          font-size: 0.85rem;
-          opacity: 0.6;
-          margin-bottom: 20px;
-          font-style: italic;
-        }
-      }
-
-      h3 {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.3rem;
-        color: #fff;
-        margin-bottom: 10px;
-      }
-
-      .year-label {
-        font-family: 'VT323', monospace;
-        color: $book-gold;
-        font-size: 1.1rem;
-        letter-spacing: 2px;
-        margin-bottom: 8px;
-        display: block;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 15px 0;
-
-        li {
-          position: relative;
-          padding-left: 25px;
-          margin-bottom: 10px;
-          font-size: 0.88rem;
-          line-height: 1.45;
-          color: rgba(255, 255, 255, 0.85);
-
-          &::before {
-            content: '✦';
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: $book-gold;
-            font-size: 0.75rem;
-            filter: blur(0.2px) drop-shadow(0 0 2px $book-gold);
-          }
-
-          strong {
-            color: #f1d399;
-            font-weight: 600;
-          }
-        }
-      }
-
-      .subtitle-text {
-        font-size: 0.85rem;
-        opacity: 0.7;
-        margin-bottom: 15px;
+      .sub-text {
+        margin: 0;
+        max-width: 320px;
+        font-size: 1.2rem;
         font-style: italic;
-        display: block;
-      }
-
-      .subtitle-gold {
-        color: $book-gold;
-        font-family: 'Playfair Display', serif;
-        font-size: 1.15rem;
-        margin: 25px 0 10px 0;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .summary-text {
-        font-size: 0.95rem;
-        line-height: 1.55;
-        color: rgba(255, 255, 255, 0.85);
-      }
-
-      .highlight-box {
-        background: rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba($book-gold, 0.2);
-        padding: 12px 18px;
-        border-radius: 4px;
-        margin: 15px 0;
-        position: relative;
-        overflow: hidden;
-        font-size: 0.85rem;
-        line-height: 1.4;
-
-        &::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 0;
-          bottom: 0;
-          width: 3px;
-          background: $book-gold;
-          box-shadow: 2px 0 10px rgba($book-gold, 0.5);
-        }
+        line-height: 1.45;
+        color: $ink;
 
         strong {
-          color: $book-gold;
           font-weight: 700;
-          text-transform: uppercase;
-          font-size: 0.75rem;
-          letter-spacing: 0.5px;
         }
       }
 
-      .tech-tags-container {
-        display: flex;
-        flex-wrap: wrap;
+      .download-btn-styled {
+        display: inline-flex;
+        align-items: center;
         gap: 10px;
-        margin-top: 30px;
+        min-height: 44px;
+        padding: 0 22px;
+        border: 1px solid #c9952f;
+        border-radius: 4px;
+        background: linear-gradient(180deg, #1a2246, #0e1430);
+        box-shadow:
+          0 2px 4px rgba(40, 20, 5, 0.5),
+          inset 0 1px 0 rgba(255, 230, 170, 0.15);
+        color: $gold-light;
+        font-family: $display;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 0.2s ease;
 
-        span {
-          font-family: 'VT323', monospace;
-          font-size: 0.85rem;
-          padding: 4px 12px;
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid rgba($book-gold, 0.3);
-          border-radius: 4px;
-          color: $book-gold;
-          transition: all 0.3s ease;
-
-          &:hover {
-            background: rgba($book-gold, 0.1);
-            border-color: $book-gold;
-          }
+        &:hover {
+          transform: translateY(-2px);
         }
       }
 
-      .icon-separator {
-        text-align: center;
-        color: $book-gold;
-        opacity: 0.4;
-        margin: 20px 0;
-        letter-spacing: 10px;
+      .scroll-hint {
+        min-height: 44px;
+        background: none;
+        border: none;
+        padding: 0;
+        font-family: $serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: $rubric;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
       }
     }
   }
 
-  .page-left .page-content::after {
-    right: 0;
-    background: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent);
-  }
-
-  .page-right .page-content::after {
+  .page-footer {
+    position: absolute;
+    bottom: 38px;
     left: 0;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
+    right: 0;
+    text-align: center;
+    font-family: $serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    font-variant-numeric: lining-nums;
+    color: #6a3e10;
+    pointer-events: none;
+
+    &:not(:empty)::before {
+      content: '· ';
+    }
+
+    &:not(:empty)::after {
+      content: ' ·';
+    }
   }
 
   .nav-arrow {
@@ -1118,17 +1177,19 @@ $page-color: #0d0d2b;
     }
   }
 
+  // The download bookmark: a red silk ribbon with gold lettering
   .bookmark-tab {
     position: absolute;
     top: 40px;
-    background: #c5a059;
+    background: linear-gradient(90deg, #5e1510, #b8372a 40%, #d0503f 55%, #7a1f17);
     border: none;
     font: inherit;
     text-align: inherit;
-    color: #000;
+    color: $gold-light;
     cursor: pointer;
     z-index: 100;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+    filter: drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.45));
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 10px), 0 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1138,7 +1199,6 @@ $page-color: #0d0d2b;
       left 0.8s cubic-bezier(0.45, 0, 0.25, 1),
       width 0.3s ease,
       padding 0.3s ease,
-      border-radius 0.3s ease,
       transform 0.3s ease;
 
     .bookmark-text,
@@ -1156,9 +1216,13 @@ $page-color: #0d0d2b;
       writing-mode: vertical-rl;
       -webkit-text-orientation: mixed;
       text-orientation: mixed;
-      font-family: 'VT323', monospace;
-      font-weight: bold;
-      margin-top: 8px;
+      font-family: $display;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 #3a0c08;
+      margin-top: 10px;
       white-space: nowrap;
     }
 
@@ -1168,13 +1232,8 @@ $page-color: #0d0d2b;
 
     &.is-open {
       left: 870px;
-      width: 32px;
-      padding: 12px 8px;
-      border-radius: 0 4px 4px 0;
-
-      .bookmark-text {
-        opacity: 1;
-      }
+      width: 40px;
+      padding: 14px 8px 24px;
 
       &:hover {
         transform: translateX(5px);
@@ -1182,11 +1241,12 @@ $page-color: #0d0d2b;
       }
     }
 
+    // on a closed book the ribbon comes out from between the pages
     &.is-front {
       left: 900px;
-      width: 20px;
-      padding: 10px 0;
-      border-radius: 0 2px 2px 0;
+      width: 22px;
+      padding: 10px 0 20px;
+      transform: translateZ(-$thickness * 0.5);
 
       .bookmark-text {
         opacity: 0;
@@ -1195,20 +1255,13 @@ $page-color: #0d0d2b;
 
       .bookmark-icon {
         transform: scale(0.8);
-      }
-
-      &:hover {
-        left: 675px;
-        width: 25px;
-        transition: transform 0.3s ease;
       }
     }
 
     &.is-back {
-      left: -20px;
-      width: 20px;
-      padding: 10px 0;
-      border-radius: 2px 0 0 2px;
+      left: -22px;
+      width: 22px;
+      padding: 10px 0 20px;
 
       .bookmark-text {
         opacity: 0;
@@ -1218,24 +1271,16 @@ $page-color: #0d0d2b;
       .bookmark-icon {
         transform: scale(0.8);
       }
-
-      &:hover {
-        left: 205px;
-        width: 25px;
-        transition: transform 0.3s ease;
-      }
     }
   }
 
-  .page-footer {
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-family: 'VT323', monospace;
-    font-size: 0.9rem;
-    color: rgba($book-gold, 0.4);
-    pointer-events: none;
+  @media (prefers-reduced-motion: reduce) {
+    .book-3d,
+    .book-shadow,
+    .book-edges,
+    .book-body .book-board,
+    .book-body .page-block {
+      transition: none !important;
+    }
   }
 }
