@@ -152,24 +152,28 @@ const Page = forwardRef<HTMLDivElement, PageProps>(function Page(props, ref) {
   );
 });
 
+// The book fades in together with its wrapper. It used to wait for the wrapper to finish
+// ('beforeChildren' + a stagger), so it stayed invisible for over a second.
 const containerVariants: Variants = {
-  hidden: { opacity: 0, y: 50 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.8,
+      duration: 0.35,
       ease: 'easeOut',
-      when: 'beforeChildren',
-      staggerChildren: 0.2,
+      staggerChildren: 0.05,
     },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, scale: 0.97 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
 };
+
+// page-flip: 0 = forward, 1 = back
+const FLIP_FORWARD = 0;
 
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState({
@@ -206,9 +210,9 @@ const ResumeSection = ({ id }: { id: string }) => {
   const { width: windowWidth } = useWindowSize();
   const isMobile = windowWidth < 1050;
   const [currentPage, setCurrentPage] = useState(0);
-  const [isFlipping, setIsFlipping] = useState(false);
-  const [nextPageDirection, setNextPageDirection] = useState<'next' | 'prev' | null>(null);
-  const [flipStartData, setFlipStartData] = useState<number | null>(null);
+  // The page a flip in progress will land on, so the bookmark moves with the page instead of after it
+  const [targetPage, setTargetPage] = useState<number | null>(null);
+  const watchFrame = useRef<number | null>(null);
   const totalPages = 8;
   const { t } = useTranslation();
 
@@ -217,149 +221,78 @@ const ResumeSection = ({ id }: { id: string }) => {
     import('./SocialsSection');
   }, []);
 
+  const pageFlipApi = () => bookRef.current?.pageFlip();
+
+  // With the cover shown on its own, the book shows the cover (0), the spreads 1-2, 3-4, 5-6 and
+  // the back cover (7). A forward flip from the cover opens spread 1; other flips move two pages.
+  const landingPage = (from: number, direction: number) => {
+    if (direction === FLIP_FORWARD) return Math.min(totalPages - 1, from === 0 ? 1 : from + 2);
+    return Math.max(0, from <= 1 ? 0 : from - 2);
+  };
+
+  const stopWatchingFlip = () => {
+    if (watchFrame.current !== null) cancelAnimationFrame(watchFrame.current);
+    watchFrame.current = null;
+  };
+
+  // 'flipping': a click or an arrow, the page will turn. 'user_fold': a drag, which only turns the
+  // page once its corner has crossed the spine (page-flip's own rule), so that is followed per frame.
+  const onChangeState = (e: { data: string }) => {
+    stopWatchingFlip();
+    if (e.data !== 'flipping' && e.data !== 'user_fold') {
+      setTargetPage(null);
+      return;
+    }
+    const follow = () => {
+      const api = pageFlipApi();
+      if (!api) return;
+      const direction = api.getRender().getDirection();
+      const calculation = api.getFlipController().getCalculation();
+      const turns =
+        e.data === 'flipping' || (calculation !== null && calculation.getPosition().x <= 0);
+      setTargetPage(
+        turns && direction !== null ? landingPage(api.getCurrentPageIndex(), direction) : null,
+      );
+      if (e.data === 'user_fold') watchFrame.current = requestAnimationFrame(follow);
+    };
+    follow();
+  };
+
+  // 'flip' fires before the state goes back to 'read', so currentPage is already right then
   const onFlip = (e: { data: number }) => {
     setCurrentPage(e.data);
-    setIsFlipping(false);
-    setNextPageDirection(null);
-    setFlipStartData(null);
   };
 
-  const onFlipStart = (e: { data: number }) => {
-    setIsFlipping(true);
-    setFlipStartData(e.data);
-
-    if (e.data === 0) {
-      setNextPageDirection('next');
-    } else if (e.data === totalPages - 2) {
-      setNextPageDirection('next');
-    } else if (e.data === totalPages - 1) {
-      setNextPageDirection('prev');
-    } else if (e.data === 1 && currentPage === 0) {
-      setNextPageDirection('prev');
-    } else {
-      const direction = e.data > currentPage ? 'next' : 'prev';
-      setNextPageDirection(direction);
-    }
-  };
+  useEffect(() => stopWatchingFlip, []);
 
   const onDownloadCV = () => {
     window.open(resumePDF, '_blank');
   };
 
+  const shownPage = targetPage ?? currentPage;
+  const isFrontCover = shownPage === 0;
+  const isBackCover = shownPage === totalPages - 1;
+
   const getBookmarkState = () => {
     if (isMobile) return 'is-mobile-hidden';
-    if (isFlipping && nextPageDirection && flipStartData !== null) {
-      let predictedPage: number;
-
-      if (nextPageDirection === 'next') {
-        predictedPage = flipStartData + 1;
-      } else {
-        predictedPage = flipStartData - 1;
-      }
-
-      predictedPage = Math.max(0, Math.min(totalPages - 1, predictedPage));
-
-      if (predictedPage === 0) return 'is-front';
-      if (predictedPage === totalPages - 1) return 'is-back';
-      return 'is-open';
-    }
-
-    if (currentPage === 0) return 'is-front';
-    if (currentPage === totalPages - 1) return 'is-back';
+    if (isFrontCover) return 'is-front';
+    if (isBackCover) return 'is-back';
     return 'is-open';
   };
 
-  const getInteractiveState = () => {
-    if (isFlipping && nextPageDirection && flipStartData !== null) {
-      let predictedPage: number;
-
-      if (nextPageDirection === 'next') {
-        predictedPage = flipStartData + 1;
-      } else {
-        predictedPage = flipStartData - 1;
-      }
-
-      predictedPage = Math.max(0, Math.min(totalPages - 1, predictedPage));
-
-      const isPredictedFrontCover = predictedPage === 0;
-      const isPredictedBackCover = predictedPage === totalPages - 1;
-
-      return {
-        isFrontCover: isPredictedFrontCover,
-        isBackCover: isPredictedBackCover,
-      };
-    }
-
-    return {
-      isFrontCover: currentPage === 0,
-      isBackCover: currentPage === totalPages - 1,
-    };
-  };
-
-  const { isFrontCover, isBackCover } = getInteractiveState();
   const bookmarkState = getBookmarkState();
 
   const handlePrevClick = (e?: { preventDefault: () => void; stopPropagation: () => void }) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    if (!isFrontCover) {
-      setIsFlipping(true);
-      setNextPageDirection('prev');
-      setFlipStartData(currentPage);
-      bookRef.current?.pageFlip()?.flipPrev();
-    }
+    e?.preventDefault();
+    e?.stopPropagation();
+    if (!isFrontCover) pageFlipApi()?.flipPrev();
   };
 
   const handleNextClick = (e?: { preventDefault: () => void; stopPropagation: () => void }) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    if (!isBackCover) {
-      setIsFlipping(true);
-      setNextPageDirection('next');
-      setFlipStartData(currentPage);
-      bookRef.current?.pageFlip()?.flipNext();
-    }
+    e?.preventDefault();
+    e?.stopPropagation();
+    if (!isBackCover) pageFlipApi()?.flipNext();
   };
-
-  useEffect(() => {
-    if (isMobile) return;
-    // react-pageflip does not expose the internal page DOM nodes via its public ref,
-    // so this class-based lookup is used to capture mousedown on rendered .page elements.
-    const bookElement = document.querySelector<HTMLElement>('.stellar-book');
-    if (!bookElement) return;
-
-    const handlePageMouseDown = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const pageElement = target.closest('.page');
-      if (pageElement) {
-        const pageIndex = Array.from(bookElement.querySelectorAll('.page')).indexOf(pageElement);
-        if (pageIndex !== -1) {
-          setIsFlipping(true);
-          setFlipStartData(pageIndex);
-
-          if (pageIndex === 0) {
-            setNextPageDirection('next');
-          } else if (pageIndex === totalPages - 2) {
-            setNextPageDirection('next');
-          } else if (pageIndex === totalPages - 1) {
-            setNextPageDirection('prev');
-          } else if (pageIndex === 1 && currentPage === 0) {
-            setNextPageDirection('prev');
-          }
-        }
-      }
-    };
-
-    bookElement.addEventListener('mousedown', handlePageMouseDown);
-
-    return () => {
-      bookElement.removeEventListener('mousedown', handlePageMouseDown);
-    };
-  }, [currentPage, isMobile]);
 
   const scrollToSocials = () => {
     scrollToSection(document.getElementById('socials-section'));
@@ -402,7 +335,7 @@ const ResumeSection = ({ id }: { id: string }) => {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
         >
           <motion.button
             type="button"
@@ -458,7 +391,7 @@ const ResumeSection = ({ id }: { id: string }) => {
               className="stellar-book"
               ref={bookRef}
               onFlip={onFlip}
-              onFlipStart={onFlipStart}
+              onChangeState={onChangeState}
               flippingTime={900}
               usePortrait={false}
               startPage={0}

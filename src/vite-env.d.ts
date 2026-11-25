@@ -55,8 +55,8 @@ declare module 'react-pageflip' {
     children?: ReactNode;
     startPage?: number;
     onFlip?: (e: { data: number }) => void;
-    onFlipStart?: (e: { data: number }) => void;
     onChangeOrientation?: (e: { data: string }) => void;
+    /** 'read' | 'fold_corner' | 'user_fold' | 'flipping'. There is no flip-start event. */
     onChangeState?: (e: { data: string }) => void;
     onInit?: (e: { data: unknown }) => void;
     onUpdate?: (e: { data: unknown }) => void;
@@ -68,6 +68,12 @@ declare module 'react-pageflip' {
     flipPrev: () => void;
     getCurrentPageIndex: () => number;
     getPageCount: () => number;
+    /** Direction of the flip in progress: 0 = forward, 1 = back, null when none */
+    getRender: () => { getDirection: () => number | null };
+    /** Where the dragged corner is; x <= 0 means the page will turn when released */
+    getFlipController: () => {
+      getCalculation: () => { getPosition: () => { x: number } } | null;
+    };
   }
 
   export default class HTMLFlipBook extends Component<PageFlipProps> {
