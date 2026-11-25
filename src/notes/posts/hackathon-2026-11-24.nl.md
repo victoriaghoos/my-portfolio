@@ -43,7 +43,7 @@ We focusten op wat een echte gebruiker zou merken. Het werkt op een gsm, het hee
 
 ## Wat kon beter
 
-De jury beoordeelde alleen wat ze in de pitch zag, en dat kwam vooral neer op hoe verzorgd en opvallend een app eruitzag. De code zag ze nooit, dus structuur en best practices telden niet mee. Responsiveness, toegankelijkheid en performance ook niet, terwijl net dat een app bruikbaar maakt in het echt. Als elk team een link naar zijn code moest geven, en de jury elke app een minuut op haar eigen gsm zou openen, zou dat werk ook meetellen.
+Hoe teams beoordeeld worden, hangt af van het bedrijf achter de challenge. Bij een vriend die een andere challenge deed, keek de jury wel naar zijn code, maar de jury van onze challenge beoordeelde alleen wat ze in de pitch zag, en dat kwam vooral neer op hoe verzorgd en opvallend een app eruitzag. De code zag ze nooit, dus structuur en best practices telden niet mee. Responsiveness, toegankelijkheid en performance ook niet, terwijl net dat een app bruikbaar maakt in het echt. Als elk team een link naar zijn code moest geven, zoals sommige challenges al vragen, en de jury elke app een minuut op haar eigen gsm zou openen, zou dat werk ook meetellen.
 
 ## Met vrienden
 

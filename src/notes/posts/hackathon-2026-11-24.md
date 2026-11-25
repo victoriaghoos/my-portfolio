@@ -43,7 +43,7 @@ We focused on what a real user would notice. It works on a phone, it has keyboar
 
 ## What could be better
 
-The jury only judged what they saw in the pitch, and that mostly came down to how polished and eye-catching an app looked. They never saw the code, so structure and best practices didn't count. Responsiveness, accessibility and performance didn't count either, while they're what makes an app usable in real life. Asking every team for a link to their code, and letting the jury open each app on their own phone for a minute, would make that work count too.
+How teams are judged depends on the company behind the challenge. A friend who did another challenge had his code reviewed, but the jury of ours only judged what they saw in the pitch, and that mostly came down to how polished and eye-catching an app looked. They never saw the code, so structure and best practices didn't count. Responsiveness, accessibility and performance didn't count either, while they're what makes an app usable in real life. Asking every team for a link to their code, as some challenges already do, and letting the jury open each app on their own phone for a minute, would make that work count too.
 
 ## With friends
 

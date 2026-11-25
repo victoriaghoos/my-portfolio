@@ -43,7 +43,7 @@ Nous nous sommes concentrés sur ce qu’un vrai utilisateur remarquerait. Elle 
 
 ## Ce qui pourrait être mieux
 
-Le jury n’a évalué que ce qu’il voyait pendant le pitch, c’est-à-dire surtout à quel point une application était soignée et accrocheuse. Il n’a jamais vu le code, donc la structure et les bonnes pratiques ne comptaient pas. Le responsive, l’accessibilité et la performance non plus, alors que c’est justement ce qui rend une application utilisable dans la vraie vie. Si chaque équipe devait donner un lien vers son code, et si le jury ouvrait chaque application une minute sur son propre téléphone, ce travail compterait aussi.
+La façon dont les équipes sont évaluées dépend de l’entreprise derrière le défi. Un ami qui a fait un autre défi a vu son code examiné, mais le jury de notre défi n’a évalué que ce qu’il voyait pendant le pitch, c’est-à-dire surtout à quel point une application était soignée et accrocheuse. Il n’a jamais vu le code, donc la structure et les bonnes pratiques ne comptaient pas. Le responsive, l’accessibilité et la performance non plus, alors que c’est justement ce qui rend une application utilisable dans la vraie vie. Si chaque équipe devait donner un lien vers son code, comme certains défis le demandent déjà, et si le jury ouvrait chaque application une minute sur son propre téléphone, ce travail compterait aussi.
 
 ## Entre amis
 
