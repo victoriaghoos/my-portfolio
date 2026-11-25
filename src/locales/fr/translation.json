@@ -50,9 +50,10 @@
   "resume": "CV",
   "drag_hint": "Faites glisser pour faire tourner le cosmos",
   "resume_content": {
+    "chapter": "Chapitre {{n}}",
     "cover": {
       "subtitle": "Software Engineering",
-      "edition": "Édition 2026 // Portfolio",
+      "edition": "Édition 2026 · Portfolio",
       "built_with": "Développé avec React"
     },
     "nav": {

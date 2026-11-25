@@ -50,9 +50,10 @@
   "resume": "CV",
   "drag_hint": "Sleep om het universum te draaien",
   "resume_content": {
+    "chapter": "Hoofdstuk {{n}}",
     "cover": {
       "subtitle": "Software Engineering",
-      "edition": "Editie 2026 // Portfolio",
+      "edition": "Editie 2026 · Portfolio",
       "built_with": "Gebouwd met React"
     },
     "nav": {

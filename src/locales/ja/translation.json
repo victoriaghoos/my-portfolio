@@ -50,9 +50,10 @@
   "resume": "履歴書",
   "drag_hint": "ドラッグしてコスモスを回す",
   "resume_content": {
+    "chapter": "第{{n}}章",
     "cover": {
       "subtitle": "ソフトウェアエンジニアリング",
-      "edition": "2026年版 // ポートフォリオ",
+      "edition": "2026年版 · ポートフォリオ",
       "built_with": "Reactで開発"
     },
     "nav": {
